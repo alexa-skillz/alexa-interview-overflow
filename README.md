@@ -14,6 +14,8 @@ OR - you can go to the Alexa Skills page and download the skills from there.
 
 You can download the Alexa App on your phone as well.
 
+If you do not have a Dot, Echo, or Tap, you can you echoism.io instead. It's free to use Alexa itself. You can also create a piece of hardware via adding Alexa to a RaspberryPi. 
+
 ### Interview Tips
 
 ```
