@@ -1,5 +1,5 @@
 # Interview Overflow
-Gathering user generated interview questions and answers for our Alexa interview skill(s).
+Gathering user-generated interview questions and answers for our Alexa interview skill(s).
 
 ## Setup the Alexa Skills
 You can add all of our interview skills, like so:
