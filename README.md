@@ -10,11 +10,13 @@ You can add all of our interview skills, like so:
 * "Alexa, add the TechnicalInterview skill."
 * "Alexa, add the TextMyPartner skill."
 
-OR - you can go to the Alexa Skills page and download the skills from there.
+OR - you can go to the [Alexa Skills page](https://www.amazon.com/b?ie=UTF8&node=13727921011) and download the skills from there.
 
-You can download the Alexa App on your phone as well.
+You can download the [Alexa App on your phone](https://www.amazon.com/gp/help/customer/display.html?nodeId=201602060) as well.
 
-If you do not have a Dot, Echo, or Tap, you can you echoism.io instead. It's free to use Alexa itself. You can also create a piece of hardware via adding Alexa to a RaspberryPi. 
+If you do not have a Dot, Echo, or Tap, you can you [echoism.io](https://echosim.io/) instead. It's free to use Alexa itself. 
+
+You can also create a piece of hardware via adding [Alexa to a RaspberryPi](https://github.com/alexa/alexa-avs-sample-app/wiki/Raspberry-Pi). 
 
 ### Interview Tips
 
@@ -28,8 +30,6 @@ Alexa: "Arrive 10 to 15 minutes early."
 ### Behavior Interview
 
 ### Technical Interview
-
-### Text My Partner
 
 ## Submit Interview Questions and Answers on Interview Overflow
 
