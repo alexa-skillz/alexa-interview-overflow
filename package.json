@@ -1,0 +1,52 @@
+{
+  "name": "alexa-interview-overflow",
+  "version": "0.1.0",
+  "description": "Gathering user-generated interview questions and answers for our Alexa interview skill(s).",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "istanbul cover mocha",
+    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "gulp": "gulp",
+    "lint": "gulp lint",
+    "debug": "DEBUG='alexa-skillz*' mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexa-skillz/alexa-interview-overflow.git"
+  },
+  "keywords": [],
+  "author": "Britt, Peter, Megan, Jonathan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alexa-skillz/alexa-interview-overflow/issues"
+  },
+  "homepage": "https://github.com/alexa-skillz/alexa-interview-overflow#readme",
+  "dependencies": {
+    "aws-sdk": "^2.7.21",
+    "bcrypt": "^1.0.2",
+    "bluebird": "^3.4.7",
+    "body-parser": "^1.15.2",
+    "cors": "^2.8.1",
+    "debug": "^2.6.0",
+    "del": "^2.2.2",
+    "dotenv": "^2.0.0",
+    "express": "^4.14.0",
+    "http-errors": "^1.5.1",
+    "jsonwebtoken": "^7.2.1",
+    "mongoose": "^4.7.6",
+    "morgan": "^1.7.0",
+    "multer": "^1.2.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "coveralls": "^2.11.15",
+    "gulp": "^3.9.1",
+    "gulp-cache": "^0.4.5",
+    "gulp-eslint": "^3.0.1",
+    "gulp-istanbul": "^1.1.1",
+    "gulp-mocha": "^3.0.1",
+    "mocha": "^3.2.0",
+    "superagent": "^3.3.1"
+  }
+}
