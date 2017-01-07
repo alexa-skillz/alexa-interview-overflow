@@ -9,6 +9,7 @@ const jsonParser = require('body-parser').json();
 const Question = require('../model/question.js');
 const questionRouter = module.exports = Router();
 
+// Abstracts questionID and error handling
 questionRouter.param('questionID', function(req, res, next, questionID) {
   Question.findById(questionID, function(err, doc) {
     if(err) return next(err);
@@ -31,7 +32,7 @@ questionRouter.post('/api/questions', jsonParser, function(req, res, next) {
   .catch(next);
 });
 
-// // GET api/questions/:questionID - route for a specific questionID
+// GET api/questions/:questionID - route for a specific questionID
 questionRouter.get('/api/questions/:questionID', function(req, res) {
   debug('GET: /api/questions/:questionID');
 
