@@ -2,7 +2,7 @@
   "name": "alexa-interview-overflow",
   "version": "0.1.0",
   "description": "Gathering user-generated interview questions and answers for our Alexa interview skill(s).",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "test": "istanbul cover mocha",
