@@ -1,12 +1,14 @@
 'use strict';
 
 const crypto = require('crypto');
-const bcrypt = require('bcrype');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const createError = require('http-errors');
 const Promise = require('bluebird');
 const debug = require('debug')('alexa-skillz:user');
+
+mongoose.Promise = Promise;
 
 const Schema = mongoose.Schema;
 
