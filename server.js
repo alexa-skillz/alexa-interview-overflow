@@ -1,10 +1,10 @@
 'use strict';
 
-const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const express = require('express');
 const authRouter = require('./route/auth-router.js');
 const debug = require('debug')('alexa-skillz:server');
 
