@@ -7,7 +7,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const debug = require('debug')('alexa-skillz:server');
 
-const questionRouter = require('./router/question-router.js');
+const questionRouter = require('./route/question-router.js');
 const errors = require('./lib/error-middleware.js');
 
 dotenv.load();
