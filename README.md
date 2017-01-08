@@ -100,7 +100,39 @@ X-Powered-By: Express
 }
 ```
 
-### Test the API (GET)
+### Test the API (GET All Questions)
+
+To GET a list of all questions sorted in the order they are created, do the following:
+
+1. Make a GET request, like this example: `http :3000/api/questions/`.
+
+2. You should get a JSON response with a `200` status code, like this example:
+
+``` javascript
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Content-Length: 271
+Content-Type: application/json; charset=utf-8
+Date: Sun, 08 Jan 2017 23:24:46 GMT
+ETag: W/"10f-V4YbpwjRpYDgg9+KAMuF4A"
+X-Powered-By: Express
+
+[
+  "5872c99fb5c9e5247518d508",
+  "5872c98352171523b5655eac",
+  "5872c97752171523b5655eab",
+  "5872c96952171523b5655eaa",
+  "5872c888cdadcf22f0c67961",
+  "5872c875cdadcf22f0c67960",
+  "5872c83256bfac22694be899",
+  "5872bd2aec2c4d1f189d1cf2",
+  "5871af18dbd6fa7ff8f49344",
+  "5871a3f83868de75ee8456e1"
+]
+```
+
+### Test the API (GET a Specific Question)
 
 After making a POST, you can make a GET request by grabbing the `_id` from the POST request and adding it as a param to the url. Don't forget to grab your token too.
 

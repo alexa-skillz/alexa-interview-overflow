@@ -38,7 +38,7 @@ questionRouter.get('/api/questions', function(req, res, next) {
 
   Question.find()
   .sort({ created: -1 })
-  .then( arrayOfQuestions => res.send(arrayOfQuestions.map(questions => questions._id)) )
+  .then( arrayOfQuestions => res.json(arrayOfQuestions.map(questions => questions._id)) )
   .catch(next);
 });
 
