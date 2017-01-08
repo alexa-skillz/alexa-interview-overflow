@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "DEBUG='alexa-skillz*' node server.js",
-    "test": "DEBUG='alexa-skillz*' istanbul cover mocha",
+    "test": "istanbul cover mocha",
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "gulp": "gulp",
     "lint": "gulp lint",
