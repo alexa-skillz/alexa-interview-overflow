@@ -5,8 +5,11 @@ const cors = require('cors');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const express = require('express');
-const authRouter = require('./route/auth-router.js');
 const debug = require('debug')('alexa-skillz:server');
+
+const authRouter = require('./route/auth-router.js');
+const questionRouter = require('./route/question-router.js');
+const errors = require('./lib/error-middleware.js');
 
 const app = express();
 
@@ -19,6 +22,8 @@ app.use(cors());
 app.use(morgan('dev'));
 
 app.use(authRouter);
+app.use(questionRouter);
+app.use(errors);
 
 app.listen(PORT, () => {
   debug(`server is up at port: ${PORT}`);
