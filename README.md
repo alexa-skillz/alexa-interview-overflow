@@ -1,4 +1,4 @@
-![alt img](https://travis-ci.org/alexa-skillz/alexa-interview-overflow.svg?branch=staging)
+![alt img](https://travis-ci.org/alexa-skillz/alexa-interview-overflow.svg?branch=staging) ![alt img](https://david-dm.org/alexa-skillz/alexa-interview-overflow.svg) [![Coverage Status](https://coveralls.io/repos/github/alexa-skillz/alexa-interview-overflow/badge.svg)](https://coveralls.io/github/alexa-skillz/alexa-interview-overflow)
 
 # Interview Overflow
 Gathering user-generated interview questions and answers for our Alexa interview skill(s).
