@@ -15,7 +15,7 @@ const server = require('../server.js');
 const url = `http://localhost:${process.env.PORT}`;
 
 const exampleUser = {
-  name: 'examplename',
+  username: 'examplename',
   password: '1234',
   email: 'test@test.com'
 };
@@ -29,7 +29,7 @@ describe('Auth Routes', function() {
     serverToggle.serverOff(server, done);
   });
 
-  describe('POST: /api/signin', function() {
+  describe('POST: /api/signup', function() {
     describe('with a valid body', function() {
       after( done => {
         User.remove({})
@@ -37,7 +37,7 @@ describe('Auth Routes', function() {
         .catch(done);
       });
       it('should return a token', done => {
-        request.post(`${url}/api/signin`)
+        request.post(`${url}/api/signup`)
         .send(exampleUser)
         .end((err, res) => {
           if(err) return done(err);
@@ -49,7 +49,7 @@ describe('Auth Routes', function() {
     });
     describe('with an invalid request', function() {
       it('should return a bad request', done => {
-        request.post(`${url}/api/signin`)
+        request.post(`${url}/api/signup`)
         .send({username: 'test name', password: '1234'})
         .end((err, res) => {
           expect(err).to.be.an('error');
@@ -60,7 +60,7 @@ describe('Auth Routes', function() {
     });
     describe('with an invalid route', function() {
       it('should return a not found', done => {
-        request.post(`${url}/api/invalide`)
+        request.post(`${url}/api/invalid`)
         .send(exampleUser)
         .end((err, res) => {
           expect(err).to.be.an('error');
@@ -71,7 +71,7 @@ describe('Auth Routes', function() {
     });
   });
   describe('GET /api/signin', function() {
-    before( done => {
+    beforeEach( done => {
       let user = new User(exampleUser);
       user.generatePasswordHash(exampleUser.password)
       .then( user => user.save())
@@ -81,7 +81,7 @@ describe('Auth Routes', function() {
       })
       .catch(done);
     });
-    after( done => {
+    afterEach( done => {
       User.remove({})
       .then( () => done())
       .catch(done);
@@ -101,7 +101,7 @@ describe('Auth Routes', function() {
     describe('with an invalid request', function() {
       it('should return a bad request',done => {
         request.get(`${url}/api/signin`)
-        .auth('exampleuser', '1111')
+        .auth('examplename', '1111')
         .end((err, res) => {
           expect(err).to.be.an('error');
           expect(res.status).to.equal(401);
@@ -109,7 +109,7 @@ describe('Auth Routes', function() {
         });
       });
     });
-    describe('with and invalide route', function() {
+    describe('with and invalid route', function() {
       it('should return a not found', done => {
         request.get(`${url}/api/invalid`)
         .auth('examplename', '1234')
