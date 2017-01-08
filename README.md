@@ -1,4 +1,4 @@
-![alt img]https://travis-ci.org/alexa-skillz/alexa-interview-overflow.svg?branch=staging
+![alt img](https://travis-ci.org/alexa-skillz/alexa-interview-overflow.svg?branch=staging)
 
 # Interview Overflow
 Gathering user-generated interview questions and answers for our Alexa interview skill(s).
