@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 
 const questionSchema = Schema({
   content: { type: String, required: true },
-  created: { type: Date, required: true, default: Date.now },
+  created: { type: Date, required: true, default: Date.now }
   // answers: [answerSchema],
 });
 
