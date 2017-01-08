@@ -38,3 +38,19 @@ questionRouter.get('/api/questions/:questionID', function(req, res) {
 
   res.json(req.question);
 });
+
+// UPDATE api/questions/:questionID - route to update a specific questionID
+questionRouter.put('/api/questions/:questionID', jsonParser, (req, res) => {
+  debug('PUT: /api/questions/:questionID');
+
+  Question.findByIdAndUpdate(req.question.id, req.body, {new:true})
+  .then( question => res.json(question));
+});
+
+// DELETE api/questions/:questionID - route to delete a specific questionID
+questionRouter.delete('/api/questions/:questionID', (req, res) => {
+  debug('DELETE: /api/questions/:questionID');
+
+  Question.findByIdAndRemove(req.question.id)
+  .then( () => res.status(204).send());
+});
