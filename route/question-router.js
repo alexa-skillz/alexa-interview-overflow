@@ -28,18 +28,28 @@ questionRouter.post('/api/questions', jsonParser, function(req, res, next) {
   debug('POST: /api/questions');
 
   new Question(req.body).save()
-  .then( question => res.json(question))
+  .then( question => res.json(question) )
   .catch(next);
 });
 
-// GET api/questions/:questionID - route for a specific questionID
+// GET  api/questions - route for getting all questions in the questions collection
+questionRouter.get('/api/questions', function(req, res, next) {
+  debug('GET: /api/questions');
+
+  Question.find()
+  .sort({ created: -1 })
+  .then( arrayOfQuestions => res.send(arrayOfQuestions.map(questions => questions._id)) )
+  .catch(next);
+});
+
+// GET api/questions/:questionID - route for getting a specific questionID
 questionRouter.get('/api/questions/:questionID', function(req, res) {
   debug('GET: /api/questions/:questionID');
 
   res.json(req.question);
 });
 
-// UPDATE api/questions/:questionID - route to update a specific questionID
+// PUT api/questions/:questionID - route to update a specific questionID
 questionRouter.put('/api/questions/:questionID', jsonParser, (req, res) => {
   debug('PUT: /api/questions/:questionID');
 
