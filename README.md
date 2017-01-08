@@ -1,6 +1,7 @@
-![alt img](https://travis-ci.org/alexa-skillz/alexa-interview-overflow.svg?branch=staging) ![alt img](https://david-dm.org/alexa-skillz/alexa-interview-overflow.svg) [![Coverage Status](https://coveralls.io/repos/github/alexa-skillz/alexa-interview-overflow/badge.svg)](https://coveralls.io/github/alexa-skillz/alexa-interview-overflow)
-
 # Interview Overflow
+
+[![Build Status](https://travis-ci.org/alexa-skillz/alexa-interview-overflow.svg?branch=staging)](https://travis-ci.org/alexa-skillz/alexa-interview-overflow) ![alt img](https://david-dm.org/alexa-skillz/alexa-interview-overflow.svg) [![Coverage Status](https://coveralls.io/repos/github/alexa-skillz/alexa-interview-overflow/badge.svg)](https://coveralls.io/github/alexa-skillz/alexa-interview-overflow)
+
 Gathering user-generated interview questions and answers for our Alexa interview skill(s).
 
 ## Submit Interview Questions and Answers on Interview Overflow
@@ -25,6 +26,7 @@ Now, type the following in your command line:
 ```
 PORT='3000'
 MLAB_MONGO_URI='mongodb://<your_db_username>:<your_db_password>@ds157288.mlab.com:57288/alexa'
+APP_SECRET='coolsecret'
 ```
 
 These are your environment variables. Be sure to add your `.env` file to your `.gitignore` since you want to keep this information secret. Shhh...
@@ -34,7 +36,7 @@ You will now see the phrase "server is up at port: 3000" if you have not already
 ## SignUp
 ### Test the API (POST)
 
-1. Open a new terminal located at the root of this project and type `http POST localhost:3000/api/signup username="user2" password="password2" email="testing2@test.com"`
+1. Open a new terminal located at the root of this project and type `http POST :3000/api/signup username="user2" password="password2" email="testing2@test.com"`
 2. You should get a JSON response with a `200` status code, and a token for future authentication, like this example:
 
 ``` javascript
@@ -55,7 +57,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImQ4OTM4M2E2ZjM1OGYyMWUyY2UwNGY
 
 After making a POST, you can make a GET request by signing in.
 
-1. Make a GET request, like this example: `http GET localhost:3000/api/signin -a user3:password3` since
+1. Make a GET request, like this example: `http GET :3000/api/signin -a user3:password3` since
 upon splitting off the end of the Basic base64 string, we can transform this into a UTF-8 string and grab the username and password as they are now available and split with a : --
 ex: username:password. The `-a` allows for authorization, as explained [here](http://blog.mashape.com/postman-httpie-test-apis/).
 
@@ -77,7 +79,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImQ4OTM4M2E2ZjM1OGYyMWUyY2UwNGY
 ## Questions
 ### Test the API (POST)
 
-1. Open a new terminal located at the root of this project, grab the token, and type `http POST localhost:3000/api/questions content="What is this?"`
+1. Open a new terminal located at the root of this project, grab the token, and type `http POST :3000/api/questions content="What is this?"`
 2. You should get a JSON response with a `200` status code and a response, like this example:
 
 ``` javascript
@@ -102,7 +104,7 @@ X-Powered-By: Express
 
 After making a POST, you can make a GET request by grabbing the `_id` from the POST request and adding it as a param to the url. Don't forget to grab your token too.
 
-1. Make a GET request, like this example: `http localhost:3000/api/questions/5871a3f83868de75ee8456e1`.
+1. Make a GET request, like this example: `http :3000/api/questions/5871a3f83868de75ee8456e1`.
 
 2. You should get a JSON response with a `200` status code, like this example:
 
@@ -110,20 +112,75 @@ After making a POST, you can make a GET request by grabbing the `_id` from the P
 HTTP/1.1 200 OK
 Access-Control-Allow-Origin: *
 Connection: keep-alive
-Content-Length: 145
+Content-Length: 105
 Content-Type: application/json; charset=utf-8
-Date: Wed, 04 Jan 2017 05:52:17 GMT
-ETag: W/"91-KaSGTNMILzMoRXFQyGu19Q"
+Date: Sun, 08 Jan 2017 21:11:46 GMT
+ETag: W/"69-4W3FOGa7pgTVxmlJvUQHfQ"
 X-Powered-By: Express
 
 {
     "__v": 0,
-    "_id": "586c7f5c7b26425f3c8f3dd0",
-    "created": "2017-01-04T05:49:55.717Z",
-    "desc": "description",
-    "name": "meow",
-    "userID": "586c7e0f7b26425f3c8f3dc7"
+    "_id": "5872ab02ee1492148dabdee3",
+    "content": "What is this?",
+    "created": "2017-01-08T21:11:30.839Z"
 }
+```
+
+### Test the API (PUT)
+
+After making a POST, you can make a PUT request by grabbing the `_id` from the POST or GET request and adding it as a param to the url. Don't forget to grab your token too.
+
+1. Make a PUT request, like this example: `http PUT :3000/api/questions/5872ab02ee1492148dabdee3 content="updated"`.
+
+2. You should get a JSON response with a `200` status code, like this example:
+
+``` javascript
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Content-Length: 99
+Content-Type: application/json; charset=utf-8
+Date: Sun, 08 Jan 2017 21:12:15 GMT
+ETag: W/"63-pk1qDVC613Kbd2w0Qyp5Og"
+X-Powered-By: Express
+
+{
+    "__v": 0,
+    "_id": "5872ab02ee1492148dabdee3",
+    "content": "updated",
+    "created": "2017-01-08T21:11:30.839Z"
+}
+```
+
+### Test the API (DELETE)
+
+After making a POST, you can make a DELETE request by grabbing the `_id` from the POST or GET request and adding it as a param to the url.
+
+1. Make a DELETE request, like this example: `http DELETE :3000/api/questions/5872ab02ee1492148dabdee3`.
+
+2. You should get a JSON response with a `204` status code, like this example:
+
+``` javascript
+HTTP/1.1 204 No Content
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Date: Sun, 08 Jan 2017 21:14:06 GMT
+X-Powered-By: Express
+```
+
+3. If you make another GET request to this particular id param, you will get a `404` status code, like this example:
+
+``` javascript
+HTTP/1.1 404 Not Found
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Content-Length: 5
+Content-Type: text/html; charset=utf-8
+Date: Sun, 08 Jan 2017 21:14:17 GMT
+ETag: W/"5-kCsNVf3e9vjWUf4QNbfUvQ"
+X-Powered-By: Express
+
+Error
 ```
 ## Future Work / Ideas
 
