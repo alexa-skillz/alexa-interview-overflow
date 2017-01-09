@@ -1,7 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const answerSchema = require('./model/answer.js');
+const answerSchema = require('./answer.js');
 
 const Schema = mongoose.Schema;
 
