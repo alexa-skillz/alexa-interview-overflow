@@ -25,6 +25,8 @@ app.use(authRouter);
 app.use(questionRouter);
 app.use(errors);
 
-app.listen(PORT, () => {
+const server = module.exports = app.listen(PORT, () => {
   debug(`server is up at port: ${PORT}`);
 });
+
+server.isRunning = true;
