@@ -6,9 +6,9 @@ const createError = require('http-errors');
 const debug = require('debug')('alexa-skillz:question-router');
 
 const Question = require('../model/question.js');
-const bearerAuth = require('../lib/bearer-middleware');
+const bearerAuth = require('../lib/bearer-middleware.js');
 
-const questionRouter = module.exports = Router();
+const questionRouter = module.exports = new Router();
 
 // Abstracts questionID and error handling
 questionRouter.param('questionID', function(req, res, next, questionID) {
@@ -74,3 +74,16 @@ questionRouter.delete('/api/questions/:questionID', bearerAuth, (req, res, next)
   })
   .catch(err => next(createError(404, err.message)));
 });
+
+// ANSWER ROUTES ----------------------------------------------------
+
+// questionRouter.post('/api/questions/:questionID/answers', jsonParser, function(req, res, next) {
+//   debug('POST: /api/questions/:questionID/answers');
+//
+//   req.question.answers.push(req.body);
+//   req.question.save(function(err, question) {
+//     if(err) return next(err);
+//     res.status(201);
+//     res.json(question);
+//   });
+// });
