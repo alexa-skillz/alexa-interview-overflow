@@ -1,7 +1,6 @@
 'use strict';
 
 const mongoose = require('mongoose');
-// const questionSchema = require('./model/question.js');
 
 const Schema = mongoose.Schema;
 
@@ -25,5 +24,3 @@ answerSchema.method('vote', function(vote, callback) {
   }
   this.parent().save(callback);
 });
-
-module.exports = mongoose.model('answer', answerSchema);
