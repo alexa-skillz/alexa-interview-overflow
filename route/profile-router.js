@@ -1,21 +1,23 @@
 'use strict';
 
 const Router = require('express').Router;
-// const jsonParser = require('body-parser');
-// const createError = require('http-errors');
+const createError = require('http-errors');
 const bearerAuth = require('../lib/bearer-middleware.js');
 const debug = require('debug')('alexa-skillz:profile-router');
 
-// const User = require('../model/user.js');
-// const Question = require('../model/question.js');
+const User = require('../model/user.js');
 const Profile = require('../model/profile.js');
 
 const profileRouter = module.exports = Router();
 
-profileRouter.get('/api/profile/me', bearerAuth, function(request, response, next) {
-  debug('GET: /api/users/me');
+profileRouter.get('/api/profile/me', bearerAuth, function(request, response, next){
+  debug('GET: /api/profile/me');
 
-  Profile.findById(request.params.id)
+  User.findById(request.user._id)
+  .catch(err => Promise.reject(createError(404, err.message)))
+  .then(() => {
+    return new Profile(request.user);
+  })
   .then(profile => response.json(profile))
   .catch(next);
 });
