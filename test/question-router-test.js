@@ -14,11 +14,11 @@ const url = `http://localhost:${process.env.PORT}`;
 
 mongoose.Promise = Promise;
 
-const exampleUser = {
-  username: 'exampleuser',
-  password: '1234',
-  email: 'exampleuser@test.com'
-};
+// const exampleUser = {
+//   username: 'exampleuser',
+//   password: '1234',
+//   email: 'exampleuser@test.com'
+// };
 
 const exampleQuestion = {
   content: 'test question'
