@@ -4,11 +4,8 @@ const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
 const createError = require('http-errors');
 const debug = require('debug')('alexa-skillz:question-router');
-
 const Question = require('../model/question.js');
-
 const bearerAuth = require('../lib/bearer-middleware.js');
-
 const questionRouter = module.exports = new Router();
 
 // POST api/questions - route for creating questions
@@ -26,7 +23,7 @@ questionRouter.get('/api/questions', function(req, res, next) {
   debug('GET: /api/questions');
 
   Question.find()
-  .sort({ created: -1 })
+  // .populate('answers')
   .then( arrayOfQuestions => res.json(arrayOfQuestions.map(questions => questions._id)) )
   .catch(next);
 });
@@ -36,7 +33,8 @@ questionRouter.get('/api/questions/:id', function(req, res, next) {
   debug('GET: /api/questions/:id');
 
   Question.findById(req.params.id)
-  .then( questions => { res.json(questions); })
+  // .populate('answers')
+  .then( question => { res.json(question); })
   .catch(err => next(createError(404, err.message)));
 });
 
