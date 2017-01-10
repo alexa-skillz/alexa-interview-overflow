@@ -3,55 +3,54 @@
 const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
 const createError = require('http-errors');
-const debug = require('debug')('alexa-skillz:question-router');
+const debug = require('debug')('question:question-router');
 const Question = require('../model/question.js');
-const bearerAuth = require('../lib/bearer-middleware.js');
+
 const questionRouter = module.exports = new Router();
 
-// POST api/questions - route for creating questions
-questionRouter.post('/api/questions', bearerAuth, jsonParser, function(req, res, next) {
-  debug('POST: /api/questions');
+// POST /question - Route for creating questions
+questionRouter.post('/api/question', jsonParser, (request, response, next) => {
+  debug('POST: /api/question');
 
-  req.body.userID = req.user._id;
-  new Question(req.body).save()
-  .then( question => res.json(question))
+  new Question(request.body).save()
+  .then(question => response.json(question))
   .catch(next);
 });
 
-// GET  api/questions - route for getting all questions in the questions collection
-questionRouter.get('/api/questions', function(req, res, next) {
-  debug('GET: /api/questions');
+// GET /question/:id - Route for specific questions
+questionRouter.get('/api/question/:id', (request, response, next) => {
+  debug('GET: /api/question/:id');
+
+  Question.findById(request.params.id)
+  .populate('answers')
+  .then(question => response.json(question))
+  .catch(next);
+});
+
+// GET /question - Route for questions collection
+questionRouter.get('/api/question', (request, response, next) => {
+  debug('GET: /api/question');
 
   Question.find()
   // .populate('answers')
-  .then( arrayOfQuestions => res.json(arrayOfQuestions.map(questions => questions._id)) )
+  .then(arrayOfQuestions => response.json(arrayOfQuestions.map(ele => ele._id)))
   .catch(next);
 });
 
-// GET api/questions/:questionID - route for getting a specific questionID
-questionRouter.get('/api/questions/:id', function(req, res, next) {
-  debug('GET: /api/questions/:id');
+// GET /question/:id - Route for updating a specific question
+questionRouter.put('/api/question/:id', jsonParser, (request, response, next) => {
+  debug('PUT: /api/question/:id');
 
-  Question.findById(req.params.id)
-  // .populate('answers')
-  .then( question => { res.json(question); })
-  .catch(err => next(createError(404, err.message)));
+  Question.findByIdAndUpdate(request.params.id, request.body, {new: true})
+  .then(question => response.json(question))
+  .catch(err => next(createError(400, err.message)));
 });
 
-// PUT api/questions/:questionID - route to update a specific questionID
-questionRouter.put('/api/questions/:id', bearerAuth, jsonParser, function(req, res, next) {
-  debug('PUT: /api/questions/:id');
+// GET /question/:id - Route for deleting a specific question
+questionRouter.delete('/api/question/:id', (request, response, next) => {
+  debug('DELETE: /api/question/:id');
 
-  Question.findByIdAndUpdate(req.params.id, req.body, {new: true})
-  .then( question => res.json(question))
-  .catch(err => next(createError(404, err.message)));
-});
-
-// DELETE api/questions/:questionID - route to delete a specific questionID
-questionRouter.delete('/api/questions/:id', bearerAuth, function(req, res, next) {
-  debug('DELETE: /api/questions/:id');
-
-  Question.findByIdAndRemove(req.params.id)
-  .then(() => res.status(204).send('deleted questions'))
-  .catch(err => next(createError(404, err.message)));
+  Question.findByIdAndRemove(request.params.id)
+  .then(() => response.status(204).send())
+  .catch(next);
 });
