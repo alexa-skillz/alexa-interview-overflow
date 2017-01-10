@@ -24,6 +24,19 @@ questionRouter.param('questionID', function(req, res, next, questionID) {
   });
 });
 
+// Abstracts answerID and error handling
+questionRouter.param('answerID', function(req, res, next, answerID) {
+  console.log('SEE ME?');
+  req.answer = req.question.answer.answerID(answerID);
+  if(!req.answer) {
+    err = new Error('Not Found');
+    err.status = 404;
+    return next(err);
+  }
+  console.log('req.answer is', req.answer);
+  next();
+});
+
 // POST api/questions - route for creating questions
 questionRouter.post('/api/questions', bearerAuth, jsonParser, function(req, res, next) {
   debug('POST: /api/questions');
@@ -77,13 +90,13 @@ questionRouter.delete('/api/questions/:questionID', bearerAuth, (req, res, next)
 
 // ANSWER ROUTES ----------------------------------------------------
 
-// questionRouter.post('/api/questions/:questionID/answers', jsonParser, function(req, res, next) {
-//   debug('POST: /api/questions/:questionID/answers');
-//
-//   req.question.answers.push(req.body);
-//   req.question.save(function(err, question) {
-//     if(err) return next(err);
-//     res.status(201);
-//     res.json(question);
-//   });
-// });
+questionRouter.post('/api/questions/:questionID/answers', jsonParser, function(req, res, next) {
+  debug('POST: /api/questions/:questionID/answers');
+
+  req.question.save(function(err, question) {
+    if(err) return next(err);
+    res.status(201);
+    res.json(question);
+  });
+  req.question.answers.push(req.body);
+});

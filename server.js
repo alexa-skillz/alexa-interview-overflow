@@ -23,7 +23,7 @@ app.use(cors());
 app.use(morgan('dev'));
 
 app.use(authRouter);
-app.use(answerRouter);
+// app.use(answerRouter);
 app.use(questionRouter);
 app.use(errors);
 
