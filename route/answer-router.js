@@ -5,13 +5,14 @@ const jsonParser = require('body-parser').json();
 const createError = require('http-errors');
 const debug = require('debug')('question:answer');
 
+const bearerAuth = require('../lib/bearer-middleware.js');
 const Answer = require('../model/answer.js');
 const Question = require('../model/question.js');
 
 const answerRouter = module.exports = new Router();
 
 // POST /question/:id/answer - Route for creating an answer
-answerRouter.post('/api/question/:questionID/answer', jsonParser, (request, response, next) => {
+answerRouter.post('/api/question/:questionID/answer', bearerAuth, jsonParser, (request, response, next) => {
   debug('POST: /api/question/:questionID/answer');
 
   Question.findByIdAndAddAnswer(request.params.questionID, request.body)
@@ -41,7 +42,7 @@ answerRouter.get('/api/answer', (request, response, next) => {
 });
 
 // PUT /answer/:id - Edit a specific answer
-answerRouter.put('/api/answer/:id', jsonParser, (request, response, next) => {
+answerRouter.put('/api/answer/:id', bearerAuth, jsonParser, (request, response, next) => {
   debug('PUT: /api/answer/:id');
 
   Answer.findByIdAndUpdate(request.params.id, request.body, {new: true})
@@ -50,7 +51,7 @@ answerRouter.put('/api/answer/:id', jsonParser, (request, response, next) => {
 });
 
 // PUT /answer/:id - Delete a specific answer
-answerRouter.delete('/api/answer/:id', (request, response, next) => {
+answerRouter.delete('/api/answer/:id', bearerAuth, (request, response, next) => {
   debug('DELETE: /api/answer/:id');
 
   Question.findByIdAndRemoveAnswer(request.params.id)
@@ -64,3 +65,5 @@ answerRouter.delete('/api/answer/:id', (request, response, next) => {
 // answerRouter.post('/api/question/:questionID/answer/:id/vote-:dir', jsonParser, (request, response, next) => {
 //   debug('/api/question/:questionID/answer/:id/vote-:dir');
 // });
+
+// TODO: explore why we get a 200 null response when hitting route for a deleted answer

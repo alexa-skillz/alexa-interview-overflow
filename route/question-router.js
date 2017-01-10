@@ -3,6 +3,7 @@
 const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
 const createError = require('http-errors');
+const bearerAuth = require('../lib/bearer-middleware.js');
 const debug = require('debug')('question:question-router');
 const Question = require('../model/question.js');
 
@@ -10,9 +11,10 @@ const Question = require('../model/question.js');
 const questionRouter = module.exports = new Router();
 
 // POST /question - Route for creating questions
-questionRouter.post('/api/question', jsonParser, (request, response, next) => {
+questionRouter.post('/api/question', bearerAuth, jsonParser, (request, response, next) => {
   debug('POST: /api/question');
 
+  request.body.userID = request.user._id;
   new Question(request.body).save()
   .then(question => response.json(question))
   .catch(next);
@@ -38,9 +40,10 @@ questionRouter.get('/api/question', (request, response, next) => {
 });
 
 // GET /question/:id - Route for updating a specific question
-questionRouter.put('/api/question/:id', jsonParser, (request, response, next) => {
+questionRouter.put('/api/question/:id', bearerAuth, jsonParser, (request, response, next) => {
   debug('PUT: /api/question/:id');
 
+  request.body.userID = request.user._id;
   Question.findByIdAndUpdate(request.params.id, request.body, {new: true})
   .then(question => response.json(question))
   .catch(err => next(createError(400, err.message)));
