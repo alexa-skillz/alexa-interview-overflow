@@ -8,6 +8,7 @@ const express = require('express');
 const debug = require('debug')('alexa-skillz:server');
 
 const authRouter = require('./route/auth-router.js');
+const profileRouter = require('./route/profile-router.js');
 const questionRouter = require('./route/question-router.js');
 const answerRouter = require('./route/answer-router.js');
 const errors = require('./lib/error-middleware.js');
@@ -23,8 +24,9 @@ app.use(cors());
 app.use(morgan('dev'));
 
 app.use(authRouter);
-// app.use(answerRouter);
+app.use(answerRouter);
 app.use(questionRouter);
+app.use(profileRouter);
 app.use(errors);
 
 const server = module.exports = app.listen(PORT, () => {
