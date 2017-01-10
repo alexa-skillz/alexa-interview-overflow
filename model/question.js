@@ -20,12 +20,14 @@ Question.findByIdAndAddAnswer = function(id, answer) {
 
   return Question.findById(id)
   .then(question => {
+    debug(question);
     answer.questionID = question._id;
     this.tempQuestion = question;
     return new Answer(answer).save();
   })
   .then(answer => {
-    this.tempQuestion.answers.push(answer._id);
+    debug(this.tempQuestion.answers);
+    this.tempQuestion.answersArray.push(answer._id);
     this.tempAnswer = answer;
     return this.tempQuestion.save();
   })
@@ -45,11 +47,8 @@ Question.findByIdAndRemoveAnswer = function(id) {
   })
   .then(() => Question.findById(this.tempAnswer.questionID))
   .then( question => {
-    for(var i = 0; i < question.answers.length; i++) {
-      if(question.answers[i]._id === this.tempSong.albumID) {
-        return question.answers.splice(i, 1);
-      }
-    }
+    debug(question);
+    question.answersArray.splice(question.answersArray.indexOf(this.tempAnswer._id), 1);
     question.save();
   })
   .catch(err => Promise.reject(createError(404, err.message)));

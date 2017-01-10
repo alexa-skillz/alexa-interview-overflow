@@ -33,7 +33,6 @@ questionRouter.get('/api/question', (request, response, next) => {
   debug('GET: /api/question');
 
   Question.find()
-  // .populate('answers')
   .then(arrayOfQuestions => response.json(arrayOfQuestions.map(ele => ele._id)))
   .catch(next);
 });
@@ -47,11 +46,6 @@ questionRouter.put('/api/question/:id', jsonParser, (request, response, next) =>
   .catch(err => next(createError(400, err.message)));
 });
 
-// GET /question/:id - Route for deleting a specific question
-questionRouter.delete('/api/question/:id', (request, response, next) => {
-  debug('DELETE: /api/question/:id');
-
-  Question.findByIdAndRemove(request.params.id)
-  .then(() => response.status(204).send())
-  .catch(next);
-});
+// You can't delete a question, because other users probably add answer content
+// And we do not want others to delete questions or their associated answers
+// This is a business logic constraint

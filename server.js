@@ -18,6 +18,7 @@ const app = express();
 dotenv.load();
 const PORT = process.env.PORT || 3000;
 
+mongoose.Promise = Promise;
 mongoose.connect(process.env.MLAB_MONGO_URI);
 
 app.use(cors());

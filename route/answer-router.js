@@ -15,7 +15,10 @@ answerRouter.post('/api/question/:questionID/answer', jsonParser, (request, resp
   debug('POST: /api/question/:questionID/answer');
 
   Question.findByIdAndAddAnswer(request.params.questionID, request.body)
-  .then(answer => response.json(answer))
+  .then(answer => {
+    debug(answer);
+    return response.json(answer);
+  })
   .catch(next);
 });
 
