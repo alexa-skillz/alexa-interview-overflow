@@ -1,9 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const debug = require('debug')('alexa-skillz:answer');
 const Schema = mongoose.Schema;
-debug('answerSchema');
 
 const answerSchema = Schema({
   content: { type: String, required: true },

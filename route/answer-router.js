@@ -10,7 +10,6 @@ const Question = require('../model/question.js');
 
 const answerRouter = module.exports = new Router();
 
-
 // POST /question/:id/answer - Route for creating an answer
 answerRouter.post('/api/question/:questionID/answer', jsonParser, (request, response, next) => {
   debug('POST: /api/question/:questionID/answer');
@@ -59,3 +58,6 @@ answerRouter.delete('/api/answer/:id', (request, response, next) => {
 // TODO: POST /answer/:id/vote-up
 // TODO: POST /answer/:id/vote-down
 // Vote on a specific answer
+// answerRouter.post('/api/question/:questionID/answer/:id/vote-:dir', jsonParser, (request, response, next) => {
+//   debug('/api/question/:questionID/answer/:id/vote-:dir');
+// });

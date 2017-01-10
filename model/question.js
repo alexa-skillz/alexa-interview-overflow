@@ -44,8 +44,12 @@ Question.findByIdAndRemoveAnswer = function(id) {
     return Answer.findByIdAndRemove(answer._id);
   })
   .then(() => Question.findById(this.tempAnswer.questionID))
-  .then(question => {
-    question.answers.splice(question.answers.indexOf(this.tempAnswer._id), 1);
+  .then( question => {
+    for(var i = 0; i < question.answers.length; i++) {
+      if(question.answers[i]._id === this.tempSong.albumID) {
+        return question.answers.splice(i, 1);
+      }
+    }
     question.save();
   })
   .catch(err => Promise.reject(createError(404, err.message)));
