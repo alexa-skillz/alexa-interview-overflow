@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const answerSchema = Schema({
-  content: { type: String, required: true },
+  content: String,
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
   votes: { type: Number, default:0 }

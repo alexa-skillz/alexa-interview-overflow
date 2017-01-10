@@ -8,12 +8,10 @@ const debug = require('debug')('alexa-skillz:answer-router');
 const Question = require('../model/question.js');
 const Answer = require('../model/answer.js');
 
-// const questionRouter = require('question-router.js');
-
 const bearerAuth = require('../lib/bearer-middleware');
 
+// const questionRouter = module.exports = new Router();
 const answerRouter = module.exports = new Router();
-// const answerRouter = module.exports = Router();
 
 // Abstracts questionID and error handling
 answerRouter.param('questionID', function(req, res, next, questionID) {
@@ -25,35 +23,61 @@ answerRouter.param('questionID', function(req, res, next, questionID) {
       return next(err);
     }
     req.question = doc;
+    console.log('leaving');
     return next();
   });
 });
 
 // Abstracts answerID and error handling
-answerRouter.param('answerID', function(req, res, next, id) {
-  req.answer = req.question.answers.id(id);
-  if(!req.answer) {
-    err = new Error('Not Found');
-    err.status = 404;
-    return next(err);
-  }
+answerRouter.param('answerID', function(req, res, next, answerID) {
+  console.log('SEE ME?');
+  req.answer = req.question.answer.answerID(answerID);
+  // if(!req.answer) {
+  //   err = new Error('Not Found');
+  //   err.status = 404;
+  //   return next(err);
+  // }
+  console.log('req.answer is', req.answer);
   next();
 });
 
-// POST /api/questions/:questionID/answers/
+// POST /api/questions/:questionID/answers
+
+// answerRouter.post('/api/questions/:questionID/answers', jsonParser, function(req, res, next) {
+//   debug('POST: /api/questions/:questionID/answers');
+//
+//   req.question.answers.push(req.body);
+//   // req.body.userID = req.user._id;
+//   new Answer(req.body).save()
+//   .then( answer => res.json(answer) )
+//   .catch(next);
+// });
 
 answerRouter.post('/api/questions/:questionID/answers', jsonParser, function(req, res, next) {
   debug('POST: /api/questions/:questionID/answers');
 
   req.question.answers.push(req.body);
+  // console.log('::: req.question.answers is:', req.question.answers);
+  // console.log('::: answer is:', answer);
   req.question.save(function(err, question) {
     if(err) return next(err);
     res.status(201);
-    res.json(question);
+    console.log(':::', req.body);
+    console.log(question);
+    Question.findById(req.params.questionID, (err, q) => {
+      res.json(q);
+    });
+    // console.log('::: question is:', question);
   });
 });
 
-// // GET /questions/:questionID/answers/
+// GET /questions/:questionID/answers/
+
+answerRouter.get('/api/questions/:questionID/answers/:answerID', function(req, res) {
+  console.log('::: req.question.answers is', req.question.answers);
+  res.json(req.question.answers);
+});
+
 // answerRouter.get('/api/questions/:questionID/answers', function(req, res, next) {
 //   debug('GET: /api/questions/:questionID/answers');
 //
@@ -99,3 +123,19 @@ answerRouter.post('/api/questions/:questionID/answers', jsonParser, function(req
 //
 //
 // // POST /questions/:questionID/answers/:answerID/downvote
+
+
+// KEEEP ME WORKS KINDA
+
+// answerRouter.post('/api/questions/:questionID/answers', jsonParser, function(req, res, next) {
+//   debug('POST: /api/questions/:questionID/answers');
+//
+//   req.question.answers.push(req.body);
+//   req.question.save(function(err, question) {
+//     if(err) return next(err);
+//     res.status(201);
+//     console.log(':::', req.body);
+//     res.json(question);
+//     console.log('::: question is:', question);
+//   });
+// });
