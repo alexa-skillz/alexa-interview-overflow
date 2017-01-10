@@ -1,27 +1,21 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const answerSchema = require('./answer.js');
-
 const Schema = mongoose.Schema;
+const debug = require('debug')('answer:question');
 
 const questionSchema = Schema({
   content: { type: String, required: true },
   created: { type: Date, required: true, default: Date.now },
-  // userID: { type: mongoose.Schema.Types.ObjectId, required: true },
-  answers: [answerSchema]
+  userID: { type: mongoose.Schema.Types.ObjectId, required: true },
+  answersArray: [{ type: Schema.Types.ObjectId, ref: 'answer' }]
 });
 
-const sortAnswers = function(a, b) {
-  if(a.votes === b.votes) {
-    return b.updated = a.updated;
-  }
-  return b.votes - a.votes;
-};
-
-questionSchema.pre('save', function(next) {
-  this.answers.sort(sortAnswers);
-  next();
-});
+// const sortAnswers = function(a, b) {
+//   if(a.votes === b.votes) {
+//     return b.updated = a.updated;
+//   }
+//   return b.votes - a.votes;
+// };
 
 module.exports = mongoose.model('question', questionSchema);
