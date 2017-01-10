@@ -24,6 +24,16 @@ questionRouter.param('questionID', function(req, res, next, questionID) {
   });
 });
 
+questionRouter.param('answerID', function(req, res, next, id) {
+  req.answer = req.question.answers.id(id);
+  if(!req.answer) {
+    let err = new Error('Not Found');
+    err.status = 404;
+    return next(err);
+  }
+  next();
+});
+
 // POST api/questions - route for creating questions
 questionRouter.post('/api/questions', bearerAuth, jsonParser, function(req, res, next) {
   debug('POST: /api/questions');

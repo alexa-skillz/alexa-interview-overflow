@@ -20,7 +20,7 @@ gulp.task('test', ['pre-test'], function() {
 });
 
 gulp.task('lint', function() {
-  return gulp.src(['**/*.js', '!node_modules/**', '**/**/*.js'])
+  return gulp.src(['**/*.js', '!node_modules/**', '**/**/*.js', '!coverage/**'])
   .pipe(eslint())
   .pipe(eslint.format())
   .pipe(eslint.failAfterError());
