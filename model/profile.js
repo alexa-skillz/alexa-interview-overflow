@@ -9,7 +9,6 @@ const Schema = mongoose.Schema;
 const profileSchema = Schema({
   username: {type: mongoose.Schema.Types.ObjectId, ref: 'user'},
   userID: {type: mongoose.Schema.Types.ObjectId, ref: 'user'},
-  questionID: {type: Schema.Types.ObjectId, required: true},
   created: {type: Date, default: Date.now},
   profileName: {type: String, unique: true},
   bio: {type:String},

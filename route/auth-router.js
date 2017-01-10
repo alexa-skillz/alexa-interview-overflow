@@ -5,6 +5,7 @@ const Router = require('express').Router;
 const debug = require('debug')('alexa-skillz:auth-router');
 const User = require('../model/user.js');
 const basicAuth = require('../lib/basic-auth-middleware.js');
+// const Profile = require('../model/profile.js');
 
 const authRouter = module.exports = Router();
 
@@ -18,9 +19,11 @@ authRouter.post('/api/signup', jsonParser, function(req, res, next) {
 
   user.generatePasswordHash(password)
   .then( user => user.save())
+  // .then( user => user.findByIdAndAddProfile())
   .then( user => user.generateToken())
   .then( token => res.send(token))
   .catch(next);
+
 });
 
 authRouter.get('/api/signin', basicAuth, function(req, res, next) {
