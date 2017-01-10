@@ -9,7 +9,7 @@ const questionSchema = Schema({
   content: { type: String, required: true },
   created: { type: Date, required: true, default: Date.now },
   userID: { type: mongoose.Schema.Types.ObjectId, required: true },
-  // answers: [answerSchema]
+  answers: [answerSchema]
 });
 
 const sortAnswers = function(a, b) {
@@ -19,9 +19,7 @@ const sortAnswers = function(a, b) {
   return b.votes - a.votes;
 };
 
-// questionSchema.pre('save', function(next) {
-//   this.answers.sort(sortAnswers);
-//   next();
-// });
-
-module.exports = mongoose.model('question', questionSchema);
+questionSchema.pre('save', function(next) {
+  this.answers.sort(sortAnswers);
+  next();
+});

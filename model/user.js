@@ -8,9 +8,6 @@ const createError = require('http-errors');
 const Promise = require('bluebird');
 const debug = require('debug')('alexa-skillz:user');
 
-const questionSchema = require('./question.js');
-const answerSchema = require('./answer.js');
-
 mongoose.Promise = Promise;
 
 const Schema = mongoose.Schema;
