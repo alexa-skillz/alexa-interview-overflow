@@ -23,5 +23,3 @@ questionSchema.pre('save', function(next) {
   this.answers.sort(sortAnswers);
   next();
 });
-
-module.exports = mongoose.model('question', questionSchema);

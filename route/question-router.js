@@ -13,6 +13,7 @@ const questionRouter = module.exports = Router();
 // Abstracts questionID and error handling
 questionRouter.param('questionID', function(req, res, next, questionID) {
   Question.findById(questionID, function(err, doc) {
+    debug('questionFindById');
     if(err) return next(err);
     if(!doc) {
       err = new Error('Not Found');
@@ -39,8 +40,11 @@ questionRouter.post('/api/questions', bearerAuth, jsonParser, function(req, res,
   debug('POST: /api/questions');
 
   req.body.userID = req.user._id;
+  debug('req.body.userId', req.body);
   new Question(req.body).save()
-  .then( question => res.json(question) )
+  .then( question => {
+    debug('question', question);
+    res.json(question);})
   .catch(next);
 });
 
