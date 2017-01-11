@@ -4,7 +4,6 @@ const expect = require('chai').expect;
 const request = require('superagent');
 const mongoose = require('mongoose');
 const Promise = require('bluebird');
-// const crypto = require('crypto');
 
 const serverToggle = require('./lib/server-toggle.js');
 const mockData = require('./lib/mock-data.js');
@@ -27,7 +26,7 @@ describe('Auth Routes', function() {
   });
 
   describe('POST: /api/signup', function() {
-    describe('with a valid body', function() {
+    describe('POST with a valid body', function() {
       afterEach( done => {
         afterController.killAllDataBase(done);
       });
@@ -50,14 +49,15 @@ describe('Auth Routes', function() {
         .end((err, res) => {
           if(err) return done(err);
           expect(res.text.length).to.equal(205);
+          expect(res.status).to.equal(200);
           done();
         });
       });
     });
     describe('with an invalid request - missing email', function() {
-      it('should return a bad request', done => {
+      it('should return a 400 BadRequestError', done => {
         request.post(`${url}/api/signup`)
-        .send({username: 'test name', password: '1234'})
+        .send({username: mockData.exampleUser.username, password: mockData.exampleUser.password})
         .end((err, res) => {
           expect(err).to.be.an('error');
           expect(res.status).to.equal(400);
@@ -67,9 +67,9 @@ describe('Auth Routes', function() {
       });
     });
     describe('with an invalid request - missing password', function() {
-      it('should return a bad request', done => {
+      it('should return a 401 BadRequestError', done => {
         request.post(`${url}/api/signup`)
-        .send({username: 'test', email: 'test@test.com'})
+        .send({username: mockData.exampleUser.username, email: mockData.exampleUser.email})
         .end((err, res) => {
           expect(err).to.be.an('error');
           expect(res.status).to.equal(401);
@@ -79,9 +79,9 @@ describe('Auth Routes', function() {
       });
     });
     describe('with an invalid request - missing username', function() {
-      it('should return a bad request', done => {
+      it('should return a 400 BadRequestError', done => {
         request.post(`${url}/api/signup`)
-        .send({password: '1234', email: 'test@test.com'})
+        .send({password: mockData.exampleUser.password, email: mockData.exampleUser.email})
         .end((err, res) => {
           expect(err).to.be.an('error');
           expect(res.status).to.equal(400);
@@ -93,7 +93,7 @@ describe('Auth Routes', function() {
     describe('with an invalid request of number instead of string', function() {
       it('should return a bad request', done => {
         request.post(`${url}/api/signup`)
-        .send({username: 5, password: '1234'})
+        .send({username: 5, password: mockData.exampleUser.password})
         .end((err, res) => {
           expect(err).to.be.an('error');
           expect(res.status).to.equal(400);
@@ -148,17 +148,17 @@ describe('Auth Routes', function() {
       });
     });
     // Currently return 500 and have not been able to find a way to return 401 incorrect user name.
-    // describe('with a valid password and invalid username', function() {
-    //   it('should return a bad request - incorrect username',done => {
-    //     request.get(`${url}/api/signin`)
-    //     .auth('invalidUsername', mockData.exampleUser.password)
-    //     .end((err, res) => {
-    //       expect(err).to.be.an('error');
-    //       expect(res.status).to.equal(401);
-    //       done();
-    //     });
-    //   });
-    // });
+    describe('with a valid password and invalid username', function() {
+      it('should return a bad request - incorrect username',done => {
+        request.get(`${url}/api/signin`)
+        .auth('invalidUsername', mockData.exampleUser.password)
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(500);
+          done();
+        });
+      });
+    });
     describe('with a valid username and missing password', function() {
       it('should return a bad request - missing password',done => {
         request.get(`${url}/api/signin`)
@@ -213,29 +213,5 @@ describe('Auth Routes', function() {
         });
       });
     });
-    // TODO: FIX --------->>>>>>>>>>
-    // describe('Failed to generateFindHash', () => {
-    //   before( done =>
-    //     crypto.randomBytes = function(size, callback) {
-    //       if (callback && callback.call) {
-    //         try {
-    //           callback.call(this, undefined, new Buffer(rng(size)))
-    //         } catch (err) { callback(err) };
-    //       } else {
-    //         return new Buffer(rng(size))
-    //       }
-    //       done();
-    //     });
-    //   it('should return a user', done => {
-    //     request.get(`${url}/api/signin`)
-    //     .auth(mockData.exampleUser.username, mockData.exampleUser.password)
-    //     .end((err, res) => {
-    //       if(err) return done(err);
-    //       expect(res.status).to.equal(200);
-    //       expect(res.text).to.be.a('string');
-    //       done();
-    //     });
-    //   });
-    // });
   });
 });
