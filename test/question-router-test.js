@@ -377,23 +377,23 @@ describe('Question Routes', function() {
     });
 
     // 400 invalid body
-    // it('should return a 400 when an invalid body is sent', done => {
-    //   var updatedQuestion = {invalid: 'invalid updated question'};
-    //   request.put(`${url}/api/question/${this.tempQuestion._id}`)
-    //   .set({
-    //     Authorization: `Bearer ${this.tempToken}`
-    //   })
-    //   .send(updatedQuestion)
-    //   .end((err, res) => {
-    //     expect(res.status).to.equal(400);
-    //     done();
-    //   });
-    // });
+    it('should return a 400 when an invalid body is sent', done => {
+      var updatedQuestion = {invalid: 'invalid updated question'};
+      request.put(`${url}/api/question/${this.tempQuestion._id}`)
+      .set({
+        Authorization: `Bearer ${this.tempToken}`
+      })
+      .send(updatedQuestion)
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        done();
+      });
+    });
 
-    // 404 invalid album id
-    it('should return a 404 error with an invalid id', done => {
+    // 404 invalid route
+    it('should return a 404 error with an invalid route', done => {
       var updatedQuestion = {content: 'updated question content'};
-      request.put(`${url}/api/question/0123456789`)
+      request.put(`${url}/api/invalid_route/${this.tempQuestion._id}`)
       .set({
         Authorization: `Bearer ${this.tempToken}`
       })
