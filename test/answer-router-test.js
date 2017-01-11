@@ -3,12 +3,10 @@
 const expect = require('chai').expect;
 const request = require('superagent');
 const Promise = require('bluebird');
-const debug = require('debug')('alexa-skillz:answer-router-test');
 const mongoose = require('mongoose');
 
 const serverToggle = require('./lib/server-toggle.js');
 const mockData = require('./lib/mock-data.js');
-const beforeController = require('./lib/before-controller.js');
 const afterController = require('./lib/after-controller.js');
 
 const User = require('../model/user.js');
