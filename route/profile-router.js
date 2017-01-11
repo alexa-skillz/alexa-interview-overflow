@@ -2,7 +2,6 @@
 
 const jsonParser = require('body-parser').json();
 const Router = require('express').Router;
-const createError = require('http-errors');
 const bearerAuth = require('../lib/bearer-middleware.js');
 const debug = require('debug')('alexa-skillz:profile-router');
 
@@ -15,7 +14,6 @@ profileRouter.get('/api/profile/me', bearerAuth, function(request, response, nex
   debug('GET: /api/profile/me');
 
   User.findById(request.user._id)
-  .catch( err => next(createError(404, err.message)))
   .then( () => {
     return new Profile({userID: request.user._id}).save();
   })
