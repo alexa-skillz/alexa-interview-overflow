@@ -153,9 +153,6 @@ describe('Question Routes', () => {
 
     it('should return a collection of questions with a 200 status', done => {
       request.get(`${url}/api/question`)
-      // .set({
-      //   Authorization: `Bearer ${this.tempToken}`,
-      // })
       .end((err,res) => {
         if (err) return done(err);
         expect(res.status).to.equal(200);
@@ -166,9 +163,6 @@ describe('Question Routes', () => {
     describe('when given an unregistered route', () => {
       it('should return a 404 err with unregistered routes', done => {
         request.get(`${url}/api/invalid`)
-        // .set({
-        //   Authorization: `Bearer ${this.tempToken}`,
-        // })
         .end((err,res) => {
           expect(res.status).to.equal(404);
           done();
