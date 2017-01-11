@@ -19,7 +19,6 @@ authRouter.post('/api/signup', jsonParser, function(req, res, next) {
 
   user.generatePasswordHash(password)
   .then( user => user.save())
-  // .then( user => user.findByIdAndAddProfile())
   .then( user => user.generateToken())
   .then( token => res.send(token))
   .catch(next);

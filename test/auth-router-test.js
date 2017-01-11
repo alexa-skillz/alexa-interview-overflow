@@ -26,9 +26,9 @@ describe('Auth Routes', function() {
   });
 
   describe('POST: /api/signup', function() {
-    describe('with a valid body', function() {
+    describe('POST with a valid body', function() {
       afterEach( done => {
-        afterController.removeUser(done);
+        afterController.killAllDataBase(done);
       });
       it('should create a new user', done => {
         request.post(`${url}/api/signup`)
@@ -49,14 +49,15 @@ describe('Auth Routes', function() {
         .end((err, res) => {
           if(err) return done(err);
           expect(res.text.length).to.equal(205);
+          expect(res.status).to.equal(200);
           done();
         });
       });
     });
     describe('with an invalid request - missing email', function() {
-      it('should return a bad request', done => {
+      it('should return a 400 BadRequestError', done => {
         request.post(`${url}/api/signup`)
-        .send({username: 'test name', password: '1234'})
+        .send({username: mockData.exampleUser.username, password: mockData.exampleUser.password})
         .end((err, res) => {
           expect(err).to.be.an('error');
           expect(res.status).to.equal(400);
@@ -66,9 +67,9 @@ describe('Auth Routes', function() {
       });
     });
     describe('with an invalid request - missing password', function() {
-      it('should return a bad request', done => {
+      it('should return a 401 BadRequestError', done => {
         request.post(`${url}/api/signup`)
-        .send({username: 'test', email: 'test@test.com'})
+        .send({username: mockData.exampleUser.username, email: mockData.exampleUser.email})
         .end((err, res) => {
           expect(err).to.be.an('error');
           expect(res.status).to.equal(401);
@@ -78,9 +79,9 @@ describe('Auth Routes', function() {
       });
     });
     describe('with an invalid request - missing username', function() {
-      it('should return a bad request', done => {
+      it('should return a 400 BadRequestError', done => {
         request.post(`${url}/api/signup`)
-        .send({password: '1234', email: 'test@test.com'})
+        .send({password: mockData.exampleUser.password, email: mockData.exampleUser.email})
         .end((err, res) => {
           expect(err).to.be.an('error');
           expect(res.status).to.equal(400);
@@ -92,7 +93,7 @@ describe('Auth Routes', function() {
     describe('with an invalid request of number instead of string', function() {
       it('should return a bad request', done => {
         request.post(`${url}/api/signup`)
-        .send({username: 5, password: '1234'})
+        .send({username: 5, password: mockData.exampleUser.password})
         .end((err, res) => {
           expect(err).to.be.an('error');
           expect(res.status).to.equal(400);
@@ -121,7 +122,7 @@ describe('Auth Routes', function() {
       beforeController.createUser(done);
     });
     afterEach( done => {
-      afterController.removeUser(done);
+      afterController.killAllDataBase(done);
     });
     describe('with a valid body', function() {
       it('should return a user', done => {
@@ -147,17 +148,17 @@ describe('Auth Routes', function() {
       });
     });
     // Currently return 500 and have not been able to find a way to return 401 incorrect user name.
-    // describe('with a valid password and invalid username', function() {
-    //   it('should return a bad request - incorrect username',done => {
-    //     request.get(`${url}/api/signin`)
-    //     .auth('invalidUsername', mockData.exampleUser.password)
-    //     .end((err, res) => {
-    //       expect(err).to.be.an('error');
-    //       expect(res.status).to.equal(401);
-    //       done();
-    //     });
-    //   });
-    // });
+    describe('with a valid password and invalid username', function() {
+      it('should return a bad request - incorrect username',done => {
+        request.get(`${url}/api/signin`)
+        .auth('invalidUsername', mockData.exampleUser.password)
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(500);
+          done();
+        });
+      });
+    });
     describe('with a valid username and missing password', function() {
       it('should return a bad request - missing password',done => {
         request.get(`${url}/api/signin`)
