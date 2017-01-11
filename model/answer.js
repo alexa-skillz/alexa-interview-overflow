@@ -7,10 +7,12 @@ const answerSchema = Schema({
   content: { type: String, required: true },
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
-  userID: { type: mongoose.Schema.Types.ObjectId, required: true },
+  userID: { type: mongoose.Schema.Types.ObjectId },
   votes: { type: Number, default:0 },
-  questionID: {type: Schema.Types.ObjectId, required: true}
+  questionID: {type: Schema.Types.ObjectId }
 });
+
+//removed required in userID and questionID
 
 //
 // answerSchema.method('vote', function(vote, callback) {

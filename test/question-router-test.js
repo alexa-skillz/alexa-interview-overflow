@@ -69,7 +69,6 @@ describe('Question Routes', function() {
       .then( () => done())
       .catch(done);
     });
-
     it('should return a questions with a 200 status', done => {
       request.post(`${url}/api/question`)
       .send(exampleQuestion)
@@ -100,7 +99,6 @@ describe('Question Routes', function() {
       })
       .catch(done);
     });
-
     // added to solve temporary before hook problem, modularize
     after( done => {
       Promise.all([
@@ -110,7 +108,6 @@ describe('Question Routes', function() {
       .then( () => done())
       .catch(done);
     });
-
     it('should return a 401 status code if no token was provided', done => {
       request.post(`${url}/api/question`)
       .send(exampleQuestion)
@@ -138,7 +135,6 @@ describe('Question Routes', function() {
       })
       .catch(done);
     });
-
     // added to solve temporary before hook problem, modularize
     after( done => {
       Promise.all([
