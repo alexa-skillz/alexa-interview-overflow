@@ -20,6 +20,10 @@ const exampleQuestion = {
   content: 'example question'
 };
 
+const updatedQuestion = {
+  content: 'updated question content'
+};
+
 describe('Question Routes', () => {
 
   before( done => {
@@ -205,7 +209,6 @@ describe('Question Routes', () => {
   describe('PUT: /api/question/:id', () => {
 
     it('should update a question', done => {
-      var updatedQuestion = {content: 'updated question content'};
       request.put(`${url}/api/question/${this.tempQuestion._id}`)
       .set({
         Authorization: `Bearer ${this.tempToken}`
@@ -221,7 +224,6 @@ describe('Question Routes', () => {
 
     describe('when no authorization is sent', () => {
       it('should return a 401 error', done => {
-        var updatedQuestion = {content: 'updated question content'};
         request.put(`${url}/api/question/${this.tempQuestion._id}`)
         .send(updatedQuestion)
         .end((err, res) => {
@@ -233,12 +235,12 @@ describe('Question Routes', () => {
 
     describe('when an invalid body is sent', () => {
       it('should return a 400', done => {
-        var updatedQuestion = {invalid: 'invalid updated question'};
+        var invalidUpdatedQuestion = {invalid: 'invalid updated question'};
         request.put(`${url}/api/question/${this.tempQuestion._id}`)
         .set({
           Authorization: `Bearer ${this.tempToken}`
         })
-        .send(updatedQuestion)
+        .send(invalidUpdatedQuestion)
         .end((err, res) => {
           expect(res.status).to.equal(400);
           done();
@@ -248,7 +250,6 @@ describe('Question Routes', () => {
 
     describe('with an invalid route', () => {
       it('should return a 404 error', done => {
-        var updatedQuestion = {content: 'updated question content'};
         request.put(`${url}/api/invalid_route/${this.tempQuestion._id}`)
         .set({
           Authorization: `Bearer ${this.tempToken}`
@@ -263,7 +264,6 @@ describe('Question Routes', () => {
 
     describe('with and invalid token', () => {
       it('should return a 500 error status', done => {
-        var updatedQuestion = {content: 'updated question content'};
         request.put(`${url}/api/question/${this.tempQuestion._id}`)
         .set({
           Authorization: `Bearer ${this.invalidToken}`
