@@ -19,12 +19,12 @@ const url = `http://localhost:${process.env.PORT}`;
 mongoose.Promise = Promise;
 
 const exampleQuestion = {
-  content: 'test question'
+  content: 'example question'
 };
 
-const exampleQuestionID = {
-  _id: '0123456789'
-};
+// const exampleQuestionID = {
+//   _id: '0123456789'
+// };
 
 describe('Question Routes', function() {
   before( done => {
@@ -35,9 +35,7 @@ describe('Question Routes', function() {
     serverToggle.serverOff(server, done);
   });
 
-
-  // TODO: replace with after-question-controller
-  afterEach( done => {
+  after( done => {
     Promise.all([
       User.remove({}),
       Question.remove({})
@@ -45,10 +43,6 @@ describe('Question Routes', function() {
     .then( () => done())
     .catch(done);
   });
-
-  // ----------
-  // POST tests
-  // ----------
 
   describe('POST: /api/question', () => {
     before( done => {
@@ -66,6 +60,16 @@ describe('Question Routes', function() {
       .catch(done);
     });
 
+    // added to solve temporary before hook problem, modularize
+    after( done => { // orig was afterEach
+      Promise.all([
+        User.remove({}),
+        Question.remove({})
+      ])
+      .then( () => done())
+      .catch(done);
+    });
+
     it('should return a questions with a 200 status', done => {
       request.post(`${url}/api/question`)
       .send(exampleQuestion)
@@ -78,6 +82,33 @@ describe('Question Routes', function() {
         expect(res.status).to.equal(200);
         done();
       });
+    });
+  });
+
+  describe('POST: /api/question', () => {
+    before( done => {
+      new User(mockData.exampleUser)
+      .generatePasswordHash(mockData.exampleUser.password)
+      .then( user => user.save())
+      .then( user => {
+        this.tempUser = user;
+        return user.generateToken();
+      })
+      .then( token => {
+        this.tempToken = token;
+        done();
+      })
+      .catch(done);
+    });
+
+    // added to solve temporary before hook problem, modularize
+    after( done => {
+      Promise.all([
+        User.remove({}),
+        Question.remove({})
+      ])
+      .then( () => done())
+      .catch(done);
     });
 
     it('should return a 401 status code if no token was provided', done => {
@@ -107,7 +138,16 @@ describe('Question Routes', function() {
       })
       .catch(done);
     });
-    // TODO: figure out why block above is breaking test below if we take it away even though it's identical to the block at the top of the page
+
+    // added to solve temporary before hook problem, modularize
+    after( done => {
+      Promise.all([
+        User.remove({}),
+        Question.remove({})
+      ])
+      .then( () => done())
+      .catch(done);
+    });
 
     it('should return a 400 status code for no body', done => {
       request.post(`${url}/api/question`)
@@ -170,6 +210,16 @@ describe('Question Routes', function() {
       .catch(done);
     });
 
+    // added to solve temporary before hook problem, modularize
+    after( done => {
+      Promise.all([
+        User.remove({}),
+        Question.remove({})
+      ])
+      .then( () => done())
+      .catch(done);
+    });
+
     it('should return a collection of questions with a 200 status', done => {
       request.get(`${url}/api/question`)
       .set({
@@ -218,47 +268,113 @@ describe('Question Routes', function() {
       })
       .then( token => {
         this.tempToken = token;
-      })
-      .then( questionID => {
-        this.tempQuestionID = questionID;
-        console.log(this.tempQuestionID);
+        done();
       })
       .catch(done);
     });
 
-    it('should return a question and a 200 status', done => {
-      request.get(`${url}/api/question/{this.tempQuestionID}`)
-      .set({
-        Authorization: `Bearer ${this.tempToken}`,
+    before( done => {
+      exampleQuestion.userID = this.tempUser._id.toString();
+      new Question(exampleQuestion).save()
+      .then( question => {
+        this.tempQuestion = question;
+        done();
       })
+      .catch(done);
+    });
+
+    // added to solve temporary before hook problem, modularize
+    after( done => {
+      Promise.all([
+        User.remove({}),
+        Question.remove({})
+      ])
+      .then( () => done())
+      .catch(done);
+    });
+
+    it('should return a question and a 200 status', done => {
+      request.get(`${url}/api/question/${this.tempQuestion._id}`)
       .end((err,res) => {
         if (err) return done(err);
         expect(res.status).to.equal(200);
-        // expect(res.question._id).to.equal(exampleQuestionID);
+        expect(res.body.userID).to.equal(exampleQuestion.userID);
+        expect(res.body.content).to.equal(exampleQuestion.content);
         done();
       });
     });
-  //
-  //   it('should return a 401 error when no token is provided', done => {
-  //     request.get(`${url}/api/question/:id`)
-  //     .end((err,res) => {
-  //       if (err) return done(err);
-  //       expect(res.status).to.equal(200);
-  //       done();
-  //     });
-  //   });
-  //
-  //   it('should return a 404 err with unregistered routes', done => {
-  //     request.get(`${url}/api/invalid/:id`)
-  //     .set({
-  //       Authorization: `Bearer ${this.tempToken}`,
-  //     })
-  //     .end((err,res) => {
-  //       expect(res.status).to.equal(404);
-  //       done();
-  //     });
-  //   });
-  //
+
+    it('should return a 404 err with unregistered routes', done => {
+      request.get(`${url}/api/invalid/${this.tempQuestion._id}`)
+      .end((err,res) => {
+        expect(res.status).to.equal(404);
+        done();
+      });
+    });
+
   });
+
+  // ---------------------
+  // PUT /api/question/:id
+  // ---------------------
+
+  describe('GET: /api/question/:id', () => {
+    before( done => {
+      new User(mockData.exampleUser)
+      .generatePasswordHash(mockData.exampleUser.password)
+      .then( user => user.save())
+      .then( user => {
+        this.tempUser = user;
+        return user.generateToken();
+      })
+      .then( token => {
+        this.tempToken = token;
+        done();
+      })
+      .catch(done);
+    });
+
+    before( done => {
+      exampleQuestion.userID = this.tempUser._id.toString();
+      new Question(exampleQuestion).save()
+      .then( question => {
+        this.tempQuestion = question;
+        done();
+      })
+      .catch(done);
+    });
+
+    // added to solve temporary before hook problem, modularize
+    after( done => {
+      Promise.all([
+        User.remove({}),
+        Question.remove({})
+      ])
+      .then( () => done())
+      .catch(done);
+    });
+
+    // 200 successfully updated
+    it('should update a question', done => {
+      var updatedQuestion = {content: 'updated question content'};
+      request.put(`${url}/api/question/${this.tempQuestion._id}`)
+      .set({
+        Authorization: `Bearer ${this.tempToken}`
+      })
+      .send(updatedQuestion)
+      .end((err, res) => {
+        if (err) return done(err);
+        expect(res.status).to.equal(200);
+        expect(res.body.content).to.equal(updatedQuestion.content);
+        done();
+      });
+    });
+  });
+    // 401 no Authorization
+
+    // 400 invalid body
+
+    // 404 invalid album id
+
 
 });
