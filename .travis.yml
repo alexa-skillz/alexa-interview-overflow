@@ -17,4 +17,4 @@ before_script: npm i
 after_script: npm run coveralls
 script:
   - npm run test
-  - npm run eslint
+  - npm run lint
