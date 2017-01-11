@@ -7,8 +7,6 @@ const Promise = require('bluebird');
 
 const serverToggle = require('./lib/server-toggle.js');
 const mockData = require('./lib/mock-data.js');
-const beforeController = require('./lib/before-controller.js');
-const afterController = require('./lib/after-controller.js');
 
 const User = require('../model/user.js');
 const Question = require('../model/question.js');

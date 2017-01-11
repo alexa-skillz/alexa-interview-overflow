@@ -4,15 +4,12 @@ const expect = require('chai').expect;
 const request = require('superagent');
 const mongoose = require('mongoose');
 const Promise = require('bluebird');
-const debug = require('debug')('alexa-skillz:profile-router-test');
 
 const serverToggle = require('./lib/server-toggle.js');
 const mockData = require('./lib/mock-data.js');
-const beforeController = require('./lib/before-controller.js');
 const afterController = require('./lib/after-controller.js');
 
 const User = require('../model/user.js');
-const Question = require('../model/question.js');
 
 const server = require('../server.js');
 const url = `http://localhost:${process.env.PORT}`;
