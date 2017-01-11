@@ -29,7 +29,7 @@ describe('Auth Routes', function() {
   describe('POST: /api/signup', function() {
     describe('with a valid body', function() {
       afterEach( done => {
-        afterController.removeUser(done);
+        afterController.killAllDataBase(done);
       });
       it('should create a new user', done => {
         request.post(`${url}/api/signup`)
@@ -122,7 +122,7 @@ describe('Auth Routes', function() {
       beforeController.createUser(done);
     });
     afterEach( done => {
-      afterController.removeUser(done);
+      afterController.killAllDataBase(done);
     });
     describe('with a valid body', function() {
       it('should return a user', done => {

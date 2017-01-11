@@ -16,6 +16,7 @@ answerRouter.post('/api/question/:questionID/answer', bearerAuth, jsonParser, (r
   debug('POST: /api/question/:questionID/answer');
 
   Question.findByIdAndAddAnswer(request.params.questionID, request.body)
+  .catch(err => next(createError(400, err.message)))
   .then(answer => {
     debug(answer);
     return response.json(answer);
