@@ -20,7 +20,7 @@ const exampleQuestion = {
   content: 'example question'
 };
 
-describe('Question Routes', function() {
+describe('Question Routes', () => {
 
   before( done => {
     serverToggle.serverOn(server, done);
@@ -30,46 +30,45 @@ describe('Question Routes', function() {
     serverToggle.serverOff(server, done);
   });
 
-  // redundant - copied into each block below to avoid duplication errors
-  // after( done => {
-  //   Promise.all([
-  //     User.remove({}),
-  //     Question.remove({})
-  //   ])
-  //   .then( () => done())
-  //   .catch(done);
-  // });
+  beforeEach( done => {
+    new User(mockData.exampleUser)
+    .generatePasswordHash(mockData.exampleUser.password)
+    .then( user => user.save())
+    .then( user => {
+      this.tempUser = user;
+      return user.generateToken();
+    })
+    .then( token => {
+      this.tempToken = token;
+      done();
+    })
+    .catch(done);
+  });
+
+  beforeEach( done => {
+    exampleQuestion.userID = this.tempUser._id.toString();
+    new Question(exampleQuestion).save()
+    .then( question => {
+      this.tempQuestion = question;
+      done();
+    })
+    .catch(done);
+  });
+
+  afterEach( done => {
+    Promise.all([
+      User.remove({}),
+      Question.remove({})
+    ])
+    .then( () => done())
+    .catch(done);
+  });
 
   // ------------------
   // POST /api/question
   // ------------------
 
   describe('POST: /api/question', () => {
-
-    before( done => {
-      new User(mockData.exampleUser)
-      .generatePasswordHash(mockData.exampleUser.password)
-      .then( user => user.save())
-      .then( user => {
-        this.tempUser = user;
-        return user.generateToken();
-      })
-      .then( token => {
-        this.tempToken = token;
-        done();
-      })
-      .catch(done);
-    });
-
-    // added to solve temporary before hook problem, modularize
-    after( done => { // orig was afterEach
-      Promise.all([
-        User.remove({}),
-        Question.remove({})
-      ])
-      .then( () => done())
-      .catch(done);
-    });
 
     it('should return a questions with a 200 status', done => {
       request.post(`${url}/api/question`)
@@ -85,7 +84,7 @@ describe('Question Routes', function() {
       });
     });
 
-    describe('with no token provided', function() {
+    describe('with no token provided', () => {
       it('should return a 401 status code', done => {
         request.post(`${url}/api/question`)
         .send(exampleQuestion)
@@ -152,31 +151,6 @@ describe('Question Routes', function() {
 
   describe('GET: /api/question', () => {
 
-    before( done => {
-      new User(mockData.exampleUser)
-      .generatePasswordHash(mockData.exampleUser.password)
-      .then( user => user.save())
-      .then( user => {
-        this.tempUser = user;
-        return user.generateToken();
-      })
-      .then( token => {
-        this.tempToken = token;
-        done();
-      })
-      .catch(done);
-    });
-
-    // added to solve temporary before hook problem, modularize
-    after( done => {
-      Promise.all([
-        User.remove({}),
-        Question.remove({})
-      ])
-      .then( () => done())
-      .catch(done);
-    });
-
     it('should return a collection of questions with a 200 status', done => {
       request.get(`${url}/api/question`)
       // .set({
@@ -208,40 +182,6 @@ describe('Question Routes', function() {
   // ---------------------
 
   describe('GET: /api/question/:id', () => {
-    before( done => {
-      new User(mockData.exampleUser)
-      .generatePasswordHash(mockData.exampleUser.password)
-      .then( user => user.save())
-      .then( user => {
-        this.tempUser = user;
-        return user.generateToken();
-      })
-      .then( token => {
-        this.tempToken = token;
-        done();
-      })
-      .catch(done);
-    });
-
-    before( done => {
-      exampleQuestion.userID = this.tempUser._id.toString();
-      new Question(exampleQuestion).save()
-      .then( question => {
-        this.tempQuestion = question;
-        done();
-      })
-      .catch(done);
-    });
-
-    // added to solve temporary before hook problem, modularize
-    after( done => {
-      Promise.all([
-        User.remove({}),
-        Question.remove({})
-      ])
-      .then( () => done())
-      .catch(done);
-    });
 
     it('should return a question and a 200 status', done => {
       request.get(`${url}/api/question/${this.tempQuestion._id}`)
@@ -269,40 +209,6 @@ describe('Question Routes', function() {
   // ---------------------
 
   describe('PUT: /api/question/:id', () => {
-    before( done => {
-      new User(mockData.exampleUser)
-      .generatePasswordHash(mockData.exampleUser.password)
-      .then( user => user.save())
-      .then( user => {
-        this.tempUser = user;
-        return user.generateToken();
-      })
-      .then( token => {
-        this.tempToken = token;
-        done();
-      })
-      .catch(done);
-    });
-
-    before( done => {
-      exampleQuestion.userID = this.tempUser._id.toString();
-      new Question(exampleQuestion).save()
-      .then( question => {
-        this.tempQuestion = question;
-        done();
-      })
-      .catch(done);
-    });
-
-    // added to solve temporary before hook problem, modularize
-    after( done => {
-      Promise.all([
-        User.remove({}),
-        Question.remove({})
-      ])
-      .then( () => done())
-      .catch(done);
-    });
 
     it('should update a question', done => {
       var updatedQuestion = {content: 'updated question content'};
