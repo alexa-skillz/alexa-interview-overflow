@@ -22,10 +22,6 @@ const exampleQuestion = {
   content: 'example question'
 };
 
-// const exampleQuestionID = {
-//   _id: '0123456789'
-// };
-
 describe('Question Routes', function() {
   before( done => {
     serverToggle.serverOn(server, done);
@@ -318,7 +314,7 @@ describe('Question Routes', function() {
   // PUT /api/question/:id
   // ---------------------
 
-  describe('GET: /api/question/:id', () => {
+  describe('PUT: /api/question/:id', () => {
     before( done => {
       new User(mockData.exampleUser)
       .generatePasswordHash(mockData.exampleUser.password)
@@ -369,12 +365,44 @@ describe('Question Routes', function() {
         done();
       });
     });
-  });
-    // 401 no Authorization
+
+    it('should return a 401 error when no authorization is sent', done => {
+      var updatedQuestion = {content: 'updated question content'};
+      request.put(`${url}/api/question/${this.tempQuestion._id}`)
+      .send(updatedQuestion)
+      .end((err, res) => {
+        expect(res.status).to.equal(401);
+        done();
+      });
+    });
 
     // 400 invalid body
+    // it('should return a 400 when an invalid body is sent', done => {
+    //   var updatedQuestion = {invalid: 'invalid updated question'};
+    //   request.put(`${url}/api/question/${this.tempQuestion._id}`)
+    //   .set({
+    //     Authorization: `Bearer ${this.tempToken}`
+    //   })
+    //   .send(updatedQuestion)
+    //   .end((err, res) => {
+    //     expect(res.status).to.equal(400);
+    //     done();
+    //   });
+    // });
 
     // 404 invalid album id
+    it('should return a 404 error with an invalid id', done => {
+      var updatedQuestion = {content: 'updated question content'};
+      request.put(`${url}/api/question/0123456789`)
+      .set({
+        Authorization: `Bearer ${this.tempToken}`
+      })
+      .send(updatedQuestion)
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
+        done();
+      });
+    });
 
-
+  });
 });
