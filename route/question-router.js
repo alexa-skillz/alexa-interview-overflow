@@ -45,8 +45,13 @@ questionRouter.put('/api/question/:id', bearerAuth, jsonParser, (request, respon
 
   request.body.userID = request.user._id;
   Question.findByIdAndUpdate(request.params.id, request.body, {new: true})
-  .then(question => response.json(question))
-  .catch(err => next(createError(400, err.message)));
+  .then( question => {
+    if(request.body.content === undefined) {
+      return next(createError(400, 'invalid body'));
+    }
+    response.json(question);
+  })
+  .catch(err => next(createError(500, err.message)));
 });
 
 // You can't delete a question, because other users probably add answer content
