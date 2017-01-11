@@ -119,7 +119,7 @@ describe('Auth Routes', function() {
 
   describe('GET /api/signin', function() {
     beforeEach( done => {
-      beforeController.createUser(done);
+      beforeController.call(this,done);
     });
     afterEach( done => {
       afterController.killAllDataBase(done);
