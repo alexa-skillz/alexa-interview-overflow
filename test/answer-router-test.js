@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 
 const serverToggle = require('./lib/server-toggle.js');
 const mockData = require('./lib/mock-data.js');
+const beforeController = require('./lib/before-controller.js');
 const afterController = require('./lib/after-controller.js');
 
 const User = require('../model/user.js');
@@ -19,7 +20,7 @@ const server = require('../server.js');
 const url = `http://localhost:${process.env.PORT}`;
 
 
-describe('Answer Routes', function() {
+describe.only('Answer Routes', function() {
   before( done => {
     serverToggle.serverOn(server, done);
   });
@@ -27,32 +28,39 @@ describe('Answer Routes', function() {
     serverToggle.serverOff(server, done);
   });
 
-  describe('POST: /api/question/:questionID/answer', function() {
-    afterEach( done => {
-      afterController.killAllDataBase(done);
-    });
-    describe('with a valid body', function() {
-      beforeEach( done => {
-        new User(mockData.exampleUser)
-        .generatePasswordHash(mockData.exampleUser.password)
-        .then( user => user.save())
-        .then( user => {
-          this.tempUser = user;
-          return user.generateToken();
-        })
-        .then( token => {
-          this.tempToken = token;
-          mockData.exampleQuestion.userID = this.tempUser._id;
-          return new Question(mockData.exampleQuestion).save();
-        })
-        .then( question =>{
-          this.tempQuestion = question;
-          mockData.exampleAnswer.userID = this.tempUser._id;
-          mockData.exampleAnswer.questionID = this.tempQuestion._id;
-          done();
-        })
-        .catch(done);
-      });
+  after( done => {
+    afterController.killAllDataBase(done);
+  });
+
+  var testQuestion = '';
+  var testToken = '';
+  var testAnswer = '';
+
+  describe.only('POST: /api/question/:questionID/answer', function() {
+    //   new User(mockData.exampleUser)
+    //   .generatePasswordHash(mockData.exampleUser.password)
+    //   .then( user => user.save())
+    //   .then( user => {
+    //     this.tempUser = user;
+    //     return user.generateToken();
+    //   })
+    //   .then( token => {
+    //     this.tempToken = token;
+    //     mockData.exampleQuestion.userID = this.tempUser._id;
+    //     testToken = this.tempToken;
+    //     return new Question(mockData.exampleQuestion).save();
+    //   })
+    //   .then( question =>{
+    //     this.tempQuestion = question;
+    //     mockData.exampleAnswer.userID = this.tempUser._id;
+    //     mockData.exampleAnswer.questionID = this.tempQuestion._id;
+    //     testQuestion = this.tempQuestion;
+    //     done();
+    //   })
+    //   .catch(done);
+    // });
+    describe.only('with a valid body', function() {
+      before( done => beforeController.call(this, done));
       it('should return an answer', done => {
         request.post(`${url}/api/question/${this.tempQuestion._id}/answer`)
         .send(mockData.exampleAnswer)
@@ -61,7 +69,7 @@ describe('Answer Routes', function() {
         })
         .end((err, res) => {
           if(err) return done(err);
-          this.tempAnswer = res.body;
+          testAnswer = res.body;
           expect(res.status).to.equal(200);
           expect(res.body.content).to.equal(mockData.exampleAnswer.content);
           expect(res.body.content).to.be.a('string');
@@ -71,32 +79,11 @@ describe('Answer Routes', function() {
       });
     });
     describe('with an invalid body', function() {
-      beforeEach( done => {
-        new User(mockData.exampleUser)
-        .generatePasswordHash(mockData.exampleUser.password)
-        .then( user => user.save())
-        .then( user => {
-          this.tempUser = user;
-          return user.generateToken();
-        })
-        .then( token => {
-          this.tempToken = token;
-          mockData.exampleQuestion.userID = this.tempUser._id;
-          return new Question(mockData.exampleQuestion).save();
-        })
-        .then( question =>{
-          this.tempQuestion = question;
-          mockData.exampleAnswer.userID = this.tempUser._id;
-          mockData.exampleAnswer.questionID = this.tempQuestion._id;
-          done();
-        })
-        .catch(done);
-      });
       it('should return an bad request', done => {
-        request.post(`${url}/api/question/${this.tempQuestion._id}/answer`)
+        request.post(`${url}/api/question/${testQuestion._id}/answer`)
         .send('')
         .set({
-          Authorization: `Bearer ${this.tempToken}`
+          Authorization: `Bearer ${testToken}`
         })
         .end((err, res) => {
           expect(err).to.be.an('error');
@@ -106,29 +93,8 @@ describe('Answer Routes', function() {
       });
     });
     describe('with invalid token', function() {
-      beforeEach( done => {
-        new User(mockData.exampleUser)
-        .generatePasswordHash(mockData.exampleUser.password)
-        .then( user => user.save())
-        .then( user => {
-          this.tempUser = user;
-          return user.generateToken();
-        })
-        .then( token => {
-          this.tempToken = token;
-          mockData.exampleQuestion.userID = this.tempUser._id;
-          return new Question(mockData.exampleQuestion).save();
-        })
-        .then( question =>{
-          this.tempQuestion = question;
-          mockData.exampleAnswer.userID = this.tempUser._id;
-          mockData.exampleAnswer.questionID = this.tempQuestion._id;
-          done();
-        })
-        .catch(done);
-      });
       it('should return unauthorized', done => {
-        request.post(`${url}/api/question/${this.tempQuestion._id}/answer`)
+        request.post(`${url}/api/question/${testQuestion._id}/answer`)
         .send(mockData.exampleAnswer)
         .set({
           Authorization: 'Bearer '
@@ -144,57 +110,16 @@ describe('Answer Routes', function() {
 
   describe('GET: /api/answer/:id', function() {
     describe('with a valid body', function() {
-      after( done => {
-        afterController.killAllDataBase(done);
-      });
-      before( done => {
-        new User(mockData.exampleUser)
-        .generatePasswordHash(mockData.exampleUser.password)
-        .then( user => user.save())
-        .then( user => {
-          this.tempUser = user;
-          return user.generateToken();
-        })
-        .then( token => {
-          this.tempToken = token;
-          mockData.exampleQuestion.userID = this.tempUser._id;
-          return new Question(mockData.exampleQuestion).save();
-        })
-        .then( question =>{
-          this.tempQuestion = question;
-          mockData.exampleAnswer.userID = this.tempUser._id;
-          mockData.exampleAnswer.questionID = this.tempQuestion._id;
-          done();
-        })
-        .catch(done);
-      });
-      it('POST should return an answer', done => {
-        request.post(`${url}/api/question/${this.tempQuestion._id}/answer`)
-        .send(mockData.exampleAnswer)
-        .set({
-          Authorization: `Bearer ${this.tempToken}`
-        })
-        .end((err, res) => {
-          if(err) return done(err);
-          this.tempAnswer = res.body;
-          expect(res.status).to.equal(200);
-          expect(res.body.content).to.equal(mockData.exampleAnswer.content);
-          expect(res.body.content).to.be.a('string');
-          expect(res.body.votes).to.equal(0);
-          done();
-        });
-      });
       it('should return an answer', done => {
-        request.get(`${url}/api/answer/${this.tempAnswer._id}`)
+        request.get(`${url}/api/answer/${testAnswer._id}`)
         .set({
-          Authorization: `Bearer ${this.tempToken}`
+          Authorization: `Bearer ${testToken}`
         })
         .end((err, res) => {
           if(err) return done(err);
           expect(res.status).to.equal(200);
-          expect(res.body.content).to.equal(mockData.exampleAnswer.content);
+          expect(res.body.content).to.equal(testAnswer.content);
           expect(res.body.content).to.be.a('string');
-          expect(res.body.votes).to.equal(0);
           done();
         });
       });
@@ -208,46 +133,6 @@ describe('Answer Routes', function() {
       });
     });
     describe('with an invalid body', function() {
-      after( done => {
-        afterController.killAllDataBase(done);
-      });
-      before( done => {
-        new User(mockData.exampleUser)
-        .generatePasswordHash(mockData.exampleUser.password)
-        .then( user => user.save())
-        .then( user => {
-          this.tempUser = user;
-          return user.generateToken();
-        })
-        .then( token => {
-          this.tempToken = token;
-          mockData.exampleQuestion.userID = this.tempUser._id;
-          return new Question(mockData.exampleQuestion).save();
-        })
-        .then( question =>{
-          this.tempQuestion = question;
-          mockData.exampleAnswer.userID = this.tempUser._id;
-          mockData.exampleAnswer.questionID = this.tempQuestion._id;
-          done();
-        })
-        .catch(done);
-      });
-      it('POST should return an answer', done => {
-        request.post(`${url}/api/question/${this.tempQuestion._id}/answer`)
-        .send(mockData.exampleAnswer)
-        .set({
-          Authorization: `Bearer ${this.tempToken}`
-        })
-        .end((err, res) => {
-          if(err) return done(err);
-          this.tempAnswer = res.body;
-          expect(res.status).to.equal(200);
-          expect(res.body.content).to.equal(mockData.exampleAnswer.content);
-          expect(res.body.content).to.be.a('string');
-          expect(res.body.votes).to.equal(0);
-          done();
-        });
-      });
       it('should return an invalid route', done => {
         request.get(`${url}/api/answer/invalid`)
         .set({
@@ -264,51 +149,11 @@ describe('Answer Routes', function() {
 
   describe('PUT: /api/question/:questionID/answer/:answerID', function() {
     describe('with a valid body', function() {
-      after( done => {
-        afterController.killAllDataBase(done);
-      });
-      before( done => {
-        new User(mockData.exampleUser)
-        .generatePasswordHash(mockData.exampleUser.password)
-        .then( user => user.save())
-        .then( user => {
-          this.tempUser = user;
-          return user.generateToken();
-        })
-        .then( token => {
-          this.tempToken = token;
-          mockData.exampleQuestion.userID = this.tempUser._id;
-          return new Question(mockData.exampleQuestion).save();
-        })
-        .then( question =>{
-          this.tempQuestion = question;
-          mockData.exampleAnswer.userID = this.tempUser._id;
-          mockData.exampleAnswer.questionID = this.tempQuestion._id;
-          done();
-        })
-        .catch(done);
-      });
-      it('POST should return an answer', done => {
-        request.post(`${url}/api/question/${this.tempQuestion._id}/answer`)
-        .send(mockData.exampleAnswer)
-        .set({
-          Authorization: `Bearer ${this.tempToken}`
-        })
-        .end((err, res) => {
-          if(err) return done(err);
-          this.tempAnswer = res.body;
-          expect(res.status).to.equal(200);
-          expect(res.body.content).to.equal(mockData.exampleAnswer.content);
-          expect(res.body.content).to.be.a('string');
-          expect(res.body.votes).to.equal(0);
-          done();
-        });
-      });
       it('should return a updated answer', done => {
-        request.put(`${url}/api/answer/${this.tempAnswer._id}`)
+        request.put(`${url}/api/answer/${testAnswer._id}`)
         .send({content: 'updated content'})
         .set({
-          Authorization: `Bearer ${this.tempToken}`
+          Authorization: `Bearer ${testToken}`
         })
         .end((err, res) => {
           if(err) return done(err);
@@ -320,51 +165,11 @@ describe('Answer Routes', function() {
       });
     });
     describe('with an invalid request', function() {
-      after( done => {
-        afterController.killAllDataBase(done);
-      });
-      before( done => {
-        new User(mockData.exampleUser)
-        .generatePasswordHash(mockData.exampleUser.password)
-        .then( user => user.save())
-        .then( user => {
-          this.tempUser = user;
-          return user.generateToken();
-        })
-        .then( token => {
-          this.tempToken = token;
-          mockData.exampleQuestion.userID = this.tempUser._id;
-          return new Question(mockData.exampleQuestion).save();
-        })
-        .then( question =>{
-          this.tempQuestion = question;
-          mockData.exampleAnswer.userID = this.tempUser._id;
-          mockData.exampleAnswer.questionID = this.tempQuestion._id;
-          done();
-        })
-        .catch(done);
-      });
-      it('POST should return an answer', done => {
-        request.post(`${url}/api/question/${this.tempQuestion._id}/answer`)
-        .send(mockData.exampleAnswer)
-        .set({
-          Authorization: `Bearer ${this.tempToken}`
-        })
-        .end((err, res) => {
-          if(err) return done(err);
-          this.tempAnswer = res.body;
-          expect(res.status).to.equal(200);
-          expect(res.body.content).to.equal(mockData.exampleAnswer.content);
-          expect(res.body.content).to.be.a('string');
-          expect(res.body.votes).to.equal(0);
-          done();
-        });
-      });
       it('should return a bad request', done => {
         request.put(`${url}/api/answer/invalid`)
         .send('')
         .set({
-          Authorization: `Bearer ${this.tempToken}`
+          Authorization: `Bearer ${testToken}`
         })
         .end((err, res) => {
           expect(err).to.be.an('error');
@@ -377,50 +182,10 @@ describe('Answer Routes', function() {
 
   describe('DELETE: /api/answer/:id', function() {
     describe('with a valid request', function() {
-      after( done => {
-        afterController.killAllDataBase(done);
-      });
-      before( done => {
-        new User(mockData.exampleUser)
-        .generatePasswordHash(mockData.exampleUser.password)
-        .then( user => user.save())
-        .then( user => {
-          this.tempUser = user;
-          return user.generateToken();
-        })
-        .then( token => {
-          this.tempToken = token;
-          mockData.exampleQuestion.userID = this.tempUser._id;
-          return new Question(mockData.exampleQuestion).save();
-        })
-        .then( question =>{
-          this.tempQuestion = question;
-          mockData.exampleAnswer.userID = this.tempUser._id;
-          mockData.exampleAnswer.questionID = this.tempQuestion._id;
-          done();
-        })
-        .catch(done);
-      });
-      it('POST should return an answer', done => {
-        request.post(`${url}/api/question/${this.tempQuestion._id}/answer`)
-        .send(mockData.exampleAnswer)
-        .set({
-          Authorization: `Bearer ${this.tempToken}`
-        })
-        .end((err, res) => {
-          if(err) return done(err);
-          this.tempAnswer = res.body;
-          expect(res.status).to.equal(200);
-          expect(res.body.content).to.equal(mockData.exampleAnswer.content);
-          expect(res.body.content).to.be.a('string');
-          expect(res.body.votes).to.equal(0);
-          done();
-        });
-      });
       it('should delete an answer', done => {
-        request.delete(`${url}/api/answer/${this.tempAnswer._id}`)
+        request.delete(`${url}/api/answer/${testAnswer._id}`)
         .set({
-          Authorization: `Bearer ${this.tempToken}`
+          Authorization: `Bearer ${testToken}`
         })
         .end((err, res) => {
           if(err) return done(err);
@@ -431,50 +196,10 @@ describe('Answer Routes', function() {
       });
     });
     describe('with an invalid request', function() {
-      after( done => {
-        afterController.killAllDataBase(done);
-      });
-      before( done => {
-        new User(mockData.exampleUser)
-        .generatePasswordHash(mockData.exampleUser.password)
-        .then( user => user.save())
-        .then( user => {
-          this.tempUser = user;
-          return user.generateToken();
-        })
-        .then( token => {
-          this.tempToken = token;
-          mockData.exampleQuestion.userID = this.tempUser._id;
-          return new Question(mockData.exampleQuestion).save();
-        })
-        .then( question =>{
-          this.tempQuestion = question;
-          mockData.exampleAnswer.userID = this.tempUser._id;
-          mockData.exampleAnswer.questionID = this.tempQuestion._id;
-          done();
-        })
-        .catch(done);
-      });
-      it('POST should return an answer', done => {
-        request.post(`${url}/api/question/${this.tempQuestion._id}/answer`)
-        .send(mockData.exampleAnswer)
-        .set({
-          Authorization: `Bearer ${this.tempToken}`
-        })
-        .end((err, res) => {
-          if(err) return done(err);
-          this.tempAnswer = res.body;
-          expect(res.status).to.equal(200);
-          expect(res.body.content).to.equal(mockData.exampleAnswer.content);
-          expect(res.body.content).to.be.a('string');
-          expect(res.body.votes).to.equal(0);
-          done();
-        });
-      });
       it('should return an invalid route', done => {
         request.delete(`${url}/api/answer/invalid`)
         .set({
-          Authorization: `Bearer ${this.tempToken}`
+          Authorization: `Bearer ${testToken}`
         })
         .end((err, res) => {
           expect(err).to.be.an('error');
@@ -483,7 +208,7 @@ describe('Answer Routes', function() {
         });
       });
       it('should return an unauthorized', done => {
-        request.delete(`${url}/api/answer/${this.tempAnswer._id}`)
+        request.delete(`${url}/api/answer/${testAnswer._id}`)
         .end((err, res) => {
           expect(err).to.be.an('error');
           expect(res.status).to.equal(401);
