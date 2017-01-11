@@ -15,8 +15,8 @@ profileRouter.get('/api/profile/me', bearerAuth, function(request, response, nex
 
   User.findById(request.user._id)
   .catch(err => Promise.reject(createError(404, err.message)))
-  .then(() => {
-    return new Profile(request.user);
+  .then((user) => {
+    return new Profile(user).save();
   })
   .then(profile => response.json(profile))
   .catch(next);

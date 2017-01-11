@@ -7,7 +7,7 @@ const answerSchema = Schema({
   content: { type: String, required: true },
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
-  // userID: { type: mongoose.Schema.Types.ObjectId, required: true },
+  userID: { type: mongoose.Schema.Types.ObjectId, required: true },
   votes: { type: Number, default:0 },
   questionID: {type: Schema.Types.ObjectId, required: true}
 });
