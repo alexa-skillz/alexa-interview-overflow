@@ -4,6 +4,7 @@ const expect = require('chai').expect;
 const request = require('superagent');
 const mongoose = require('mongoose');
 const Promise = require('bluebird');
+// const crypto = require('crypto');
 
 const serverToggle = require('./lib/server-toggle.js');
 const mockData = require('./lib/mock-data.js');
@@ -28,7 +29,7 @@ describe('Auth Routes', function() {
   describe('POST: /api/signup', function() {
     describe('with a valid body', function() {
       afterEach( done => {
-        afterController.removeData(done);
+        afterController.killAllDataBase(done);
       });
       it('should create a new user', done => {
         request.post(`${url}/api/signup`)
@@ -121,7 +122,7 @@ describe('Auth Routes', function() {
       beforeController.createUser(done);
     });
     afterEach( done => {
-      afterController.removeData(done);
+      afterController.killAllDataBase(done);
     });
     describe('with a valid body', function() {
       it('should return a user', done => {
@@ -212,5 +213,29 @@ describe('Auth Routes', function() {
         });
       });
     });
+    // TODO: FIX --------->>>>>>>>>>
+    // describe('Failed to generateFindHash', () => {
+    //   before( done =>
+    //     crypto.randomBytes = function(size, callback) {
+    //       if (callback && callback.call) {
+    //         try {
+    //           callback.call(this, undefined, new Buffer(rng(size)))
+    //         } catch (err) { callback(err) };
+    //       } else {
+    //         return new Buffer(rng(size))
+    //       }
+    //       done();
+    //     });
+    //   it('should return a user', done => {
+    //     request.get(`${url}/api/signin`)
+    //     .auth(mockData.exampleUser.username, mockData.exampleUser.password)
+    //     .end((err, res) => {
+    //       if(err) return done(err);
+    //       expect(res.status).to.equal(200);
+    //       expect(res.text).to.be.a('string');
+    //       done();
+    //     });
+    //   });
+    // });
   });
 });

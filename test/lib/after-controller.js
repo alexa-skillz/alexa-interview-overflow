@@ -1,26 +1,24 @@
 'use strict';
 
 const User = require('../../model/user.js');
-const Question = require('../../model/question.js');
-const Answer = require('../../model/answer.js');
 
+const Answer = require('../../model/answer.js');
+const Profile = require('../../model/profile.js');
+const Question = require('../../model/profile.js');
+const mongoose = require('mongoose');
+
+
+mongoose.Promise = Promise;
 
 module.exports = exports = {};
 
-// exports.removeUser = function(done) {
-//   User.remove({}),
-//   Question.remove({})
-//   Answer.revmove({});
-//   .then( ()=> done())
-//   .catch(done);
-// };
-
-exports.removeData = function(done) {
+exports.killAllDataBase = function(done) {
   Promise.all([
     User.remove({}),
     Question.remove({}),
+    Profile.remove({}),
     Answer.remove({})
   ])
-  .then( () => done())
+  .then( ()=> done())
   .catch(done);
 };
