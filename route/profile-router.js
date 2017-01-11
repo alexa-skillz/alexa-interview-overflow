@@ -14,10 +14,18 @@ profileRouter.get('/api/profile/me', bearerAuth, function(request, response, nex
   debug('GET: /api/profile/me');
 
   User.findById(request.user._id)
-  .catch(err => Promise.reject(createError(404, err.message)))
-  .then((user) => {
-    return new Profile(user).save();
+  .catch(err => next(createError(404, err.message)))
+  .then(() => {
+    return new Profile({userID: request.user._id}).save();
   })
+  .then(profile => response.json(profile))
+  .catch(next);
+});
+
+profileRouter.put('/api/profile/me', bearerAuth, function(request, response, next) {
+  debug('PUT: /api/profile/me');
+
+  User.findByIdAndUpdate(request.user._id, request.body, {new:true})
   .then(profile => response.json(profile))
   .catch(next);
 });
