@@ -8,7 +8,8 @@ const profileSchema = Schema({
   profileName: { type: String, unique: true },
   bio: { type:String },
   primaryLanguage: { type: String },
-  userID: { type: mongoose.Schema.Types.ObjectId, ref: 'user' }
+  userID: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
+  availableForHire: { type: Boolean, default: false }
 });
 
 module.exports = mongoose.model('profile', profileSchema);
