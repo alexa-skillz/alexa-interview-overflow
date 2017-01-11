@@ -8,8 +8,6 @@ const createError = require('http-errors');
 const Promise = require('bluebird');
 const debug = require('debug')('alexa-skillz:user');
 
-// const Profile = require('./profile.js');
-
 mongoose.Promise = Promise;
 
 const Schema = mongoose.Schema;
@@ -20,18 +18,6 @@ const userSchema = Schema({
   password: {type: String, required: true},
   findHash: {type: String, unique: true},
 });
-
-// const User = module.exports = mongoose.model('user', userSchema);
-
-// userSchema.methods.findByIdAndAddProfile = function(id) {
-//   debug('findByIdAndAddProfile');
-//
-//   return userSchema.methods.findById(id)
-//   .then(user => {
-//     return new Profile(user).save();
-//   })
-//   .catch(err => Promise.reject(createError(404, err.message)));
-// };
 
 userSchema.methods.generatePasswordHash = function(password) {
   debug('generatePasswordHash');

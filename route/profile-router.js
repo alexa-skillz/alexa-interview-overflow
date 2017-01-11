@@ -1,21 +1,32 @@
 'use strict';
 
+const jsonParser = require('body-parser').json();
 const Router = require('express').Router;
-// const jsonParser = require('body-parser');
-// const createError = require('http-errors');
+const createError = require('http-errors');
 const bearerAuth = require('../lib/bearer-middleware.js');
 const debug = require('debug')('alexa-skillz:profile-router');
 
-// const User = require('../model/user.js');
-// const Question = require('../model/question.js');
+const User = require('../model/user.js');
 const Profile = require('../model/profile.js');
 
 const profileRouter = module.exports = Router();
 
-profileRouter.get('/api/profile/me', bearerAuth, function(request, response, next) {
-  debug('GET: /api/users/me');
+profileRouter.get('/api/profile/me', bearerAuth, function(request, response, next){
+  debug('GET: /api/profile/me');
 
-  Profile.findById(request.params.id)
-  .then(profile => response.json(profile))
+  User.findById(request.user._id)
+  .catch( err => next(createError(404, err.message)))
+  .then( () => {
+    return new Profile({userID: request.user._id}).save();
+  })
+  .then( profile => response.json(profile))
+  .catch(next);
+});
+
+profileRouter.put('/api/profile/me', bearerAuth, jsonParser, function(request, response, next) {
+  debug('PUT: /api/profile/me');
+
+  Profile.findOneAndUpdate({userID: request.user._id}, request.body, {new:true})
+  .then( profile => response.json(profile))
   .catch(next);
 });
