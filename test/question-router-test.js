@@ -7,8 +7,6 @@ const Promise = require('bluebird');
 
 const serverToggle = require('./lib/server-toggle.js');
 const mockData = require('./lib/mock-data.js');
-// const beforeController = require('./lib/before-controller.js');
-// const afterController = require('./lib/after-controller.js');
 
 const User = require('../model/user.js');
 const Question = require('../model/question.js');
@@ -23,6 +21,7 @@ const exampleQuestion = {
 };
 
 describe('Question Routes', function() {
+
   before( done => {
     serverToggle.serverOn(server, done);
   });
@@ -31,16 +30,22 @@ describe('Question Routes', function() {
     serverToggle.serverOff(server, done);
   });
 
-  after( done => {
-    Promise.all([
-      User.remove({}),
-      Question.remove({})
-    ])
-    .then( () => done())
-    .catch(done);
-  });
+  // redundant - copied into each block below to avoid duplication errors
+  // after( done => {
+  //   Promise.all([
+  //     User.remove({}),
+  //     Question.remove({})
+  //   ])
+  //   .then( () => done())
+  //   .catch(done);
+  // });
+
+  // ------------------
+  // POST /api/question
+  // ------------------
 
   describe('POST: /api/question', () => {
+
     before( done => {
       new User(mockData.exampleUser)
       .generatePasswordHash(mockData.exampleUser.password)
@@ -79,111 +84,66 @@ describe('Question Routes', function() {
         done();
       });
     });
-  });
 
-  describe('POST: /api/question', () => {
-    before( done => {
-      new User(mockData.exampleUser)
-      .generatePasswordHash(mockData.exampleUser.password)
-      .then( user => user.save())
-      .then( user => {
-        this.tempUser = user;
-        return user.generateToken();
-      })
-      .then( token => {
-        this.tempToken = token;
-        done();
-      })
-      .catch(done);
-    });
-
-    // added to solve temporary before hook problem, modularize
-    after( done => {
-      Promise.all([
-        User.remove({}),
-        Question.remove({})
-      ])
-      .then( () => done())
-      .catch(done);
-    });
-
-    it('should return a 401 status code if no token was provided', done => {
-      request.post(`${url}/api/question`)
-      .send(exampleQuestion)
-      .set({})
-      .end((err, res) => {
-        expect(res.status).to.equal(401);
-        expect(err).to.be.an('error');
-        done();
-      });
-    });
-  });
-
-  describe('POST: /api/question', () => {
-    before( done => {
-      new User(mockData.exampleUser)
-      .generatePasswordHash(mockData.exampleUser.password)
-      .then( user => user.save())
-      .then( user => {
-        this.tempUser = user;
-        return user.generateToken();
-      })
-      .then( token => {
-        this.tempToken = token;
-        done();
-      })
-      .catch(done);
-    });
-
-    // added to solve temporary before hook problem, modularize
-    after( done => {
-      Promise.all([
-        User.remove({}),
-        Question.remove({})
-      ])
-      .then( () => done())
-      .catch(done);
-    });
-
-    it('should return a 400 status code for no body', done => {
-      request.post(`${url}/api/question`)
-      .send({})
-      .set({
-        Authorization: `Bearer ${this.tempToken}`,
-      })
-      .set('Content-type', 'application/json')
-      .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(err).to.be.an('error');
-        done();
+    describe('with no token provided', function() {
+      it('should return a 401 status code', done => {
+        request.post(`${url}/api/question`)
+        .send(exampleQuestion)
+        .set({})
+        .end((err, res) => {
+          expect(res.status).to.equal(401);
+          expect(err).to.be.an('error');
+          done();
+        });
       });
     });
 
-    it('should return a 400 status code for an invalid body', done => {
-      request.post(`${url}/api/question`)
-      .send('beepbeep')
-      .set({
-        Authorization: `Bearer ${this.tempToken}`,
-      })
-      .set('Content-type', 'application/json')
-      .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(err).to.be.an('error');
-        done();
+    describe('with no body content provided', () => {
+      it('should return a 400 status code', done => {
+        request.post(`${url}/api/question`)
+        .send({})
+        .set({
+          Authorization: `Bearer ${this.tempToken}`,
+        })
+        .set('Content-type', 'application/json')
+        .end((err, res) => {
+          expect(res.status).to.equal(400);
+          expect(err).to.be.an('error');
+          done();
+        });
       });
     });
 
-    it('should return a 404 not found status for unregistered routes', done => {
-      request.post(`${url}/api/nonexistent`)
-      .set({
-        Authorization: `Bearer ${this.tempToken}`
-      })
-      .end((err, res) => {
-        expect(res.status).to.equal(404);
-        expect(err).to.be.an('error');
-        done();
+    describe('with an invalid body provided', () => {
+      it('should return a 400 status code', done => {
+        request.post(`${url}/api/question`)
+        .send('beepbeep')
+        .set({
+          Authorization: `Bearer ${this.tempToken}`,
+        })
+        .set('Content-type', 'application/json')
+        .end((err, res) => {
+          expect(res.status).to.equal(400);
+          expect(err).to.be.an('error');
+          done();
+        });
       });
     });
+
+    describe('when given an unregistered route', () => {
+      it('should return a 404 not found status', done => {
+        request.post(`${url}/api/nonexistent`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          expect(err).to.be.an('error');
+          done();
+        });
+      });
+    });
+
   });
 
   // -----------------
@@ -191,6 +151,7 @@ describe('Question Routes', function() {
   // -----------------
 
   describe('GET: /api/question', () => {
+
     before( done => {
       new User(mockData.exampleUser)
       .generatePasswordHash(mockData.exampleUser.password)
@@ -218,9 +179,9 @@ describe('Question Routes', function() {
 
     it('should return a collection of questions with a 200 status', done => {
       request.get(`${url}/api/question`)
-      .set({
-        Authorization: `Bearer ${this.tempToken}`,
-      })
+      // .set({
+      //   Authorization: `Bearer ${this.tempToken}`,
+      // })
       .end((err,res) => {
         if (err) return done(err);
         expect(res.status).to.equal(200);
@@ -228,23 +189,16 @@ describe('Question Routes', function() {
       });
     });
 
-    it('should return a 401 error when no token is provided', done => {
-      request.get(`${url}/api/question`)
-      .end((err,res) => {
-        if (err) return done(err);
-        expect(res.status).to.equal(200);
-        done();
-      });
-    });
-
-    it('should return a 404 err with unregistered routes', done => {
-      request.get(`${url}/api/invalid`)
-      .set({
-        Authorization: `Bearer ${this.tempToken}`,
-      })
-      .end((err,res) => {
-        expect(res.status).to.equal(404);
-        done();
+    describe('when given an unregistered route', () => {
+      it('should return a 404 err with unregistered routes', done => {
+        request.get(`${url}/api/invalid`)
+        // .set({
+        //   Authorization: `Bearer ${this.tempToken}`,
+        // })
+        .end((err,res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
       });
     });
   });
@@ -350,7 +304,6 @@ describe('Question Routes', function() {
       .catch(done);
     });
 
-    // 200 successfully updated
     it('should update a question', done => {
       var updatedQuestion = {content: 'updated question content'};
       request.put(`${url}/api/question/${this.tempQuestion._id}`)
@@ -366,41 +319,60 @@ describe('Question Routes', function() {
       });
     });
 
-    it('should return a 401 error when no authorization is sent', done => {
-      var updatedQuestion = {content: 'updated question content'};
-      request.put(`${url}/api/question/${this.tempQuestion._id}`)
-      .send(updatedQuestion)
-      .end((err, res) => {
-        expect(res.status).to.equal(401);
-        done();
+    describe('when no authorization is sent', () => {
+      it('should return a 401 error', done => {
+        var updatedQuestion = {content: 'updated question content'};
+        request.put(`${url}/api/question/${this.tempQuestion._id}`)
+        .send(updatedQuestion)
+        .end((err, res) => {
+          expect(res.status).to.equal(401);
+          done();
+        });
       });
     });
 
-    // 400 invalid body
-    it('should return a 400 when an invalid body is sent', done => {
-      var updatedQuestion = {invalid: 'invalid updated question'};
-      request.put(`${url}/api/question/${this.tempQuestion._id}`)
-      .set({
-        Authorization: `Bearer ${this.tempToken}`
-      })
-      .send(updatedQuestion)
-      .end((err, res) => {
-        expect(res.status).to.equal(400);
-        done();
+    describe('when an invalid body is sent', () => {
+      it('should return a 400', done => {
+        var updatedQuestion = {invalid: 'invalid updated question'};
+        request.put(`${url}/api/question/${this.tempQuestion._id}`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .send(updatedQuestion)
+        .end((err, res) => {
+          expect(res.status).to.equal(400);
+          done();
+        });
       });
     });
 
-    // 404 invalid route
-    it('should return a 404 error with an invalid route', done => {
-      var updatedQuestion = {content: 'updated question content'};
-      request.put(`${url}/api/invalid_route/${this.tempQuestion._id}`)
-      .set({
-        Authorization: `Bearer ${this.tempToken}`
-      })
-      .send(updatedQuestion)
-      .end((err, res) => {
-        expect(res.status).to.equal(404);
-        done();
+    describe('with an invalid route', () => {
+      it('should return a 404 error', done => {
+        var updatedQuestion = {content: 'updated question content'};
+        request.put(`${url}/api/invalid_route/${this.tempQuestion._id}`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .send(updatedQuestion)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+
+    describe('with and invalid token', () => {
+      it('should return a 500 error status', done => {
+        var updatedQuestion = {content: 'updated question content'};
+        request.put(`${url}/api/question/${this.tempQuestion._id}`)
+        .set({
+          Authorization: `Bearer ${this.invalidToken}`
+        })
+        .send(updatedQuestion)
+        .end((err, res) => {
+          expect(res.status).to.equal(500);
+          done();
+        });
       });
     });
 
