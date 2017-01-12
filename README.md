@@ -366,7 +366,7 @@ NotFoundError
 
 When a user sends a GET request to `:8000/api/profile/me`, profile will be created automatically with the first request and saves a profile to that user.
 
-1. Make a GET request, like this example: `http PUT :3000/api/profile/me`. Be sure to include your token.
+1. Make a GET request, like this example: `http GET :3000/api/profile/me`. Be sure to include your token.
 
 2. You should get a JSON response with a `200` status code, like this example:
 
@@ -425,4 +425,4 @@ X-Powered-By: Express
 * Create a more robust profile endpoint
 
 ## Thank You
- Thank you to the Amazon Alexa SDK, Brian, Gio, Kaylyn, Duncan, Stack Exchange API, etc.
+ Thank you to the Amazon Alexa SDK, Brian, Gio, Kaylyn, Duncan, Lee, Stack Exchange API, etc.
