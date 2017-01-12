@@ -119,7 +119,7 @@ describe('Question Routes', () => {
     describe('when given an unregistered route', () => {
       it('should return a 404 err with unregistered routes', done => {
         request.get(`${url}/api/invalid`)
-        .end((err,res) => {
+        .end( res => {
           expect(res.status).to.equal(404);
           done();
         });
@@ -146,7 +146,7 @@ describe('Question Routes', () => {
 
     it('should return a 404 err with unregistered routes', done => {
       request.get(`${url}/api/invalid/${this.tempQuestion._id}`)
-      .end((err,res) => {
+      .end( res => {
         expect(res.status).to.equal(404);
         done();
       });
@@ -178,7 +178,7 @@ describe('Question Routes', () => {
       it('should return a 401 error', done => {
         request.put(`${url}/api/question/${this.tempQuestion._id}`)
         .send(mockData.updatedQuestion)
-        .end((err, res) => {
+        .end( res => {
           expect(res.status).to.equal(401);
           done();
         });
@@ -193,7 +193,7 @@ describe('Question Routes', () => {
           Authorization: `Bearer ${this.tempToken}`
         })
         .send(invalidUpdatedQuestion)
-        .end((err, res) => {
+        .end( res => {
           expect(res.status).to.equal(400);
           done();
         });
@@ -207,21 +207,21 @@ describe('Question Routes', () => {
           Authorization: `Bearer ${this.tempToken}`
         })
         .send(mockData.updatedQuestion)
-        .end((err, res) => {
+        .end( res => {
           expect(res.status).to.equal(404);
           done();
         });
       });
     });
 
-    describe('with and invalid token', () => {
+    describe('with an invalid token', () => {
       it('should return a 500 error status', done => {
         request.put(`${url}/api/question/${this.tempQuestion._id}`)
         .set({
           Authorization: `Bearer ${this.invalidToken}`
         })
         .send(mockData.updatedQuestion)
-        .end((err, res) => {
+        .end( res => {
           expect(res.status).to.equal(500);
           done();
         });
