@@ -15,3 +15,7 @@ exports.exampleQuestion = {
 exports.exampleAnswer = {
   content: 'Test answer'
 };
+
+exports.updatedQuestion = {
+  content: 'updated question content'
+};
