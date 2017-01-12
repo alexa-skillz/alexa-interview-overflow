@@ -83,7 +83,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImQ4OTM4M2E2ZjM1OGYyMWUyY2UwNGY
 ## Questions
 ### Test the API (POST)
 
-1. Open a new terminal located at the root of this project, grab the token, and type `http POST :3000/api/question content="What is this?"`
+1. Open a new terminal located at the root of this project, grab the token, and type `http POST :3000/api/question content="What is this?" Authentication:"Bearer <long-token-string>"` Note: the single space after "Bearer" in that line is important.
 2. You should get a JSON response with a `200` status code and a response, like this example:
 
 ``` javascript
@@ -138,7 +138,7 @@ X-Powered-By: Express
 
 ### Test the API (GET a Specific Question)
 
-After making a POST, you can make a GET request by grabbing the `_id` from the POST request and adding it as a param to the url. Don't forget to grab your token too.
+After making a POST, you can make a GET request by grabbing the `_id` from the POST request and adding it as a param to the url.
 
 1. Make a GET request, like this example: `http :3000/api/question/5871a3f83868de75ee8456e1`.
 
@@ -166,7 +166,7 @@ X-Powered-By: Express
 
 After making a POST, you can make a PUT request by grabbing the `_id` from the POST or GET request and adding it as a param to the url. Don't forget to grab your token too.
 
-1. Make a PUT request, like this example: `http PUT :3000/api/question/5872ab02ee1492148dabdee3 content="updated"`.
+1. Make a PUT request, like this example: `http PUT :3000/api/question/5872ab02ee1492148dabdee3 content="updated" Authentication:"Bearer <long-token-string>"`.
 
 2. You should get a JSON response with a `200` status code, like this example:
 
@@ -192,7 +192,7 @@ X-Powered-By: Express
 
 After making a POST, you can make a DELETE request by grabbing the `_id` from the POST or GET request and adding it as a param to the url. Don't forget to grab your token too.
 
-1. Make a DELETE request, like this example: `http DELETE :3000/api/questions/5872ab02ee1492148dabdee3`.
+1. Make a DELETE request, like this example: `http DELETE :3000/api/questions/5872ab02ee1492148dabdee3 Authentication:"Bearer <long-token-string>"`.
 
 2. You should get a JSON response with a `204` status code, like this example:
 
@@ -222,7 +222,7 @@ Error
 ## Answers
 ### Test the API (POST Answer)
 
-1. Open a new terminal located at the root of this project, grab the token, and type `http POST :3000/api/question/<questionID> content="This is answer"`
+1. Open a new terminal located at the root of this project, grab the token, and type `http POST :3000/api/question/<questionID> content="This is answer" Authentication:"Bearer <long-token-string>"`
 2. You should get a JSON response with a `200` status code and a response, like this example:
 
 ``` javascript
@@ -274,7 +274,7 @@ X-Powered-By: Express
 
 ### Test the API (GET a Specific Answer)
 
-After making a POST, you can make a GET request by grabbing the `_id` from the POST request and adding it as a param to the url. Don't forget to grab your token too.
+After making a POST, you can make a GET request by grabbing the `_id` from the POST request and adding it as a param to the url.
 
 1. Make a GET request, like this example: `http :3000/api/answer/5877f8e3f33b6d17a2ecd131`.
 
@@ -305,7 +305,7 @@ X-Powered-By: Express
 
 After making a POST, you can make a PUT request by grabbing the `_id` from the POST or GET request and adding it as a param to the url. Don't forget to grab your token too.
 
-1. Make a PUT request, like this example: `http PUT :3000/api/answer/5877f8e3f33b6d17a2ecd131 content="Updated an answer."`.
+1. Make a PUT request, like this example: `http PUT :3000/api/answer/5877f8e3f33b6d17a2ecd131 content="Updated an answer." Authentication:"Bearer <long-token-string>"`.
 
 2. You should get a JSON response with a `200` status code, like this example:
 
@@ -334,7 +334,7 @@ X-Powered-By: Express
 
 After making a POST, you can make a DELETE request by grabbing the `_id` from the POST or GET request and adding it as a param to the url. Be sure to have your token.
 
-1. Make a DELETE request, like this example: `http DELETE :3000/api/answer/5877f8e3f33b6d17a2ecd131`.
+1. Make a DELETE request, like this example: `http DELETE :3000/api/answer/5877f8e3f33b6d17a2ecd131 Authentication:"Bearer <long-token-string>"`.
 
 2. You should get a JSON response with a `204` status code, like this example:
 
@@ -366,7 +366,7 @@ NotFoundError
 
 When a user sends a GET request to `:8000/api/profile/me`, profile will be created automatically with the first request and saves a profile to that user.
 
-1. Make a GET request, like this example: `http GET :3000/api/profile/me`. Be sure to include your token.
+1. Make a GET request, like this example: `http GET :3000/api/profile/me Authentication:"Bearer <long-token-string>"`. Be sure to include your token.
 
 2. You should get a JSON response with a `200` status code, like this example:
 
@@ -393,7 +393,7 @@ X-Powered-By: Express
 
 After the initial GET, you can make a PUT request by grabbing the `_id` from the POST or GET request and adding it as a param to the url. Don't forget to grab your token too.
 
-1. Make a PUT request, like this example: `http PUT :3000/api/profile/me bio="I love writing code"`.
+1. Make a PUT request, like this example: `http PUT :3000/api/profile/me bio="I love writing code" Authentication:"Bearer <long-token-string>"`.
 
 2. You should get a JSON response with a `200` status code, like this example:
 
