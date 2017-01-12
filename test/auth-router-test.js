@@ -17,19 +17,11 @@ const server = require('../server.js');
 const url = `http://localhost:${process.env.PORT}`;
 
 describe('Auth Routes', function() {
-  before( done => {
-    serverToggle.serverOn(server, done);
-  });
-
-  after( done => {
-    serverToggle.serverOff(server, done);
-  });
-
+  before( done => serverToggle.serverOn(server, done));
+  after( done => serverToggle.serverOff(server, done));
   describe('POST: /api/signup', function() {
     describe('POST with a valid body', function() {
-      afterEach( done => {
-        afterController.killAllDataBase(done);
-      });
+      afterEach( done => afterController.killAllDataBase(done));
       it('should create a new user', done => {
         request.post(`${url}/api/signup`)
         .send(mockData.exampleUser)
@@ -115,15 +107,9 @@ describe('Auth Routes', function() {
     });
   });
 
-
-
   describe('GET /api/signin', function() {
-    beforeEach( done => {
-      beforeController.call(this,done);
-    });
-    afterEach( done => {
-      afterController.killAllDataBase(done);
-    });
+    beforeEach( done => beforeController.call(this,done));
+    afterEach( done => afterController.killAllDataBase(done));
     describe('with a valid body', function() {
       it('should return a user', done => {
         request.get(`${url}/api/signin`)
@@ -147,7 +133,6 @@ describe('Auth Routes', function() {
         });
       });
     });
-    // Currently return 500 and have not been able to find a way to return 401 incorrect user name.
     describe('with a valid password and invalid username', function() {
       it('should return a bad request - incorrect username',done => {
         request.get(`${url}/api/signin`)

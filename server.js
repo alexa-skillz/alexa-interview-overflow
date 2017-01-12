@@ -15,11 +15,12 @@ const errors = require('./lib/error-middleware.js');
 
 const app = express();
 
-dotenv.load();
+if(process.env.NODE_ENV !== 'production') dotenv.load();
+
 const PORT = process.env.PORT || 3000;
 
 mongoose.Promise = Promise;
-mongoose.connect(process.env.MLAB_MONGO_URI);
+mongoose.connect(process.env.MONGODB_URI);
 
 app.use(cors());
 app.use(morgan('dev'));
@@ -28,6 +29,7 @@ app.use(authRouter);
 app.use(questionRouter);
 app.use(answerRouter);
 app.use(profileRouter);
+app.use(express.static('public'));
 app.use(errors);
 
 const server = module.exports = app.listen(PORT, () => {
