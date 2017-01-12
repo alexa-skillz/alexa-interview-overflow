@@ -6,7 +6,7 @@ Gathering user-generated interview questions and answers for our Alexa interview
 
 Check out our InVision mockup of our MVP [here](https://invis.io/YAA01KTSR#/214067299_Interview_Overflow_-2--pdf_1).
 
-Checkout out our Landing Page: [Staging](https://staging-interview-overflow.herokuapp.com/) | [Production](https://dashboard.heroku.com/apps/alexa-interview-overflow)
+Checkout out our Landing Page: [Staging](https://staging-interview-overflow.herokuapp.com/) | [Production](https://alexa-interview-overflow.herokuapp.com/)
 
 ## Submit Interview Questions and Answers on Interview Overflow
 
