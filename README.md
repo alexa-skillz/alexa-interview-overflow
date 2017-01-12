@@ -8,7 +8,7 @@ Check out our InVision mockup [here](https://invis.io/YAA01KTSR#/214067299_Inter
 
 ## Submit Interview Questions and Answers on Interview Overflow
 
-If you want to submit questions and answers, log into our Interview Overflow app. From there, our developers will pick and choose the best questions and answers to include in our Alexa skills. You can up vote, down vote, add questions, and add answers to this app. You can also update and delete questions and answers.
+If you want to submit questions and answers, log into our Interview Overflow app. From there, our developers will pick and choose the best questions and answers to include in our Alexa skills. You can up vote, down vote, add questions, and add answers to this app. You can also update questions and answers.
 
 ### Get the Project Running
 
