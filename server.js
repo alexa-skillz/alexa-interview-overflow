@@ -29,6 +29,7 @@ app.use(authRouter);
 app.use(questionRouter);
 app.use(answerRouter);
 app.use(profileRouter);
+app.use(express.static('public'));
 app.use(errors);
 
 const server = module.exports = app.listen(PORT, () => {
