@@ -18,17 +18,14 @@ const url = `http://localhost:${process.env.PORT}`;
 
 
 describe('Answer Routes', function() {
-  before( done => {
-    serverToggle.serverOn(server, done);
-  });
-  after( done => {
-    serverToggle.serverOff(server, done);
-  });
+  before( done => serverToggle.serverOn(server, done));
+  after( done => serverToggle.serverOff(server, done));
+  before( done => beforeController.call(this, done));
+  after( done => afterController.killAllDataBase(done));
 
   var testAnswer = '';
 
-  describe('POST: /api/question/:questionID/answer', function() {
-    before( done => beforeController.call(this, done));
+  describe('POST: /api/question/:questionID/answer', () => {
     describe('with a valid body', () => {
       it('should return an answer', done => {
         request.post(`${url}/api/question/${this.tempQuestion._id}/answer`)
@@ -147,7 +144,6 @@ describe('Answer Routes', function() {
     });
 
     describe('DELETE: /api/answer/:id', () => {
-      after( done => afterController.killAllDataBase(done));
       describe('with a valid request', () => {
         it('should delete an answer', done => {
           request.delete(`${url}/api/answer/${testAnswer._id}`)

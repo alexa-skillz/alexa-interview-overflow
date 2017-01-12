@@ -7,82 +7,34 @@ const Promise = require('bluebird');
 
 const serverToggle = require('./lib/server-toggle.js');
 const mockData = require('./lib/mock-data.js');
-
-const User = require('../model/user.js');
-const Question = require('../model/question.js');
+const beforeController = require('./lib/before-controller.js');
+const afterController = require('./lib/after-controller.js');
 
 const server = require('../server.js');
 const url = `http://localhost:${process.env.PORT}`;
 
 mongoose.Promise = Promise;
 
-const exampleQuestion = {
-  content: 'example question'
-};
-
-const updatedQuestion = {
-  content: 'updated question content'
-};
-
 describe('Question Routes', () => {
-
-  before( done => {
-    serverToggle.serverOn(server, done);
-  });
-
-  after( done => {
-    serverToggle.serverOff(server, done);
-  });
-
-  beforeEach( done => {
-    new User(mockData.exampleUser)
-    .generatePasswordHash(mockData.exampleUser.password)
-    .then( user => user.save())
-    .then( user => {
-      this.tempUser = user;
-      return user.generateToken();
-    })
-    .then( token => {
-      this.tempToken = token;
-      done();
-    })
-    .catch(done);
-  });
-
-  beforeEach( done => {
-    exampleQuestion.userID = this.tempUser._id.toString();
-    new Question(exampleQuestion).save()
-    .then( question => {
-      this.tempQuestion = question;
-      done();
-    })
-    .catch(done);
-  });
-
-  afterEach( done => {
-    Promise.all([
-      User.remove({}),
-      Question.remove({})
-    ])
-    .then( () => done())
-    .catch(done);
-  });
+  before( done => serverToggle.serverOn(server, done));
+  after( done => serverToggle.serverOff(server, done));
+  before( done => beforeController.call(this, done));
+  after( done => afterController.killAllDataBase(done));
 
   // ------------------
   // POST /api/question
   // ------------------
 
   describe('POST: /api/question', () => {
-    
     it('should return a questions with a 200 status', done => {
       request.post(`${url}/api/question`)
-      .send(exampleQuestion)
+      .send(mockData.exampleQuestion)
       .set({
         Authorization: `Bearer ${this.tempToken}`
       })
       .end((err, res) => {
         if (err) return done(err);
-        expect(res.body.content).to.equal(exampleQuestion.content);
+        expect(res.body.content).to.equal(mockData.exampleQuestion.content);
         expect(res.status).to.equal(200);
         done();
       });
@@ -91,7 +43,7 @@ describe('Question Routes', () => {
     describe('with no token provided', () => {
       it('should return a 401 status code', done => {
         request.post(`${url}/api/question`)
-        .send(exampleQuestion)
+        .send(mockData.exampleQuestion)
         .set({})
         .end((err, res) => {
           expect(res.status).to.equal(401);
@@ -186,8 +138,8 @@ describe('Question Routes', () => {
       .end((err,res) => {
         if (err) return done(err);
         expect(res.status).to.equal(200);
-        expect(res.body.userID).to.equal(exampleQuestion.userID);
-        expect(res.body.content).to.equal(exampleQuestion.content);
+        expect(res.body.userID).to.equal(mockData.exampleQuestion.userID.toString());
+        expect(res.body.content).to.equal(mockData.exampleQuestion.content);
         done();
       });
     });
@@ -213,11 +165,11 @@ describe('Question Routes', () => {
       .set({
         Authorization: `Bearer ${this.tempToken}`
       })
-      .send(updatedQuestion)
+      .send(mockData.updatedQuestion)
       .end((err, res) => {
         if (err) return done(err);
         expect(res.status).to.equal(200);
-        expect(res.body.content).to.equal(updatedQuestion.content);
+        expect(res.body.content).to.equal(mockData.updatedQuestion.content);
         done();
       });
     });
@@ -225,7 +177,7 @@ describe('Question Routes', () => {
     describe('when no authorization is sent', () => {
       it('should return a 401 error', done => {
         request.put(`${url}/api/question/${this.tempQuestion._id}`)
-        .send(updatedQuestion)
+        .send(mockData.updatedQuestion)
         .end((err, res) => {
           expect(res.status).to.equal(401);
           done();
@@ -254,7 +206,7 @@ describe('Question Routes', () => {
         .set({
           Authorization: `Bearer ${this.tempToken}`
         })
-        .send(updatedQuestion)
+        .send(mockData.updatedQuestion)
         .end((err, res) => {
           expect(res.status).to.equal(404);
           done();
@@ -268,13 +220,12 @@ describe('Question Routes', () => {
         .set({
           Authorization: `Bearer ${this.invalidToken}`
         })
-        .send(updatedQuestion)
+        .send(mockData.updatedQuestion)
         .end((err, res) => {
           expect(res.status).to.equal(500);
           done();
         });
       });
     });
-
   });
 });
