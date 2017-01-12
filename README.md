@@ -4,7 +4,7 @@
 
 Gathering user-generated interview questions and answers for our Alexa interview skill(s).
 
-Check out our InVision mockup [here](https://invis.io/YAA01KTSR#/214067299_Interview_Overflow_-2--pdf_1).
+Check out our InVision mockup of our MVP [here](https://invis.io/YAA01KTSR#/214067299_Interview_Overflow_-2--pdf_1).
 
 ## Submit Interview Questions and Answers on Interview Overflow
 
@@ -221,6 +221,7 @@ Error
 * Implement an Angular frontend to Interview Overflow
 * Integrate Alexa into our web application
 * Allow users to log into the Interview Overflow app via their Amazon accounts
+* Create a more robust profile endpoint
 
 ## Thank You
- Thank you to the Amazon Alexa SDK, Duncan, etc.
+ Thank you to the Amazon Alexa SDK, Brian, Gio, Kaylyn, Duncan, Stack Exchange API, etc.
