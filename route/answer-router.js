@@ -11,7 +11,6 @@ const Question = require('../model/question.js');
 
 const answerRouter = module.exports = new Router();
 
-// POST /question/:id/answer - Route for creating an answer
 answerRouter.post('/api/question/:questionID/answer', bearerAuth, jsonParser, (request, response, next) => {
   debug('POST: /api/question/:questionID/answer');
 
@@ -24,7 +23,6 @@ answerRouter.post('/api/question/:questionID/answer', bearerAuth, jsonParser, (r
   .catch(next);
 });
 
-// GET /answer/:id - Get a specific answer
 answerRouter.get('/api/answer/:id', (request, response, next) => {
   debug('GET: /api/answer/:id');
 
@@ -33,7 +31,6 @@ answerRouter.get('/api/answer/:id', (request, response, next) => {
   .catch(err => next(createError(404, err.message)));
 });
 
-// GET /answer/ - Get all answers
 answerRouter.get('/api/answer', (request, response, next) => {
   debug('GET: /api/answer');
 
@@ -42,7 +39,6 @@ answerRouter.get('/api/answer', (request, response, next) => {
   .catch(next);
 });
 
-// PUT /answer/:id - Edit a specific answer
 answerRouter.put('/api/answer/:id', bearerAuth, jsonParser, (request, response, next) => {
   debug('PUT: /api/answer/:id');
 
@@ -51,7 +47,6 @@ answerRouter.put('/api/answer/:id', bearerAuth, jsonParser, (request, response, 
   .catch(err => next(createError(404, err.message)));
 });
 
-// PUT /answer/:id - Delete a specific answer
 answerRouter.delete('/api/answer/:id', bearerAuth, (request, response, next) => {
   debug('DELETE: /api/answer/:id');
 
@@ -59,12 +54,3 @@ answerRouter.delete('/api/answer/:id', bearerAuth, (request, response, next) => 
   .then(() => response.status(204).send())
   .catch(err => next(createError(404, err.message)));
 });
-
-// TODO: POST /answer/:id/vote-up
-// TODO: POST /answer/:id/vote-down
-// Vote on a specific answer
-// answerRouter.post('/api/question/:questionID/answer/:id/vote-:dir', jsonParser, (request, response, next) => {
-//   debug('/api/question/:questionID/answer/:id/vote-:dir');
-// });
-
-// TODO: explore why we get a 200 null response when hitting route for a deleted answer
