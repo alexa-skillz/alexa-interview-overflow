@@ -15,14 +15,12 @@ module.exports = function(done) {
   .then( token => {
     this.tempToken = token;
     mockData.exampleQuestion.userID = this.tempUser._id;
-    // testToken = this.tempToken;
     return new Question(mockData.exampleQuestion).save();
   })
   .then( question => {
     this.tempQuestion = question;
     mockData.exampleAnswer.userID = this.tempUser._id;
     mockData.exampleAnswer.questionID = this.tempQuestion._id;
-    // testQuestion = this.tempQuestion;
     done();
   })
   .catch(done);

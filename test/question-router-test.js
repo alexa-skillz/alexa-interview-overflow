@@ -21,10 +21,6 @@ describe('Question Routes', () => {
   before( done => beforeController.call(this, done));
   after( done => afterController.killAllDataBase(done));
 
-  // ------------------
-  // POST /api/question
-  // ------------------
-
   describe('POST: /api/question', () => {
     it('should return a questions with a 200 status', done => {
       request.post(`${url}/api/question`)
@@ -39,7 +35,6 @@ describe('Question Routes', () => {
         done();
       });
     });
-
     describe('with no token provided', () => {
       it('should return a 401 status code', done => {
         request.post(`${url}/api/question`)
@@ -52,7 +47,6 @@ describe('Question Routes', () => {
         });
       });
     });
-
     describe('with no body content provided', () => {
       it('should return a 400 status code', done => {
         request.post(`${url}/api/question`)
@@ -68,7 +62,6 @@ describe('Question Routes', () => {
         });
       });
     });
-
     describe('with an invalid body provided', () => {
       it('should return a 400 status code', done => {
         request.post(`${url}/api/question`)
@@ -84,7 +77,6 @@ describe('Question Routes', () => {
         });
       });
     });
-
     describe('when given an unregistered route', () => {
       it('should return a 404 not found status', done => {
         request.post(`${url}/api/nonexistent`)
@@ -101,12 +93,7 @@ describe('Question Routes', () => {
 
   });
 
-  // -----------------
-  // GET /api/question
-  // -----------------
-
   describe('GET: /api/question', () => {
-
     it('should return a collection of questions with a 200 status', done => {
       request.get(`${url}/api/question`)
       .end((err,res) => {
@@ -115,7 +102,6 @@ describe('Question Routes', () => {
         done();
       });
     });
-
     describe('when given an unregistered route', () => {
       it('should return a 404 err with unregistered routes', done => {
         request.get(`${url}/api/invalid`)
@@ -127,12 +113,7 @@ describe('Question Routes', () => {
     });
   });
 
-  // ---------------------
-  // GET /api/question/:id
-  // ---------------------
-
   describe('GET: /api/question/:id', () => {
-
     it('should return a question and a 200 status', done => {
       request.get(`${url}/api/question/${this.tempQuestion._id}`)
       .end((err,res) => {
@@ -143,7 +124,6 @@ describe('Question Routes', () => {
         done();
       });
     });
-
     it('should return a 404 err with unregistered routes', done => {
       request.get(`${url}/api/invalid/${this.tempQuestion._id}`)
       .end( res => {
@@ -154,12 +134,7 @@ describe('Question Routes', () => {
 
   });
 
-  // ---------------------
-  // PUT /api/question/:id
-  // ---------------------
-
   describe('PUT: /api/question/:id', () => {
-
     it('should update a question', done => {
       request.put(`${url}/api/question/${this.tempQuestion._id}`)
       .set({
@@ -173,7 +148,6 @@ describe('Question Routes', () => {
         done();
       });
     });
-
     describe('when no authorization is sent', () => {
       it('should return a 401 error', done => {
         request.put(`${url}/api/question/${this.tempQuestion._id}`)
@@ -184,7 +158,6 @@ describe('Question Routes', () => {
         });
       });
     });
-
     describe('when an invalid body is sent', () => {
       it('should return a 400', done => {
         var invalidUpdatedQuestion = {invalid: 'invalid updated question'};
@@ -199,7 +172,6 @@ describe('Question Routes', () => {
         });
       });
     });
-
     describe('with an invalid route', () => {
       it('should return a 404 error', done => {
         request.put(`${url}/api/invalid_route/${this.tempQuestion._id}`)
@@ -213,7 +185,6 @@ describe('Question Routes', () => {
         });
       });
     });
-
     describe('with an invalid token', () => {
       it('should return a 500 error status', done => {
         request.put(`${url}/api/question/${this.tempQuestion._id}`)

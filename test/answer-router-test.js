@@ -10,12 +10,10 @@ const mockData = require('./lib/mock-data.js');
 const beforeController = require('./lib/before-controller.js');
 const afterController = require('./lib/after-controller.js');
 
-mongoose.Promise = Promise;
-
 const server = require('../server.js');
-
 const url = `http://localhost:${process.env.PORT}`;
 
+mongoose.Promise = Promise;
 
 describe('Answer Routes', function() {
   before( done => serverToggle.serverOn(server, done));
@@ -72,6 +70,7 @@ describe('Answer Routes', function() {
         });
       });
     });
+
     describe('GET: /api/answer/:id', () => {
       describe('with a valid body', () => {
         it('should return an answer', done => {
@@ -110,6 +109,7 @@ describe('Answer Routes', function() {
         });
       });
     });
+    
     describe('PUT: /api/answer/:answerID', () => {
       describe('with a valid body', () => {
         it('should return a updated answer', done => {
