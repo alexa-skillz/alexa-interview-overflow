@@ -53,16 +53,3 @@ Question.findByIdAndRemoveAnswer = function(id) {
   })
   .catch(err => Promise.reject(createError(404, err.message)));
 };
-
-// Question.findByUserId = function(id) {
-//   debug('findByUserId');
-//
-//   return Question.findById(id)
-//   .then(question => {
-//     debug(question);
-//     answer.questionID = question._id;
-//     this.tempQuestion = question;
-//     return new Answer(answer).save();
-//   })
-//   .catch(err => Promise.reject(createError(404, err.message)));
-// };

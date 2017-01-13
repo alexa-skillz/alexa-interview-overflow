@@ -10,11 +10,10 @@ const mockData = require('./lib/mock-data.js');
 const beforeController = require('./lib/before-controller.js');
 const afterController = require('./lib/after-controller.js');
 
-mongoose.Promise = Promise;
-
 const server = require('../server.js');
-
 const url = `http://localhost:${process.env.PORT}`;
+
+mongoose.Promise = Promise;
 
 describe('Auth Routes', function() {
   before( done => serverToggle.serverOn(server, done));
@@ -123,7 +122,7 @@ describe('Auth Routes', function() {
       });
     });
     describe('with a valid username and invalid password', function() {
-      it('should return a bad request',done => {
+      it('should return a bad request', done => {
         request.get(`${url}/api/signin`)
         .auth(mockData.exampleUser.username, 'invalidPassword')
         .end((err, res) => {
@@ -134,7 +133,7 @@ describe('Auth Routes', function() {
       });
     });
     describe('with a valid password and invalid username', function() {
-      it('should return a bad request - incorrect username',done => {
+      it('should return a bad request - incorrect username', done => {
         request.get(`${url}/api/signin`)
         .auth('invalidUsername', mockData.exampleUser.password)
         .end((err, res) => {
@@ -145,7 +144,7 @@ describe('Auth Routes', function() {
       });
     });
     describe('with a valid username and missing password', function() {
-      it('should return a bad request - missing password',done => {
+      it('should return a bad request - missing password', done => {
         request.get(`${url}/api/signin`)
         .auth(mockData.exampleUser.username)
         .end((err, res) => {
@@ -156,7 +155,7 @@ describe('Auth Routes', function() {
       });
     });
     describe('with a valid password and missing username', function() {
-      it('should return a bad request - missing username',done => {
+      it('should return a bad request - missing username', done => {
         request.get(`${url}/api/signin`)
         .auth('', mockData.exampleUser.password)
         .end((err, res) => {
@@ -167,7 +166,7 @@ describe('Auth Routes', function() {
       });
     });
     describe('with a missing username and password', function() {
-      it('should return a bad request - missing username and password',done => {
+      it('should return a bad request - missing username and password', done => {
         request.get(`${url}/api/signin`)
         .auth('', '')
         .end((err, res) => {
