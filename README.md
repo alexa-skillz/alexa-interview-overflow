@@ -4,7 +4,7 @@
 
 Gathering user-generated interview questions and answers for our Alexa interview skill(s).
 
-Check out our InVision mockup of our MVP [here](https://invis.io/YAA01KTSR#/214067299_Interview_Overflow_-2--pdf_1).
+Check out our InVision mockup of our MVP:  [here](https://invis.io/YAA01KTSR#/214067299_Interview_Overflow_-2--pdf_1).
 
 Checkout out our Landing Page: [Staging](https://staging-interview-overflow.herokuapp.com/) | [Production](https://alexa-interview-overflow.herokuapp.com/)
 
@@ -29,7 +29,7 @@ Now, type the following in your command line:
 
 ```
 PORT='3000'
-MLAB_MONGO_URI='mongodb://<your_db_username>:<your_db_password>@ds157288.mlab.com:57288/alexa'
+MONGO_URI='mongodb://<your_db_username>:<your_db_password>@ds157288.mlab.com:57288/alexa'
 APP_SECRET='coolsecret'
 ```
 
@@ -425,4 +425,4 @@ X-Powered-By: Express
 * Create a more robust profile endpoint
 
 ## Thank You
- Thank you to the Amazon Alexa SDK, Brian, Gio, Kaylyn, Duncan, Lee, Stack Exchange API, etc.
+ Thank you to [Brian Nations](@bnates), [Gio D'Amelio](@giodamelio), [Kaylyn Yuh](@kaylynyuh), [Duncan Marsh](@slugbyte), and [Lee Broxson](@broxsonl). Also to the [Amazon Alexa SDK](https://developer.amazon.com/alexa) and the [Stack Exchange API](https://api.stackexchange.com/)
