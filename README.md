@@ -188,36 +188,9 @@ X-Powered-By: Express
 }
 ```
 
-### Test the API (DELETE)
+### A Note On (DELETE)
 
-After making a POST, you can make a DELETE request by grabbing the `_id` from the POST or GET request and adding it as a param to the url. Don't forget to grab your token too.
-
-1. Make a DELETE request, like this example: `http DELETE :3000/api/questions/5872ab02ee1492148dabdee3 Authentication:"Bearer <long-token-string>"`.
-
-2. You should get a JSON response with a `204` status code, like this example:
-
-``` javascript
-HTTP/1.1 204 No Content
-Access-Control-Allow-Origin: *
-Connection: keep-alive
-Date: Sun, 08 Jan 2017 21:14:06 GMT
-X-Powered-By: Express
-```
-
-3. If you make another GET request to this particular id param, you will get a `404` status code, like this example:
-
-``` javascript
-HTTP/1.1 404 Not Found
-Access-Control-Allow-Origin: *
-Connection: keep-alive
-Content-Length: 5
-Content-Type: text/html; charset=utf-8
-Date: Sun, 08 Jan 2017 21:14:17 GMT
-ETag: W/"5-kCsNVf3e9vjWUf4QNbfUvQ"
-X-Powered-By: Express
-
-Error
-```
+We do not have a delete option for questions as deleting a question would also delete the answers that other users included and we don't want to edit content without permission. We have a future goal of allowing a user to delete a question that has no answers associated with it, such as in the case that an identical question was created.
 
 ## Answers
 ### Test the API (POST Answer)
