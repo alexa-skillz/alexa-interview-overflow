@@ -49,3 +49,11 @@ questionRouter.put('/api/question/:id', bearerAuth, jsonParser, (request, respon
   })
   .catch(err => next(createError(500, err.message)));
 });
+
+questionRouter.delete('/api/question/:id', bearerAuth, (request, response, next) => {
+  debug('DELETE: /api/question/:id');
+
+  Question.findByIdAndRemove(request.params.id)
+  .then(() => response.status(204).send())
+  .catch(err => next(createError(404, err.message)));
+});
