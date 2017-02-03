@@ -199,4 +199,39 @@ describe('Question Routes', () => {
       });
     });
   });
+
+  describe('DELETE: /api/question/:id', () => {
+    it('should delete a question', done => {
+      request.delete(`${url}/api/question/${this.tempQuestion._id}`)
+      .set({
+        Authorization: `Bearer ${this.tempToken}`
+      })
+      .end((err, res) => {
+        if (err) return done(err);
+        expect(res.status).to.equal(204);
+        done();
+      });
+    });
+  });
+  // 
+  // describe('DELETE: /api/question/:id', () => {
+  //   before( done => {
+  //     console.log(this.tempQuestion);
+  //     delete this.tempQuestion.answersArray;
+  //     console.log(this.tempQuestion);
+  //     done();
+  //   });
+  //
+  //   it('should delete a question', done => {
+  //     request.delete(`${url}/api/question/${this.tempQuestion._id}`)
+  //     .set({
+  //       Authorization: `Bearer ${this.tempToken}`
+  //     })
+  //     .end((err, res) => {
+  //       if (err) return done(err);
+  //       expect(res.status).to.equal(204);
+  //       done();
+  //     });
+  //   });
+  // });
 });

@@ -4,7 +4,7 @@ const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
 const createError = require('http-errors');
 const bearerAuth = require('../lib/bearer-middleware.js');
-const debug = require('debug')('question:question-router');
+const debug = require('debug')('alexa-skillz:question-router');
 const Question = require('../model/question.js');
 
 
@@ -51,21 +51,17 @@ questionRouter.put('/api/question/:id', bearerAuth, jsonParser, (request, respon
 });
 
 questionRouter.delete('/api/question/:id', bearerAuth, (request, response, next) => {
-  debug('DELETE: /api/question/:id', response);
+  debug('DELETE: /api/question/:id');
 
   Question.findById(request.params.id)
-  .populate('answers')
-  .then(question => response.json(question))
-  .catch(next);
-  
-  // Question.findById(request.params.id)
-  // .then(question => {
-  //   if(question.answersArray.length === 0) {
-  //     debug('DELETE: question.answersArray.length === 0', question);
-  //     Question.findByIdAndRemove(question._id);
-  //   }
-  //   if(question.answersArray.length !== 0) next(createError(401, 'cannot delete question'));
-  // })
-  // .then(() => response.status(204).send())
-  // .catch(err => next(createError(404, err.message)));
+  .then(question => {
+    if(question.answersArray.length === 0) {
+      return Question.findByIdAndRemove(question._id);
+    }
+    if(question.answersArray.length !== 0) {
+      throw new Error();
+    }
+  })
+  .then(() => response.status(204).send())
+  .catch(err => next(createError(404, err.message)));
 });

@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 const createError = require('http-errors');
-const debug = require('debug')('question:question');
+const debug = require('debug')('alexa-skillz:question');
 const Schema = mongoose.Schema;
 const Answer = require('./answer.js');
 
