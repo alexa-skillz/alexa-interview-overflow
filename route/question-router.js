@@ -51,9 +51,21 @@ questionRouter.put('/api/question/:id', bearerAuth, jsonParser, (request, respon
 });
 
 questionRouter.delete('/api/question/:id', bearerAuth, (request, response, next) => {
-  debug('DELETE: /api/question/:id');
+  debug('DELETE: /api/question/:id', response);
 
-  Question.findByIdAndRemove(request.params.id)
-  .then(() => response.status(204).send())
-  .catch(err => next(createError(404, err.message)));
+  Question.findById(request.params.id)
+  .populate('answers')
+  .then(question => response.json(question))
+  .catch(next);
+  
+  // Question.findById(request.params.id)
+  // .then(question => {
+  //   if(question.answersArray.length === 0) {
+  //     debug('DELETE: question.answersArray.length === 0', question);
+  //     Question.findByIdAndRemove(question._id);
+  //   }
+  //   if(question.answersArray.length !== 0) next(createError(401, 'cannot delete question'));
+  // })
+  // .then(() => response.status(204).send())
+  // .catch(err => next(createError(404, err.message)));
 });
