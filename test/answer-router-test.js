@@ -143,6 +143,21 @@ describe('Answer Routes', function() {
       });
     });
 
+    describe('DELETE: /api/question/:id', () => {
+      describe('Question Test', () => {
+        it('shoud not delete the question', done => {
+          request.delete(`${url}/api/question/${this.tempQuestion._id}`)
+          .set({
+            Authorization: `Bearer ${this.tempToken}`
+          })
+          .end( res => {
+            expect(res.status).to.equal(404);
+            done();
+          });
+        });
+      });
+    });
+
     describe('DELETE: /api/answer/:id', () => {
       describe('with a valid request', () => {
         it('should delete an answer', done => {
