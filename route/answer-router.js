@@ -67,7 +67,7 @@ answerRouter.param('id', function(request, response, next, id) {
   });
 });
 
-answerRouter.put('/api/answer/:id/upvote', bearerAuth, function(request, response, next) {
+answerRouter.put('/api/answer/:id/upvote', bearerAuth, (request, response, next) => {
   debug('PUT: /api/answer/:id/upvote');
 
   request.answer.upvote(function(err, answer){
@@ -76,7 +76,7 @@ answerRouter.put('/api/answer/:id/upvote', bearerAuth, function(request, respons
   });
 });
 
-answerRouter.put('/api/answer/:id/downvote', bearerAuth, function(request, response, next) {
+answerRouter.put('/api/answer/:id/downvote', bearerAuth, (request, response, next) => {
   debug('PUT: /api/answer/:id/downvote');
 
   request.answer.downvote(function(err, answer){

@@ -62,7 +62,7 @@ questionRouter.param('id', function(request, response, next, id) {
   });
 });
 
-questionRouter.put('/api/question/:id/upvote', bearerAuth, function(request, response, next) {
+questionRouter.put('/api/question/:id/upvote', bearerAuth, (request, response, next) => {
   debug('PUT: /api/question/:id/upvote');
 
   request.question.upvote(function(err, question){
@@ -72,7 +72,7 @@ questionRouter.put('/api/question/:id/upvote', bearerAuth, function(request, res
   });
 });
 
-questionRouter.put('/api/question/:id/downvote', bearerAuth, function(request, response, next) {
+questionRouter.put('/api/question/:id/downvote', bearerAuth, (request, response, next) => {
   debug('PUT: /api/question/:id/downvote');
 
   request.question.downvote(function(err, question){

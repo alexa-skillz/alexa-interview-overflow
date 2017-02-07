@@ -188,14 +188,72 @@ X-Powered-By: Express
 }
 ```
 
-### A Note On (DELETE)
+### Test the API (PUT) - Upvote / Downvote Questions
 
-We do not have a delete option for questions as deleting a question would also delete the answers that other users included and we don't want to edit content without permission. We have a future goal of allowing a user to delete a question that has no answers associated with it, such as in the case that an identical question was created.
+After making a POST, you can make a PUT request by grabbing the `_id` from the POST or GET request and adding it as a param to the url. Don't forget to grab your token too.
+
+1. Make a PUT request to upvote or downvote on a question, like this example: `http PUT :3000/api/question/589a1ad8c6e4b429720a8bb7/upvote Authentication:"Bearer <long-token-string>"` or `http PUT :3000/api/question/589a1ad8c6e4b429720a8bb7/downvote Authentication:"Bearer <long-token-string>"`.
+
+2. You should get a JSON response with a `200` status code, like this example:
+
+``` javascript
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Content-Length: 99
+Content-Type: application/json; charset=utf-8
+Date: Sun, 08 Jan 2017 21:12:15 GMT
+ETag: W/"63-pk1qDVC613Kbd2w0Qyp5Og"
+X-Powered-By: Express
+
+{
+  "__v": 0,
+    "_id": "589a1ad8c6e4b429720a8bb7",
+    "answersArray": [],
+    "content": "hey",
+    "created": "2017-02-07T19:07:04.630Z",
+    "userID": "589a1a92c6e4b429720a8bb6",
+    "votes": -1
+}
+```
+
+The upvotes and downvotes will increment or decrement the number of votes associated with the question.
+
+### Test the API (DELETE Question)
+
+After making a POST, you can make a DELETE request by grabbing the `_id` from the POST or GET request and adding it as a param to the url. Be sure to have your token.
+
+1. Make a DELETE request, like this example: `http DELETE :3000/api/question/589a1ad8c6e4b429720a8bb7 Authentication:"Bearer <long-token-string>"`.
+
+2. You should get a JSON response with a `204` status code, like this example:
+
+``` javascript
+HTTP/1.1 204 No Content
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Date: Thu, 12 Jan 2017 22:03:41 GMT
+X-Powered-By: Express
+```
+
+3. If you make another GET request to this particular id param, you will get a `404` status code, like this example:
+
+``` javascript
+HTTP/1.1 404 Not Found
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Content-Length: 13
+Content-Type: text/html; charset=utf-8
+Date: Thu, 12 Jan 2017 22:04:08 GMT
+ETag: W/"d-8ImJlDOBcq5A9PkBq5sbQw"
+X-Powered-By: Express
+
+NotFoundError
+```
 
 ## Answers
 ### Test the API (POST Answer)
 
-1. Open a new terminal located at the root of this project, grab the token, and type `http POST :3000/api/question/<questionID> content="This is answer" Authentication:"Bearer <long-token-string>"`
+1. Open a new terminal located at the root of this project, grab the token, and type `http POST :3000/api/question/<questionID>/answer content="This is answer" Authentication:"Bearer <long-token-string>"`
 2. You should get a JSON response with a `200` status code and a response, like this example:
 
 ``` javascript
@@ -302,6 +360,37 @@ X-Powered-By: Express
     "votes": 0
 }
 ```
+
+### Test the API (PUT) - Upvote / Downvote Answers
+
+After making a POST, you can make a PUT request by grabbing the `_id` from the POST or GET request and adding it as a param to the url. Don't forget to grab your token too.
+
+1. Make a PUT request to upvote or downvote on an answer, like this example: `http PUT :3000/api/answer/589a1e50b03eeb2b1820796c/upvote Authentication:"Bearer <long-token-string>"` or `http PUT :3000/api/answer/589a1e50b03eeb2b1820796c/downvote Authentication:"Bearer <long-token-string>"`.
+
+2. You should get a JSON response with a `200` status code, like this example:
+
+``` javascript
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Content-Length: 99
+Content-Type: application/json; charset=utf-8
+Date: Sun, 08 Jan 2017 21:12:15 GMT
+ETag: W/"63-pk1qDVC613Kbd2w0Qyp5Og"
+X-Powered-By: Express
+
+{
+  "__v": 0,
+    "_id": "589a1ad8c6e4b429720a8bb7",
+    "answersArray": [],
+    "content": "hey",
+    "created": "2017-02-07T19:07:04.630Z",
+    "userID": "589a1a92c6e4b429720a8bb6",
+    "votes": -1
+}
+```
+
+The upvotes and downvotes will increment or decrement the number of votes associated with the answer.
 
 ### Test the API (DELETE)
 
