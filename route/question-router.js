@@ -36,7 +36,7 @@ questionRouter.get('/api/question', (request, response, next) => {
   .catch(next);
 });
 
-questionRouter.put('/api/question/:id', bearerAuth,jsonParser, (request, response, next) => {
+questionRouter.put('/api/question/:id', bearerAuth, jsonParser, (request, response, next) => {
   debug('PUT: /api/question/:id');
 
   request.body.userID = request.user._id;
