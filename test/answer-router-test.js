@@ -96,10 +96,9 @@ describe('Answer Routes', function() {
         });
       });
       describe('with an invalid body', () => {
-        it('should return an invalid route', done => {
-          request.get(`${url}/api/answer/invalid`)
-          .end((err, res) => {
-            expect(err).to.be.an('error');
+        it('should return a 404 err with unregistered routes', done => {
+          request.get(`${url}/api/invalid/${testAnswer._id}`)
+          .end( res => {
             expect(res.status).to.equal(404);
             done();
           });
@@ -126,7 +125,7 @@ describe('Answer Routes', function() {
       });
       describe('with an invalid request', () => {
         it('should return a bad request', done => {
-          request.put(`${url}/api/answer/invalid`)
+          request.put(`${url}/api/answer//${testAnswer._id}`)
           .send('')
           .set({
             Authorization: `Bearer ${this.tempToken}`
@@ -276,21 +275,13 @@ describe('Answer Routes', function() {
       });
       describe('with an invalid request', () => {
         it('should return an invalid route', done => {
-          request.delete(`${url}/api/answer/invalid`)
+          request.delete(`${url}/api/answer/${testAnswer._id}/invalid`)
           .set({
             Authorization: `Bearer ${this.tempToken}`
           })
           .end((err, res) => {
             expect(err).to.be.an('error');
             expect(res.status).to.equal(404);
-            done();
-          });
-        });
-        it('should return an unauthorized', done => {
-          request.delete(`${url}/api/answer/${testAnswer._id}`)
-          .end((err, res) => {
-            expect(err).to.be.an('error');
-            expect(res.status).to.equal(401);
             done();
           });
         });
