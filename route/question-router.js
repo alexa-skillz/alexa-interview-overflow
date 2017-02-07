@@ -50,6 +50,38 @@ questionRouter.put('/api/question/:id', bearerAuth, jsonParser, (request, respon
   .catch(err => next(createError(500, err.message)));
 });
 
+questionRouter.param('id', function(request, response, next, id) {
+  var query = Question.findById(id);
+
+  query.exec(function (err, question){
+    if (err) { return next(err); }
+    if (!question) { return next(new Error('can\'t find question')); }
+
+    request.question = question;
+    return next();
+  });
+});
+
+questionRouter.put('/api/question/:id/upvote', bearerAuth, (request, response, next) => {
+  debug('PUT: /api/question/:id/upvote');
+
+  request.question.upvote(function(err, question){
+    if (err) { return next(err); }
+
+    response.json(question);
+  });
+});
+
+questionRouter.put('/api/question/:id/downvote', bearerAuth, (request, response, next) => {
+  debug('PUT: /api/question/:id/downvote');
+
+  request.question.downvote(function(err, question){
+    if (err) { return next(err); }
+
+    response.json(question);
+  });
+});
+
 questionRouter.delete('/api/question/:id', bearerAuth, (request, response, next) => {
   debug('DELETE: /api/question/:id');
 

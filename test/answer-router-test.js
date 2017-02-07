@@ -96,13 +96,9 @@ describe('Answer Routes', function() {
         });
       });
       describe('with an invalid body', () => {
-        it('should return an invalid route', done => {
-          request.get(`${url}/api/answer/invalid`)
-          .set({
-            Authorization: `Bearer ${this.tempToken}`
-          })
-          .end((err, res) => {
-            expect(err).to.be.an('error');
+        it('should return a 404 err with unregistered routes', done => {
+          request.get(`${url}/api/invalid/${testAnswer._id}`)
+          .end( res => {
             expect(res.status).to.equal(404);
             done();
           });
@@ -129,7 +125,7 @@ describe('Answer Routes', function() {
       });
       describe('with an invalid request', () => {
         it('should return a bad request', done => {
-          request.put(`${url}/api/answer/invalid`)
+          request.put(`${url}/api/answer//${testAnswer._id}`)
           .send('')
           .set({
             Authorization: `Bearer ${this.tempToken}`
@@ -137,6 +133,110 @@ describe('Answer Routes', function() {
           .end((err, res) => {
             expect(err).to.be.an('error');
             expect(res.status).to.equal(404);
+            done();
+          });
+        });
+      });
+    });
+
+    describe('PUT: /api/answer/:id/upvote', () => {
+      it('should upvote a answer', done => {
+        request.put(`${url}/api/answer/${testAnswer._id}/upvote`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .send(mockData.updatedVote)
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          expect(res.body.votes).to.equal(mockData.updatedVote.votes);
+          done();
+        });
+      });
+      describe('when no authorization is sent', () => {
+        it('should return a 401 error', done => {
+          request.put(`${url}/api/answer/${testAnswer._id}/upvote`)
+          .send(mockData.updatedVote)
+          .end( res => {
+            expect(res.status).to.equal(401);
+            done();
+          });
+        });
+      });
+      describe('with an invalid route', () => {
+        it('should return a 404 error', done => {
+          request.put(`${url}/api/invalid_route/${testAnswer._id}/upvoting`)
+          .set({
+            Authorization: `Bearer ${this.tempToken}`
+          })
+          .send(mockData.updatedVote)
+          .end( res => {
+            expect(res.status).to.equal(404);
+            done();
+          });
+        });
+      });
+      describe('with an invalid token', () => {
+        it('should return a 500 error status', done => {
+          request.put(`${url}/api/answer/${testAnswer._id}/upvote`)
+          .set({
+            Authorization: `Bearer ${this.invalidToken}`
+          })
+          .send(mockData.updatedVote)
+          .end( res => {
+            expect(res.status).to.equal(500);
+            done();
+          });
+        });
+      });
+    });
+
+    describe('PUT: /api/answer/:id/downvote', () => {
+      it('should downvote a answer', done => {
+        request.put(`${url}/api/answer/${testAnswer._id}/downvote`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .send(mockData.updatedVote)
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          expect(res.body.votes).to.equal(0);
+          done();
+        });
+      });
+      describe('when no authorization is sent', () => {
+        it('should return a 401 error', done => {
+          request.put(`${url}/api/answer/${testAnswer._id}/downvote`)
+          .send(mockData.updatedVote)
+          .end( res => {
+            expect(res.status).to.equal(401);
+            done();
+          });
+        });
+      });
+      describe('with an invalid route', () => {
+        it('should return a 404 error', done => {
+          request.put(`${url}/api/invalid_route/${testAnswer._id}/downvoting`)
+          .set({
+            Authorization: `Bearer ${this.tempToken}`
+          })
+          .send(mockData.updatedVote)
+          .end( res => {
+            expect(res.status).to.equal(404);
+            done();
+          });
+        });
+      });
+      describe('with an invalid token', () => {
+        it('should return a 500 error status', done => {
+          request.put(`${url}/api/answer/${testAnswer._id}/downvote`)
+          .set({
+            Authorization: `Bearer ${this.invalidToken}`
+          })
+          .send(mockData.updatedVote)
+          .end( res => {
+            expect(res.status).to.equal(500);
             done();
           });
         });
@@ -175,21 +275,13 @@ describe('Answer Routes', function() {
       });
       describe('with an invalid request', () => {
         it('should return an invalid route', done => {
-          request.delete(`${url}/api/answer/invalid`)
+          request.delete(`${url}/api/answer/${testAnswer._id}/invalid`)
           .set({
             Authorization: `Bearer ${this.tempToken}`
           })
           .end((err, res) => {
             expect(err).to.be.an('error');
             expect(res.status).to.equal(404);
-            done();
-          });
-        });
-        it('should return an unauthorized', done => {
-          request.delete(`${url}/api/answer/${testAnswer._id}`)
-          .end((err, res) => {
-            expect(err).to.be.an('error');
-            expect(res.status).to.equal(401);
             done();
           });
         });

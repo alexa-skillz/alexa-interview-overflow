@@ -12,4 +12,14 @@ const answerSchema = Schema({
   questionID: {type: Schema.Types.ObjectId }
 });
 
+answerSchema.methods.upvote = function(id) {
+  this.votes += 1;
+  this.save(id);
+};
+
+answerSchema.methods.downvote = function(id) {
+  this.votes -= 1;
+  this.save(id);
+};
+
 module.exports = mongoose.model('answer', answerSchema);

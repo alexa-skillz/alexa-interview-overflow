@@ -10,8 +10,19 @@ const questionSchema = Schema({
   content: { type: String, required: true },
   created: { type: Date, required: true, default: Date.now },
   userID: { type: mongoose.Schema.Types.ObjectId, required: true },
-  answersArray: [{ type: Schema.Types.ObjectId, ref: 'answer' }]
+  answersArray: [{ type: Schema.Types.ObjectId, ref: 'answer' }],
+  votes: {type: Number, default: 0}
 });
+
+questionSchema.methods.upvote = function(id) {
+  this.votes += 1;
+  this.save(id);
+};
+
+questionSchema.methods.downvote = function(id) {
+  this.votes -= 1;
+  this.save(id);
+};
 
 const Question = module.exports = mongoose.model('question', questionSchema);
 
