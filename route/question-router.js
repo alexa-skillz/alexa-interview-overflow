@@ -4,7 +4,7 @@ const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
 const createError = require('http-errors');
 const bearerAuth = require('../lib/bearer-middleware.js');
-const debug = require('debug')('question:question-router');
+const debug = require('debug')('alexa-skillz:question-router');
 const Question = require('../model/question.js');
 
 
@@ -36,7 +36,7 @@ questionRouter.get('/api/question', (request, response, next) => {
   .catch(next);
 });
 
-questionRouter.put('/api/question/:id', bearerAuth, jsonParser, (request, response, next) => {
+questionRouter.put('/api/question/:id', bearerAuth,jsonParser, (request, response, next) => {
   debug('PUT: /api/question/:id');
 
   request.body.userID = request.user._id;
@@ -48,4 +48,36 @@ questionRouter.put('/api/question/:id', bearerAuth, jsonParser, (request, respon
     response.json(question);
   })
   .catch(err => next(createError(500, err.message)));
+});
+
+questionRouter.param('id', function(req, res, next, id) {
+  var query = Question.findById(id);
+
+  query.exec(function (err, question){
+    if (err) { return next(err); }
+    if (!question) { return next(new Error('can\'t find question')); }
+
+    req.question = question;
+    return next();
+  });
+});
+
+questionRouter.put('/api/question/:id/upvote', function(request, response, next) {
+  debug('PUT: /api/question/:id/upvote');
+
+  request.question.upvote(function(err, question){
+    if (err) { return next(err); }
+
+    response.json(question);
+  });
+});
+
+questionRouter.put('/api/question/:id/downvote', function(request, response, next) {
+  debug('PUT: /api/question/:id/downvote');
+
+  request.question.downvote(function(err, question){
+    if (err) { return next(err); }
+
+    response.json(question);
+  });
 });
