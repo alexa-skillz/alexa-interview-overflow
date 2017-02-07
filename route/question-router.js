@@ -80,6 +80,7 @@ questionRouter.put('/api/question/:id/downvote', function(request, response, nex
 
     response.json(question);
   });
+});
 
 questionRouter.delete('/api/question/:id', bearerAuth, (request, response, next) => {
   debug('DELETE: /api/question/:id');
