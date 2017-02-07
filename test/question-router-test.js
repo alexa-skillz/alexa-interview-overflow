@@ -200,6 +200,110 @@ describe('Question Routes', () => {
     });
   });
 
+  describe('PUT: /api/question/:id/upvote', () => {
+    it('should upvote a question', done => {
+      request.put(`${url}/api/question/${this.tempQuestion._id}/upvote`)
+      .set({
+        Authorization: `Bearer ${this.tempToken}`
+      })
+      .send(mockData.updatedVote)
+      .end((err, res) => {
+        if (err) return done(err);
+        expect(res.status).to.equal(200);
+        expect(res.body.votes).to.equal(mockData.updatedVote.votes);
+        done();
+      });
+    });
+    describe('when no authorization is sent', () => {
+      it('should return a 401 error', done => {
+        request.put(`${url}/api/question/${this.tempQuestion._id}/upvote`)
+        .send(mockData.updatedVote)
+        .end( res => {
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+    });
+    describe('with an invalid route', () => {
+      it('should return a 404 error', done => {
+        request.put(`${url}/api/invalid_route/${this.tempQuestion._id}/upvoting`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .send(mockData.updatedVote)
+        .end( res => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+    describe('with an invalid token', () => {
+      it('should return a 500 error status', done => {
+        request.put(`${url}/api/question/${this.tempQuestion._id}/upvote`)
+        .set({
+          Authorization: `Bearer ${this.invalidToken}`
+        })
+        .send(mockData.updatedVote)
+        .end( res => {
+          expect(res.status).to.equal(500);
+          done();
+        });
+      });
+    });
+  });
+
+  describe('PUT: /api/question/:id/downvote', () => {
+    it('should downvote a question', done => {
+      request.put(`${url}/api/question/${this.tempQuestion._id}/downvote`)
+      .set({
+        Authorization: `Bearer ${this.tempToken}`
+      })
+      .send(mockData.updatedVote)
+      .end((err, res) => {
+        if (err) return done(err);
+        expect(res.status).to.equal(200);
+        expect(res.body.votes).to.equal(0);
+        done();
+      });
+    });
+    describe('when no authorization is sent', () => {
+      it('should return a 401 error', done => {
+        request.put(`${url}/api/question/${this.tempQuestion._id}/downvote`)
+        .send(mockData.updatedVote)
+        .end( res => {
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+    });
+    describe('with an invalid route', () => {
+      it('should return a 404 error', done => {
+        request.put(`${url}/api/invalid_route/${this.tempQuestion._id}/downvoting`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .send(mockData.updatedVote)
+        .end( res => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+    describe('with an invalid token', () => {
+      it('should return a 500 error status', done => {
+        request.put(`${url}/api/question/${this.tempQuestion._id}/downvote`)
+        .set({
+          Authorization: `Bearer ${this.invalidToken}`
+        })
+        .send(mockData.updatedVote)
+        .end( res => {
+          expect(res.status).to.equal(500);
+          done();
+        });
+      });
+    });
+  });
+
   describe('DELETE: /api/question/:id', () => {
     it('should delete a question', done => {
       request.delete(`${url}/api/question/${this.tempQuestion._id}`)
@@ -213,25 +317,4 @@ describe('Question Routes', () => {
       });
     });
   });
-  // 
-  // describe('DELETE: /api/question/:id', () => {
-  //   before( done => {
-  //     console.log(this.tempQuestion);
-  //     delete this.tempQuestion.answersArray;
-  //     console.log(this.tempQuestion);
-  //     done();
-  //   });
-  //
-  //   it('should delete a question', done => {
-  //     request.delete(`${url}/api/question/${this.tempQuestion._id}`)
-  //     .set({
-  //       Authorization: `Bearer ${this.tempToken}`
-  //     })
-  //     .end((err, res) => {
-  //       if (err) return done(err);
-  //       expect(res.status).to.equal(204);
-  //       done();
-  //     });
-  //   });
-  // });
 });

@@ -50,19 +50,19 @@ questionRouter.put('/api/question/:id', bearerAuth,jsonParser, (request, respons
   .catch(err => next(createError(500, err.message)));
 });
 
-questionRouter.param('id', function(req, res, next, id) {
+questionRouter.param('id', function(request, response, next, id) {
   var query = Question.findById(id);
 
   query.exec(function (err, question){
     if (err) { return next(err); }
     if (!question) { return next(new Error('can\'t find question')); }
 
-    req.question = question;
+    request.question = question;
     return next();
   });
 });
 
-questionRouter.put('/api/question/:id/upvote', function(request, response, next) {
+questionRouter.put('/api/question/:id/upvote', bearerAuth, function(request, response, next) {
   debug('PUT: /api/question/:id/upvote');
 
   request.question.upvote(function(err, question){
@@ -72,7 +72,7 @@ questionRouter.put('/api/question/:id/upvote', function(request, response, next)
   });
 });
 
-questionRouter.put('/api/question/:id/downvote', function(request, response, next) {
+questionRouter.put('/api/question/:id/downvote', bearerAuth, function(request, response, next) {
   debug('PUT: /api/question/:id/downvote');
 
   request.question.downvote(function(err, question){

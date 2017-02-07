@@ -24,3 +24,7 @@ exports.exampleQuestionAnswer = {
   content: 'test question with answer',
   answersArray: ['12345']
 };
+
+exports.updatedVote = {
+  votes: 1
+};

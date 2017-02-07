@@ -3,7 +3,6 @@
 const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
 const createError = require('http-errors');
-const debug = require('debug')('alexa-skillz:question');
 const debug = require('debug')('alexa-skillz:answer');
 
 const bearerAuth = require('../lib/bearer-middleware.js');
@@ -56,19 +55,19 @@ answerRouter.delete('/api/answer/:id', bearerAuth, (request, response, next) => 
   .catch(err => next(createError(404, err.message)));
 });
 
-answerRouter.param('id', function(req, res, next, id) {
+answerRouter.param('id', function(request, response, next, id) {
   var query = Answer.findById(id);
 
   query.exec(function (err, answer){
     if (err) { return next(err); }
     if (!answer) { return next(new Error('can\'t find answer')); }
 
-    req.answer = answer;
+    request.answer = answer;
     return next();
   });
 });
 
-answerRouter.put('/api/answer/:id/upvote', function(request, response, next) {
+answerRouter.put('/api/answer/:id/upvote', bearerAuth, function(request, response, next) {
   debug('PUT: /api/answer/:id/upvote');
 
   request.answer.upvote(function(err, answer){
@@ -78,7 +77,7 @@ answerRouter.put('/api/answer/:id/upvote', function(request, response, next) {
   });
 });
 
-answerRouter.put('/api/answer/:id/downvote', function(request, response, next) {
+answerRouter.put('/api/answer/:id/downvote', bearerAuth, function(request, response, next) {
   debug('PUT: /api/answer/:id/downvote');
 
   request.answer.downvote(function(err, answer){
