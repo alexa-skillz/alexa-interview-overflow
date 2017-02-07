@@ -72,7 +72,6 @@ answerRouter.put('/api/answer/:id/upvote', bearerAuth, function(request, respons
 
   request.answer.upvote(function(err, answer){
     if (err) { return next(err); }
-
     response.json(answer);
   });
 });
@@ -82,7 +81,6 @@ answerRouter.put('/api/answer/:id/downvote', bearerAuth, function(request, respo
 
   request.answer.downvote(function(err, answer){
     if (err) { return next(err); }
-
     response.json(answer);
   });
 });
