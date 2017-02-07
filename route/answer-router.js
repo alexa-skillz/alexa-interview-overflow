@@ -54,3 +54,35 @@ answerRouter.delete('/api/answer/:id', bearerAuth, (request, response, next) => 
   .then(() => response.status(204).send())
   .catch(err => next(createError(404, err.message)));
 });
+
+answerRouter.param('id', function(req, res, next, id) {
+  var query = Answer.findById(id);
+
+  query.exec(function (err, answer){
+    if (err) { return next(err); }
+    if (!answer) { return next(new Error('can\'t find answer')); }
+
+    req.answer = answer;
+    return next();
+  });
+});
+
+answerRouter.put('/api/answer/:id/upvote', function(request, response, next) {
+  debug('PUT: /api/answer/:id/upvote');
+
+  request.answer.upvote(function(err, answer){
+    if (err) { return next(err); }
+
+    response.json(answer);
+  });
+});
+
+answerRouter.put('/api/answer/:id/downvote', function(request, response, next) {
+  debug('PUT: /api/answer/:id/downvote');
+
+  request.answer.downvote(function(err, answer){
+    if (err) { return next(err); }
+
+    response.json(answer);
+  });
+});
