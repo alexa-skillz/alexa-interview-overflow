@@ -19,3 +19,8 @@ exports.exampleAnswer = {
 exports.updatedQuestion = {
   content: 'updated question content'
 };
+
+exports.exampleQuestionAnswer = {
+  content: 'test question with answer',
+  answersArray: ['12345']
+};

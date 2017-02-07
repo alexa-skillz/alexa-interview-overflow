@@ -80,4 +80,19 @@ questionRouter.put('/api/question/:id/downvote', function(request, response, nex
 
     response.json(question);
   });
+
+questionRouter.delete('/api/question/:id', bearerAuth, (request, response, next) => {
+  debug('DELETE: /api/question/:id');
+
+  Question.findById(request.params.id)
+  .then(question => {
+    if(question.answersArray.length === 0) {
+      return Question.findByIdAndRemove(question._id);
+    }
+    if(question.answersArray.length !== 0) {
+      throw new Error();
+    }
+  })
+  .then(() => response.status(204).send())
+  .catch(err => next(createError(404, err.message)));
 });

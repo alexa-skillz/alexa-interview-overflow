@@ -4,6 +4,7 @@ const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
 const createError = require('http-errors');
 const debug = require('debug')('alexa-skillz:question');
+const debug = require('debug')('alexa-skillz:answer');
 
 const bearerAuth = require('../lib/bearer-middleware.js');
 const Answer = require('../model/answer.js');
