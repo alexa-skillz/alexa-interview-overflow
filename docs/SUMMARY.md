@@ -1,6 +1,6 @@
 # Table of content
-* [Getting Started](./GETTINGSTARTED.md)
-* [Sign in & Sign up](./AUTHENTICATE.md)
-* [Profile](./PROFILE.md)
-* [Questions](./QUESTIONS.md)
-* [Answers](./ANSWERS.md)
+* [Getting Started](docs/GETTINGSTARTED.md)
+* [Sign in & Sign up](docs/AUTHENTICATE.md)
+* [Profile](docs/PROFILE.md)
+* [Questions](docs/QUESTIONS.md)
+* [Answers](docs/ANSWERS.md)
