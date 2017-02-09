@@ -11,7 +11,7 @@ Checkout out our Landing Page: [Staging](https://staging-interview-overflow.hero
 
 ----
 
-<p align="center">[View Docs](https://alexa-skills.gitbooks.io/alexa-interview-overflow/content/)</p>
+[View Docs](https://alexa-skills.gitbooks.io/alexa-interview-overflow/content/)
 
 ## Submit Interview Questions and Answers on Interview Overflow
 
