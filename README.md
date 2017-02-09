@@ -1,4 +1,5 @@
-# Interview Overflow
+![](https://s3.amazonaws.com/technical-interview-alexa-skill/interview-overflow.png)
+
 
 [![Build Status](https://travis-ci.org/alexa-skillz/alexa-interview-overflow.svg?branch=staging)](https://travis-ci.org/alexa-skillz/alexa-interview-overflow) ![alt img](https://david-dm.org/alexa-skillz/alexa-interview-overflow.svg) [![Coverage Status](https://coveralls.io/repos/github/alexa-skillz/alexa-interview-overflow/badge.svg?branch=add-availableforhire-data)](https://coveralls.io/github/alexa-skillz/alexa-interview-overflow?branch=add-availableforhire-data)
 
