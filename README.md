@@ -1,4 +1,4 @@
-<p style="text-align: center">![](https://s3.amazonaws.com/technical-interview-alexa-skill/interview-overflow.png)</p>
+<p align="center">[![documentation](https://s3.amazonaws.com/technical-interview-alexa-skill/interview-overflow.png)](https://alexa-skills.gitbooks.io/alexa-interview-overflow/content/)</p>
 
 
 [![Build Status](https://travis-ci.org/alexa-skillz/alexa-interview-overflow.svg?branch=staging)](https://travis-ci.org/alexa-skillz/alexa-interview-overflow) ![alt img](https://david-dm.org/alexa-skillz/alexa-interview-overflow.svg) [![Coverage Status](https://coveralls.io/repos/github/alexa-skillz/alexa-interview-overflow/badge.svg?branch=add-availableforhire-data)](https://coveralls.io/github/alexa-skillz/alexa-interview-overflow?branch=add-availableforhire-data)
@@ -11,7 +11,7 @@ Checkout out our Landing Page: [Staging](https://staging-interview-overflow.hero
 
 ----
 
-<p style="text-align: center"><a href="https://alexa-skills.gitbooks.io/alexa-interview-overflow/content/" style="background: #0068A8; padding: 1vw 6vw; font-size: 2vw; border-radius: 5px">View Docs</a></p>
+<p align="center"><a href="https://alexa-skills.gitbooks.io/alexa-interview-overflow/content/" style="background: #0068A8; padding: 1vw 6vw; font-size: 2vw; border-radius: 5px">View Docs</a></p>
 
 ## Submit Interview Questions and Answers on Interview Overflow
 
