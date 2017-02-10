@@ -1,11 +1,6 @@
 {
+  "root": "./docs",
   "structure": {
-    "summary": "docs/SUMMARY.md"
-  },
-  "plugins": ["-highlight"],
-  "pluginsConfig": {
-    "prism": {
-      "css": ["prismjs/themes/prism-solarizedlight.css"]
-    }
+    "summary": "./docs/SUMMARY.md"
   }
 }
