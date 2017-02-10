@@ -1,6 +1,6 @@
 {
-  "root": "./docs",
+  "gitbook": ">= 3.0.0",
   "structure": {
-    "summary": "./docs/SUMMARY.md"
+    "summary": "SUMMARY.md"
   }
 }
