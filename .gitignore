@@ -39,3 +39,6 @@ jspm_packages
 # Environment Variables
 .env
 .coveralls.yml
+
+# Docs Local Build
+_book
