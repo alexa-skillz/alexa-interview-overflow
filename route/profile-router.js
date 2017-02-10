@@ -2,7 +2,6 @@
 
 const jsonParser = require('body-parser').json();
 const Router = require('express').Router;
-const bearerAuth = require('../lib/bearer-middleware.js');
 const debug = require('debug')('alexa-skillz:profile-router');
 
 const User = require('../model/user.js');
@@ -10,7 +9,7 @@ const Profile = require('../model/profile.js');
 
 const profileRouter = module.exports = Router();
 
-profileRouter.get('/api/profile/me', bearerAuth, function(request, response, next){
+profileRouter.get('/api/profile/me', function(request, response, next){
   debug('GET: /api/profile/me');
 
   User.findById(request.user._id)
@@ -23,7 +22,7 @@ profileRouter.get('/api/profile/me', bearerAuth, function(request, response, nex
   .catch(next);
 });
 
-profileRouter.put('/api/profile/me', bearerAuth, jsonParser, function(request, response, next) {
+profileRouter.put('/api/profile/me', jsonParser, function(request, response, next) {
   debug('PUT: /api/profile/me');
 
   Profile.findOneAndUpdate({userID: request.user._id}, request.body, {new:true})

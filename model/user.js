@@ -13,65 +13,35 @@ mongoose.Promise = Promise;
 const Schema = mongoose.Schema;
 
 const userSchema = Schema({
-  username: {type: String, required: true, unique: true},
-  email: {type: String, required: true, unique: true},
-  password: {type: String, required: true},
-  findHash: {type: String, unique: true},
+  username: { type: String, required: true, unique: true, lowercase: true },
+  hash: String,
+  salt: String
 });
 
-userSchema.methods.generatePasswordHash = function(password) {
-  debug('generatePasswordHash');
+userSchema.methods.setPassword = function(password){
+  this.salt = crypto.randomBytes(16).toString('hex');
 
-  return new Promise((resolve, reject) => {
-    bcrypt.hash(password, 10, (err, hash) => {
-      if(err) return reject(err);
-      this.password = hash;
-      resolve(this);
-    });
-  });
+  this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
 };
 
-userSchema.methods.comparePasswordHash = function(password) {
-  debug('comparePasswordHash');
+userSchema.methods.validPassword = function(password) {
+  var hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
 
-  return new Promise((resolve, reject) => {
-    bcrypt.compare(password, this.password, (err, valid) => {
-      if (err) return reject(err);
-      if(!valid) return reject(createError(401, 'wrong password'));
-      resolve(this);
-    });
-  });
+  return this.hash === hash;
 };
 
-userSchema.methods.generateFindHash = function() {
-  debug('generateFindHash');
+userSchema.methods.generateJWT = function() {
 
-  return new Promise((resolve, reject) => {
-    let tries = 0;
+  // set expiration to 60 days
+  var today = new Date();
+  var exp = new Date(today);
+  exp.setDate(today.getDate() + 60);
 
-    _generateFindHash.call(this);
-
-    function _generateFindHash() {
-      this.findHash = crypto.randomBytes(32).toString('hex');
-      this.save()
-      .then( () => resolve(this.findHash))
-      .catch( err => {
-        if (tries > 3) return reject(err);
-        tries++;
-        _generateFindHash.call(this);
-      });
-    }
-  });
-};
-
-userSchema.methods.generateToken = function() {
-  debug('generateToken');
-
-  return new Promise((resolve, reject) => {
-    this.generateFindHash()
-    .then( findHash => resolve(jwt.sign({token: findHash}, process.env.APP_SECRET)))
-    .catch(err => reject(err));
-  });
+  return jwt.sign({
+    _id: this._id,
+    username: this.username,
+    exp: parseInt(exp.getTime() / 1000),
+  }, 'secret');
 };
 
 module.exports = mongoose.model('user', userSchema);

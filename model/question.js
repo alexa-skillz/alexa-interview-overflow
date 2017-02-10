@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 const createError = require('http-errors');
-const debug = require('debug')('question:question');
+const debug = require('debug')('alexa-skillz:question');
 const Schema = mongoose.Schema;
 const Answer = require('./answer.js');
 
@@ -10,8 +10,20 @@ const questionSchema = Schema({
   content: { type: String, required: true },
   created: { type: Date, required: true, default: Date.now },
   userID: { type: mongoose.Schema.Types.ObjectId, required: true },
-  answersArray: [{ type: Schema.Types.ObjectId, ref: 'answer' }]
+  author: { type: String },
+  answersArray: [{ type: mongoose.Schema.Types.ObjectId, ref: 'answer' }],
+  votes: { type: Number, default: 0 }
 });
+
+questionSchema.methods.upvote = function(id) {
+  this.votes += 1;
+  this.save(id);
+};
+
+questionSchema.methods.downvote = function(id) {
+  this.votes -= 1;
+  this.save(id);
+};
 
 const Question = module.exports = mongoose.model('question', questionSchema);
 

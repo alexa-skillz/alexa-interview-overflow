@@ -4,32 +4,41 @@ const jsonParser = require('body-parser').json();
 const Router = require('express').Router;
 const debug = require('debug')('alexa-skillz:auth-router');
 const User = require('../model/user.js');
-const basicAuth = require('../lib/basic-auth-middleware.js');
 const authRouter = module.exports = Router();
+const passport = require('passport');
+const jwt = require('express-jwt');
+const auth = jwt({secret: 'secret', userProperty: 'payload'});
 
-authRouter.post('/api/signup', jsonParser, function(req, res, next) {
-  debug('POST: /api/signup');
+authRouter.post('/register', function(req, res, next){
+  if(!req.body.username || !req.body.password){
+    return res.status(400).json({message: 'Please fill out all fields'});
+  }
 
-  let password = req.body.password;
-  delete req.body.password;
+  let user = new User();
 
-  let user = new User(req.body);
+  user.username = req.body.username;
 
-  user.generatePasswordHash(password)
-  .then( user => user.save())
-  .then( user => user.generateToken())
-  .then( token => res.send(token))
-  .catch(next);
+  user.setPassword(req.body.password)
 
+  user.save(function (err){
+    if(err){ return next(err); }
+
+    return res.json({token: user.generateJWT()})
+  });
 });
 
-authRouter.get('/api/signin', basicAuth, function(req, res, next) {
-  debug('GET: /api/signin');
+authRouter.post('/login', function(req, res, next){
+  if(!req.body.username || !req.body.password){
+    return res.status(400).json({message: 'Please fill out all fields'});
+  }
 
-  User.findOne({username: req.auth.username})
-  .then( user => User.findById(user._id))
-  .then( user => user.comparePasswordHash(req.auth.password))
-  .then( user => user.generateToken())
-  .then( token => res.send(token))
-  .catch(next);
+  passport.authenticate('local', function(err, user, info){
+    if(err){ return next(err); }
+
+    if(user){
+      return res.json({token: user.generateJWT()});
+    } else {
+      return res.status(401).json(info);
+    }
+  })(req, res, next);
 });

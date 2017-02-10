@@ -12,6 +12,11 @@ const questionRouter = require('./route/question-router.js');
 const answerRouter = require('./route/answer-router.js');
 const profileRouter = require('./route/profile-router.js');
 const errors = require('./lib/error-middleware.js');
+const passport = require('passport');
+require('./model/answer');
+require('./model/question');
+require('./model/user');
+require('./config/passport');
 
 const app = express();
 
@@ -30,6 +35,7 @@ app.use(questionRouter);
 app.use(answerRouter);
 app.use(profileRouter);
 app.use(express.static('public'));
+app.use(passport.initialize());
 app.use(errors);
 
 const server = module.exports = app.listen(PORT, () => {
