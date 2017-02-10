@@ -40,7 +40,9 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "cookie-parser": "^1.4.3",
     "coveralls": "^2.11.15",
+    "express-jwt": "^5.1.0",
     "gulp": "^3.9.1",
     "gulp-cache": "^0.4.5",
     "gulp-eslint": "^3.0.1",
@@ -48,6 +50,9 @@
     "gulp-mocha": "^3.0.1",
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "serve-favicon": "^2.3.2",
     "superagent": "^3.3.1"
   }
 }
