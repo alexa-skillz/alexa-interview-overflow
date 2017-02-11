@@ -8,17 +8,25 @@
 HTTP/1.1 200 OK
 Access-Control-Allow-Origin: *
 Connection: keep-alive
-Content-Length: 105
+Content-Length: 244
 Content-Type: application/json; charset=utf-8
-Date: Sun, 08 Jan 2017 02:29:12 GMT
-ETag: W/"69-TjkNa/AGllrNsPuAq7jBBg"
+Date: Sat, 11 Feb 2017 22:41:15 GMT
+ETag: W/"f4-LXjYEHB1Ue6WBDIp+otgtw"
 X-Powered-By: Express
 
 {
     "__v": 0,
-    "_id": "5871a3f83868de75ee8456e1",
+    "_id": "589f930b8076134eea917d0f",
+    "answers": [],
     "content": "What is this?",
-    "created": "2017-01-08T02:29:12.697Z"
+    "created": "2017-02-11T22:41:15.781Z",
+    "downvotes": 0,
+    "updated": "2017-02-11T22:41:15.781Z",
+    "upvotes": 1,
+    "usersWhoDownvoted": [],
+    "usersWhoUpvoted": [
+        "589f92cec62f224e0688e63c"
+    ]
 }
 ```
 
@@ -34,23 +42,41 @@ To GET a list of all questions sorted in the order they are created, do the foll
 HTTP/1.1 200 OK
 Access-Control-Allow-Origin: *
 Connection: keep-alive
-Content-Length: 271
+Content-Length: 498
 Content-Type: application/json; charset=utf-8
-Date: Sun, 08 Jan 2017 23:24:46 GMT
-ETag: W/"10f-V4YbpwjRpYDgg9+KAMuF4A"
+Date: Sat, 11 Feb 2017 22:43:02 GMT
+ETag: W/"1f2-XWkwu/T/USzZ0dxLlGKufQ"
 X-Powered-By: Express
 
 [
-  "5872c99fb5c9e5247518d508",
-  "5872c98352171523b5655eac",
-  "5872c97752171523b5655eab",
-  "5872c96952171523b5655eaa",
-  "5872c888cdadcf22f0c67961",
-  "5872c875cdadcf22f0c67960",
-  "5872c83256bfac22694be899",
-  "5872bd2aec2c4d1f189d1cf2",
-  "5871af18dbd6fa7ff8f49344",
-  "5871a3f83868de75ee8456e1"
+    {
+        "__v": 0,
+        "_id": "589f930b8076134eea917d0f",
+        "answers": [],
+        "content": "What is this?",
+        "created": "2017-02-11T22:41:15.781Z",
+        "downvotes": 0,
+        "updated": "2017-02-11T22:41:15.781Z",
+        "upvotes": 1,
+        "usersWhoDownvoted": [],
+        "usersWhoUpvoted": [
+            "589f92cec62f224e0688e63c"
+        ]
+    },
+    {
+        "__v": 0,
+        "_id": "589f936c8076134eea917d10",
+        "answers": [],
+        "content": "Where are we?",
+        "created": "2017-02-11T22:42:52.963Z",
+        "downvotes": 0,
+        "updated": "2017-02-11T22:42:52.963Z",
+        "upvotes": 1,
+        "usersWhoDownvoted": [],
+        "usersWhoUpvoted": [
+            "589f92cec62f224e0688e63c"
+        ]
+    }
 ]
 ```
 
@@ -58,7 +84,7 @@ X-Powered-By: Express
 
 After making a POST, you can make a GET request by grabbing the `_id` from the POST request and adding it as a param to the url.
 
-1. Make a GET request, like this example: `http :3000/api/question/5871a3f83868de75ee8456e1`.
+1. Make a GET request, like this example: `http :3000/api/question/589f930b8076134eea917d0f`.
 
 2. You should get a JSON response with a `200` status code, like this example:
 
@@ -66,17 +92,25 @@ After making a POST, you can make a GET request by grabbing the `_id` from the P
 HTTP/1.1 200 OK
 Access-Control-Allow-Origin: *
 Connection: keep-alive
-Content-Length: 105
+Content-Length: 244
 Content-Type: application/json; charset=utf-8
-Date: Sun, 08 Jan 2017 21:11:46 GMT
-ETag: W/"69-4W3FOGa7pgTVxmlJvUQHfQ"
+Date: Sat, 11 Feb 2017 22:43:53 GMT
+ETag: W/"f4-uXi6JuzKdnxPGJ4hRWSYfw"
 X-Powered-By: Express
 
 {
     "__v": 0,
-    "_id": "5872ab02ee1492148dabdee3",
+    "_id": "589f930b8076134eea917d0f",
+    "answers": [],
     "content": "What is this?",
-    "created": "2017-01-08T21:11:30.839Z"
+    "created": "2017-02-11T22:41:15.781Z",
+    "downvotes": 0,
+    "updated": "2017-02-11T22:41:15.781Z",
+    "upvotes": 1,
+    "usersWhoDownvoted": [],
+    "usersWhoUpvoted": [
+        "589f92cec62f224e0688e63c"
+    ]
 }
 ```
 
@@ -110,7 +144,7 @@ X-Powered-By: Express
 
 After making a POST, you can make a PUT request by grabbing the `_id` from the POST or GET request and adding it as a param to the url. Don't forget to grab your token too.
 
-1. Make a PUT request to upvote or downvote on a question, like this example: `http PUT :3000/api/question/589a1ad8c6e4b429720a8bb7/upvote Authentication:"Bearer <long-token-string>"` or `http PUT :3000/api/question/589a1ad8c6e4b429720a8bb7/downvote Authentication:"Bearer <long-token-string>"`.
+1. Make a PUT request to upvote or downvote on a question, like this example: `http PUT :3000/api/question/589f930b8076134eea917d0f/upvote Authentication:"Bearer <long-token-string>"` or `http PUT :3000/api/question/589f930b8076134eea917d0f/downvote Authentication:"Bearer <long-token-string>"`.
 
 2. You should get a JSON response with a `200` status code, like this example:
 
@@ -118,20 +152,51 @@ After making a POST, you can make a PUT request by grabbing the `_id` from the P
 HTTP/1.1 200 OK
 Access-Control-Allow-Origin: *
 Connection: keep-alive
-Content-Length: 99
+Content-Length: 244
 Content-Type: application/json; charset=utf-8
-Date: Sun, 08 Jan 2017 21:12:15 GMT
-ETag: W/"63-pk1qDVC613Kbd2w0Qyp5Og"
+Date: Sat, 11 Feb 2017 22:45:55 GMT
+ETag: W/"f4-TqCXg80cUGs2y5c1Kt6B9g"
 X-Powered-By: Express
 
 {
-  "__v": 0,
-    "_id": "589a1ad8c6e4b429720a8bb7",
-    "answersArray": [],
-    "content": "hey",
-    "created": "2017-02-07T19:07:04.630Z",
-    "userID": "589a1a92c6e4b429720a8bb6",
-    "votes": -1
+    "__v": 4,
+    "_id": "589f930b8076134eea917d0f",
+    "answers": [],
+    "content": "What is this?",
+    "created": "2017-02-11T22:41:15.781Z",
+    "downvotes": 0,
+    "updated": "2017-02-11T22:41:15.781Z",
+    "upvotes": 1,
+    "usersWhoDownvoted": [],
+    "usersWhoUpvoted": [
+        "589f92cec62f224e0688e63c"
+    ]
+}
+```
+
+``` javascript
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Content-Length: 244
+Content-Type: application/json; charset=utf-8
+Date: Sat, 11 Feb 2017 22:47:13 GMT
+ETag: W/"f4-LFh6dCXXqi+5kRnyJzjLUQ"
+X-Powered-By: Express
+
+{
+    "__v": 5,
+    "_id": "589f930b8076134eea917d0f",
+    "answers": [],
+    "content": "What is this?",
+    "created": "2017-02-11T22:41:15.781Z",
+    "downvotes": 1,
+    "updated": "2017-02-11T22:41:15.781Z",
+    "upvotes": 0,
+    "usersWhoDownvoted": [
+        "589f92cec62f224e0688e63c"
+    ],
+    "usersWhoUpvoted": []
 }
 ```
 
