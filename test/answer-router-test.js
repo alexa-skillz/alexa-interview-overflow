@@ -26,6 +26,7 @@ describe('Answer Routes', function() {
   describe('POST: /api/question/:questionID/answer', () => {
     describe('with a valid body', () => {
       it('should return an answer', done => {
+        console.log('this.tempQuestion._id', this.tempToken);
         request.post(`${url}/api/question/${this.tempQuestion._id}/answer`)
         .send(mockData.exampleAnswer)
         .set({

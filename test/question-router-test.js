@@ -15,7 +15,7 @@ const url = `http://localhost:${process.env.PORT}`;
 
 mongoose.Promise = Promise;
 
-describe('Question Routes', () => {
+describe.only('Question Routes', () => {
   before( done => serverToggle.serverOn(server, done));
   after( done => serverToggle.serverOff(server, done));
   before( done => beforeController.call(this, done));
@@ -237,14 +237,14 @@ describe('Question Routes', () => {
       });
     });
     describe('with an invalid token', () => {
-      it('should return a 500 error status', done => {
+      it('should return a 401 error status - invalid token', done => {
         request.put(`${url}/api/question/${this.tempQuestion._id}/upvote`)
         .set({
           Authorization: `Bearer ${this.invalidToken}`
         })
         .send(mockData.updatedVote)
         .end( res => {
-          expect(res.status).to.equal(500);
+          expect(res.status).to.equal(401);
           done();
         });
       });
@@ -289,14 +289,14 @@ describe('Question Routes', () => {
       });
     });
     describe('with an invalid token', () => {
-      it('should return a 500 error status', done => {
+      it('should return a 401 error status - invalid token', done => {
         request.put(`${url}/api/question/${this.tempQuestion._id}/downvote`)
         .set({
           Authorization: `Bearer ${this.invalidToken}`
         })
         .send(mockData.updatedVote)
         .end( res => {
-          expect(res.status).to.equal(500);
+          expect(res.status).to.equal(401);
           done();
         });
       });

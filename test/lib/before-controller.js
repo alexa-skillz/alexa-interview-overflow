@@ -5,12 +5,14 @@ const mockData = require('./mock-data.js');
 const Question = require('../../model/question.js');
 
 module.exports = function(done) {
-  let user = new User(mockData.exampleUser);
-  user.generatePasswordHash(mockData.exampleUser.password)
-  .then( user => user.save())
+  let user = new User();
+  user.username = mockData.exampleUser.username;
+  user.setPassword(mockData.exampleUser.password);
+
+  user.save()
   .then( user => {
     this.tempUser = user;
-    return user.generateToken();
+    return user.generateJWT();
   })
   .then( token => {
     this.tempToken = token;

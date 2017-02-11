@@ -11,8 +11,8 @@ const auth = jwt({secret: 'secret', userProperty: 'payload'});
 
 questionRouter.post('/api/question', auth, jsonParser, (request, response, next) => {
   debug('POST: /api/question');
-
-  request.body.userID = request.user._id;
+  
+  // request.body.userID = request.user._id;
   new Question(request.body).save()
   .then(question => response.json(question))
   .catch(next);
