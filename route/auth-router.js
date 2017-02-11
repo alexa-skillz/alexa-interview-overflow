@@ -11,15 +11,9 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 
 authRouter.post('/register', jsonParser, function(req, res, next){
-  debug('yo');
-
-  debug(req.body);
-  debug(req.body);
-
   if(!req.body.username || !req.body.password){
     return res.status(400).json({message: 'Please fill out all fields'});
   }
-
 
   let user = new User();
 
