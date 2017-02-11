@@ -13,9 +13,13 @@ mongoose.Promise = Promise;
 const Schema = mongoose.Schema;
 
 const userSchema = Schema({
-  username: { type: String, required: true, unique: true, lowercase: true },
+  username: { type: String, unique: true, lowercase: true },
   hash: String,
-  salt: String
+  salt: String,
+  upvotedQuestions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'question' }],
+  downvotedQuestions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'question' }],
+  upvotedAnswers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'answer' }],
+  downvotedAnswers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'answer' }]
 });
 
 userSchema.methods.setPassword = function(password){
@@ -31,8 +35,6 @@ userSchema.methods.validPassword = function(password) {
 };
 
 userSchema.methods.generateJWT = function() {
-
-  // set expiration to 60 days
   var today = new Date();
   var exp = new Date(today);
   exp.setDate(today.getDate() + 60);
