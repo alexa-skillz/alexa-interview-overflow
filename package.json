@@ -44,6 +44,7 @@
     "chai": "^3.5.0",
     "cookie-parser": "^1.4.3",
     "coveralls": "^2.11.15",
+    "ejs": "^2.5.5",
     "express-jwt": "^5.1.0",
     "gitbook-cli": "^2.3.0",
     "gulp": "^3.9.1",
