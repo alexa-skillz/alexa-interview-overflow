@@ -5,6 +5,8 @@ const jsonParser = require('body-parser').json();
 const createError = require('http-errors');
 const debug = require('debug')('alexa-skillz:question-router');
 const Question = require('../model/question.js');
+const Answer = require('../model/answer.js');
+const User = require('../model/user.js');
 const questionRouter = module.exports = new Router();
 const jwt = require('express-jwt');
 const auth = jwt({secret: 'secret', userProperty: 'payload'});
@@ -12,10 +14,20 @@ const auth = jwt({secret: 'secret', userProperty: 'payload'});
 questionRouter.post('/api/question', auth, jsonParser, (request, response, next) => {
   debug('POST: /api/question');
 
-  request.body.userID = request.user._id;
-  new Question(request.body).save()
-  .then(question => response.json(question))
-  .catch(next);
+  let question = new Question(request.body);
+  question.usersWhoUpvoted.push(request.payload._id);
+
+  question.save((err, question) => {
+    if (err) {
+      return next(err);
+    }
+
+    Question.populate(question, { path: 'author', select: 'username'})
+    .then((question) => {
+      response.json(question);
+    })
+    .catch(next);
+  });
 });
 
 questionRouter.get('/api/question/:id', (request, response, next) => {
@@ -24,15 +36,23 @@ questionRouter.get('/api/question/:id', (request, response, next) => {
   Question.findById(request.params.id)
   .populate('answers')
   .then(question => response.json(question))
-  .catch(next);
+  .catch(err => next(createError(404, err.message)));
 });
 
 questionRouter.get('/api/question', (request, response, next) => {
   debug('GET: /api/question');
 
-  Question.find()
-  .then(arrayOfQuestions => response.json(arrayOfQuestions.map(ele => ele._id)))
-  .catch(next);
+  Question.find((err, questions) => {
+    if (err) {
+      return next(err);
+    }
+
+    Question.populate(questions, { path: "author", select: "username"})
+    .then((questions) => {
+      response.json(questions);
+    })
+    .catch(next);
+  });
 });
 
 questionRouter.put('/api/question/:id', auth, jsonParser, (request, response, next) => {
