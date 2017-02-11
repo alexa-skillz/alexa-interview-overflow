@@ -8,9 +8,12 @@ const debug = require('debug')('alexa-skillz:answer');
 const Answer = require('../model/answer.js');
 const Question = require('../model/question.js');
 
+const jwt = require('express-jwt');
+const auth = jwt({secret: 'secret', userProperty: 'payload'});
+
 const answerRouter = module.exports = new Router();
 
-answerRouter.post('/api/question/:questionID/answer', jsonParser, (request, response, next) => {
+answerRouter.post('/api/question/:questionID/answer', auth, (request, response, next) => {
   debug('POST: /api/question/:questionID/answer');
 
   Question.findByIdAndAddAnswer(request.params.questionID, request.body)
