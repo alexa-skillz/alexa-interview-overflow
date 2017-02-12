@@ -1,50 +1,41 @@
-(function() {
-  "use strict";
+'use strict';
 
-  var express = require("express");
-  var router = express.Router();
+const jsonParser = require('body-parser').json();
+const Router = require('express').Router;
+const debug = require('debug')('alexa-skillz:user-router');
+const User = require('../model/user.js');
+const userRouter = module.exports = Router();
+const jwt = require('express-jwt');
+const auth = jwt({secret: 'secret', userProperty: 'payload'});
+const mongoose = require('mongoose');
+const passport = require('passport');
 
-  var mongoose = require("mongoose");
-  var User = mongoose.model("user");
-
-  var jwt = require("express-jwt");
-  var auth = jwt({
-    secret: 'secret',
-    userProperty: 'payload'
+userRouter.get('/api/users', function(request, response, next) {
+  User.find(function(err, users) {
+    if (err) {
+      return next(err);
+    }
+    response.json(users);
   });
+});
 
-  router.route("/users")
-    .get(function(request, response, next) {
-      User.find(function(err, users) {
-        if (err) {
-          return next(err);
-        }
+userRouter.get('/api/users/:user', function(request, response, next) {
+  response.json(request.user);
+});
 
-        response.json(users);
-      });
-    });
+userRouter.param('user', function(request, response, next, id) {
+  var query = User.findById(id);
 
-  router.route("/users/:user")
-    .get(function(request, response, next) {
-      response.json(request.user);
-    });
+  query.exec(function(err, user) {
+    if (err) {
+      return next(err);
+    }
 
-  router.param("user", function(request, response, next, id) {
-    var query = User.findById(id);
+    if (!user) {
+      return next(new Error('Not found.'));
+    }
 
-    query.exec(function(err, user) {
-      if (err) {
-        return next(err);
-      }
-
-      if (!user) {
-        return next(new Error("can't find user"));
-      }
-
-      request.user = user;
-      return next();
-    });
+    request.user = user;
+    return next();
   });
-
-  module.exports = router;
-})();
+});

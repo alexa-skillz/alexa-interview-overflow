@@ -15,8 +15,8 @@ const authRouter = require('./route/auth-router.js');
 const questionRouter = require('./route/question-router.js');
 const answerRouter = require('./route/answer-router.js');
 const profileRouter = require('./route/profile-router.js');
+const userRouter = require('./route/user-router.js');
 const errors = require('./lib/error-middleware.js');
-var usersRoutes = require("./route/user-router.js");
 
 const passport = require('passport');
 require('./config/passport');
@@ -49,7 +49,7 @@ app.use(authRouter);
 app.use(questionRouter);
 app.use(answerRouter);
 app.use(profileRouter);
-app.use(usersRoutes);
+app.use(userRouter);
 app.use(express.static('public'));
 app.use(passport.initialize());
 app.use(errors);
