@@ -30,6 +30,7 @@ questionRouter.get('/api/questions', function(req, res, next){
 questionRouter.post('/api/questions', auth, jsonParser, function(req, res, next){
   let question = new Question(req.body);
   question.usersWhoUpvoted.push(req.payload._id);
+  question.upvotes = 1;
 
   question.save(function(err, question) {
     if (err) {
