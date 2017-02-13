@@ -36,7 +36,7 @@ questionSchema.methods.upvote = function(user, callback) {
 
     this.save(callback);
   }
-}
+};
 
 questionSchema.methods.downvote = function(user, callback) {
   if (this.usersWhoDownvoted.indexOf(user._id) == -1) {
@@ -55,7 +55,7 @@ questionSchema.methods.downvote = function(user, callback) {
 
     this.save(callback);
   }
-}
+};
 
 const Question = module.exports = mongoose.model('question', questionSchema);
 

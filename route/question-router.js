@@ -13,6 +13,8 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 
 questionRouter.get('/api/questions', function(req, res, next){
+  debug('GET: /api/questions');
+
   Question.find(function(err, questions) {
     if (err) {
       return next(err);
@@ -28,6 +30,8 @@ questionRouter.get('/api/questions', function(req, res, next){
 });
 
 questionRouter.post('/api/questions', auth, jsonParser, function(req, res, next){
+  debug('GET: /api/questions');
+
   let question = new Question(req.body);
   question.usersWhoUpvoted.push(req.payload._id);
   question.upvotes = 1;
@@ -47,17 +51,19 @@ questionRouter.post('/api/questions', auth, jsonParser, function(req, res, next)
 });
 
 questionRouter.get('/api/questions/:question', function(req, res, next){
+  debug('GET: /api/questions/:question');
+
   Question.populate(req.question, {
-    path: "answers",
+    path: 'answers',
   }).then(function(question) {
     Answer.populate(req.question.answers, {
-      path: "author",
-      select: "username"
+      path: 'author',
+      select: 'username'
     }).then(function(answers) {
       res.json(question);
     });
   });
-})
+});
 
 questionRouter.param('question', function(req, res, next, id){
   let query = Question.findById(id);
@@ -77,6 +83,8 @@ questionRouter.param('question', function(req, res, next, id){
 });
 
 questionRouter.put('/api/questions/:question/upvote', auth, jsonParser, function(req, res, next){
+  debug('PUT: /api/questions/:question/upvote');
+
   req.question.upvote(req.payload, function(err, question) {
     if (err) {
       return next(err);
@@ -91,10 +99,26 @@ questionRouter.put('/api/questions/:question/upvote', auth, jsonParser, function
   });
 });
 
-questionRouter.put('/api/question/:id', auth, jsonParser, (request, response, next) => {
-  debug('PUT: /api/question/:id');
+questionRouter.put('/api/questions/:question/downvote', auth, jsonParser, function(req, res, next){
+  debug('PUT: /api/questions/:question/downvote');
 
-  request.body.userID = request.user._id;
+  req.question.downvote(req.payload, function(err, question) {
+    if (err) {
+      return next(err);
+    }
+
+    Question.populate(question, {
+      path: 'author',
+      select: 'username'
+    }).then(function(question) {
+      res.json(question);
+    });
+  });
+});
+
+questionRouter.put('/api/questions/:question', auth, jsonParser, (request, response, next) => {
+  debug('PUT: /api/questions/:question');
+
   Question.findByIdAndUpdate(request.params.id, request.body, {new: true})
   .then( question => {
     if(request.body.content === undefined) {
@@ -103,4 +127,20 @@ questionRouter.put('/api/question/:id', auth, jsonParser, (request, response, ne
     response.json(question);
   })
   .catch(err => next(createError(500, err.message)));
+});
+
+questionRouter.delete('/api/question/:question', auth, (request, response, next) => {
+  debug('DELETE: /api/question/:question');
+
+  Question.findById(request.params.id)
+  .then(question => {
+    if(question.answers.length === 0) {
+      return Question.findByIdAndRemove(question._id);
+    }
+    if(question.answers.length !== 0) {
+      throw new Error();
+    }
+  })
+  .then(() => response.status(204).send())
+  .catch(err => next(createError(404, err.message)));
 });
