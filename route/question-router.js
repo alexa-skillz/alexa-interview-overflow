@@ -91,17 +91,16 @@ questionRouter.put('/api/questions/:question/upvote', auth, jsonParser, function
   });
 });
 
-questionRouter.put('/api/questions/:question/downvote', auth, jsonParser, function(req, res, next){
-    req.question.downvote(req.payload, function(err, question) {
-      if (err) {
-        return next(err);
-      }
+questionRouter.put('/api/question/:id', auth, jsonParser, (request, response, next) => {
+  debug('PUT: /api/question/:id');
 
-      Question.populate(question, {
-        path: 'author',
-        select: 'username'
-      }).then(function(question) {
-        res.json(question);
-      });
-    });
-  });
+  request.body.userID = request.user._id;
+  Question.findByIdAndUpdate(request.params.id, request.body, {new: true})
+  .then( question => {
+    if(request.body.content === undefined) {
+      return next(createError(400, 'invalid body'));
+    }
+    response.json(question);
+  })
+  .catch(err => next(createError(500, err.message)));
+});

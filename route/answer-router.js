@@ -12,6 +12,22 @@ const auth = jwt({secret: 'secret', userProperty: 'payload'});
 const mongoose = require('mongoose');
 const passport = require('passport');
 
+answerRouter.get('/api/answer/:id', (request, response, next) => {
+  debug('GET: /api/answer/:id');
+
+  Answer.findById(request.params.id)
+  .then(answer => response.json(answer))
+  .catch(err => next(createError(404, err.message)));
+});
+
+answerRouter.get('/api/answer', (request, response, next) => {
+  debug('GET: /api/answer');
+
+  Answer.find()
+  .then(arrayOfAnswers => response.json(arrayOfAnswers.map(ele => ele._id)))
+  .catch(next);
+});
+
 answerRouter.post('/api/questions/:question/answers', auth, jsonParser, function(req, res, next){
   let answer = new Answer(req.body);
   answer.question = req.question;
@@ -101,4 +117,20 @@ answerRouter.param('answer', function(req, res, next, id){
     req.answer = answer;
     return next();
   });
+});
+
+answerRouter.put('/api/answer/:id', auth, jsonParser, (request, response, next) => {
+  debug('PUT: /api/answer/:id');
+
+  Answer.findByIdAndUpdate(request.params.id, request.body, {new: true})
+  .then(answer => response.json(answer))
+  .catch(err => next(createError(404, err.message)));
+});
+
+answerRouter.delete('/api/answer/:id', auth, (request, response, next) => {
+  debug('DELETE: /api/answer/:id');
+
+  Question.findByIdAndRemoveAnswer(request.params.id)
+  .then(() => response.status(204).send())
+  .catch(err => next(createError(404, err.message)));
 });

@@ -58,3 +58,20 @@ questionSchema.methods.downvote = function(user, callback) {
 }
 
 const Question = module.exports = mongoose.model('question', questionSchema);
+
+Question.findByIdAndRemoveAnswer = function(id) {
+  debug('findByIdAndRemoveAnswer');
+
+  return Answer.findById(id)
+  .then(answer => {
+    this.tempAnswer = answer;
+    return Answer.findByIdAndRemove(answer._id);
+  })
+  .then(() => Question.findById(this.tempAnswer.questionID))
+  .then( question => {
+    debug(question);
+    question.answers.splice(question.answers.indexOf(this.tempAnswer._id), 1);
+    question.save();
+  })
+  .catch(err => Promise.reject(createError(404, err.message)));
+};

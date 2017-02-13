@@ -13,7 +13,7 @@ const answerSchema = Schema({
   downvotes: { type: Number, default: 0 },
   usersWhoUpvoted: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
   usersWhoDownvoted: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user'}],
-  // questionID: { type: mongoose.Schema.Types.ObjectId, ref: 'question' },
+  questionID: { type: mongoose.Schema.Types.ObjectId, ref: 'question' },
   question: { type: mongoose.Schema.Types.ObjectId, ref: 'question' }
 });
 
