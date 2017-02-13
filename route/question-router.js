@@ -1,118 +1,107 @@
 'use strict';
 
-const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
-const createError = require('http-errors');
+const Router = require('express').Router;
 const debug = require('debug')('alexa-skillz:question-router');
+const User = require('../model/user.js');
 const Question = require('../model/question.js');
 const Answer = require('../model/answer.js');
-const User = require('../model/user.js');
-const questionRouter = module.exports = new Router();
+const questionRouter = module.exports = Router();
 const jwt = require('express-jwt');
 const auth = jwt({secret: 'secret', userProperty: 'payload'});
+const mongoose = require('mongoose');
+const passport = require('passport');
 
-questionRouter.post('/api/question', auth, jsonParser, (request, response, next) => {
-  debug('POST: /api/question');
-
-  let question = new Question(request.body);
-  question.usersWhoUpvoted.push(request.payload._id);
-
-  question.save((err, question) => {
+questionRouter.get('/api/questions', function(req, res, next){
+  Question.find(function(err, questions) {
     if (err) {
       return next(err);
     }
 
-    Question.populate(question, { path: 'author', select: 'username'})
-    .then((question) => {
-      response.json(question);
-    })
-    .catch(next);
+    Question.populate(questions, {
+      path: 'author',
+      select: 'username'
+    }).then(function(questions) {
+      res.json(questions);
+    });
   });
 });
 
-questionRouter.get('/api/question/:id', (request, response, next) => {
-  debug('GET: /api/question/:id');
+questionRouter.post('/api/questions', auth, jsonParser, function(req, res, next){
+  let question = new Question(req.body);
+  question.usersWhoUpvoted.push(req.payload._id);
+  question.upvotes = 1;
 
-  Question.findById(request.params.id)
-  .populate('answers')
-  .then(question => response.json(question))
-  .catch(err => next(createError(404, err.message)));
-});
-
-questionRouter.get('/api/question', (request, response, next) => {
-  debug('GET: /api/question');
-
-  Question.find((err, questions) => {
+  question.save(function(err, question) {
     if (err) {
       return next(err);
     }
 
-    Question.populate(questions, { path: 'author', select: 'username'})
-    .then((questions) => {
-      response.json(questions);
-    })
-    .catch(next);
+    Question.populate(question, {
+      path: 'author',
+      select: 'username'
+    }).then(function(question) {
+      res.json(question);
+    });
   });
 });
 
-questionRouter.put('/api/question/:id', auth, jsonParser, (request, response, next) => {
-  debug('PUT: /api/question/:id');
-
-  request.body.userID = request.user._id;
-  Question.findByIdAndUpdate(request.params.id, request.body, {new: true})
-  .then( question => {
-    if(request.body.content === undefined) {
-      return next(createError(400, 'invalid body'));
-    }
-    response.json(question);
-  })
-  .catch(err => next(createError(500, err.message)));
+questionRouter.get('/api/questions/:question', function(req, res, next){
+  Question.populate(req.question, {
+    path: 'answers',
+  }).then(function(question) {
+    Answer.populate(req.question.answers, {
+      path: 'author',
+      select: 'username'
+    }).then(function(answers) {
+      res.json(question);
+    });
+  });
 });
 
-questionRouter.param('id', function(request, response, next, id) {
-  var query = Question.findById(id);
+questionRouter.param('question', function(req, res, next, id){
+  let query = Question.findById(id);
 
-  query.exec(function (err, question){
-    if (err) { return next(err); }
-    if (!question) { return next(new Error('can\'t find question')); }
+  query.exec(function(err, question) {
+    if (err) {
+      return next(err);
+    }
 
-    request.question = question;
+    if (!question) {
+      return next(new Error('Question not found.'));
+    }
+
+    req.question = question;
     return next();
   });
 });
 
-questionRouter.put('/api/question/:id/upvote', auth, (request, response, next) => {
-  debug('PUT: /api/question/:id/upvote');
+questionRouter.put('/api/questions/:question/upvote', auth, jsonParser, function(req, res, next){
+  req.question.upvote(req.payload, function(err, question) {
+    if (err) {
+      return next(err);
+    }
 
-  request.question.upvote(function(err, question){
-    if (err) { return next(err); }
-
-    response.json(question);
+    Question.populate(question, {
+      path: 'author',
+      select: 'username'
+    }).then(function(question) {
+      res.json(question);
+    });
   });
 });
 
-questionRouter.put('/api/question/:id/downvote', auth, (request, response, next) => {
-  debug('PUT: /api/question/:id/downvote');
+questionRouter.put('/api/questions/:question/downvote', auth, jsonParser, function(req, res, next){
+  req.question.downvote(req.payload, function(err, question) {
+    if (err) {
+      return next(err);
+    }
 
-  request.question.downvote(function(err, question){
-    if (err) { return next(err); }
-
-    response.json(question);
+    Question.populate(question, {
+      path: 'author',
+      select: 'username'
+    }).then(function(question) {
+      res.json(question);
+    });
   });
-});
-
-questionRouter.delete('/api/question/:id', auth, (request, response, next) => {
-  debug('DELETE: /api/question/:id');
-
-  Question.findById(request.params.id)
-  .then(question => {
-    if(question.answersArray.length === 0) {
-      return Question.findByIdAndRemove(question._id);
-    }
-    if(question.answersArray.length !== 0) {
-      throw new Error();
-    }
-  })
-  .then(() => response.status(204).send())
-  .catch(err => next(createError(404, err.message)));
 });

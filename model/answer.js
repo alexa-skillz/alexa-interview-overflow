@@ -7,14 +7,13 @@ const answerSchema = Schema({
   content: { type: String, required: true },
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
-  userID: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
+  // userID: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
   upvotes: { type: Number, default: 0 },
   downvotes: { type: Number, default: 0 },
   usersWhoUpvoted: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
   usersWhoDownvoted: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user'}],
-  votes: { type: Number, default:0 },
-  questionID: { type: mongoose.Schema.Types.ObjectId, ref: 'question' },
+  // questionID: { type: mongoose.Schema.Types.ObjectId, ref: 'question' },
   question: { type: mongoose.Schema.Types.ObjectId, ref: 'question' }
 });
 
