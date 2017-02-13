@@ -1,10 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const createError = require('http-errors');
-const debug = require('debug')('alexa-skillz:question');
 const Schema = mongoose.Schema;
-const Answer = require('./answer.js');
 
 const questionSchema = Schema({
   content: { type: String, required: true },
@@ -57,4 +54,4 @@ questionSchema.methods.downvote = function(user, callback) {
   }
 };
 
-const Question = module.exports = mongoose.model('question', questionSchema);
+module.exports = mongoose.model('question', questionSchema);

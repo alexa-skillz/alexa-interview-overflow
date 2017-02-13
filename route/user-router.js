@@ -1,14 +1,9 @@
 'use strict';
 
-const jsonParser = require('body-parser').json();
 const Router = require('express').Router;
 const debug = require('debug')('alexa-skillz:user-router');
 const User = require('../model/user.js');
 const userRouter = module.exports = Router();
-const jwt = require('express-jwt');
-const auth = jwt({secret: 'secret', userProperty: 'payload'});
-const mongoose = require('mongoose');
-const passport = require('passport');
 
 userRouter.get('/api/users', function(request, response, next) {
   debug('GET: /api/users');
@@ -21,7 +16,7 @@ userRouter.get('/api/users', function(request, response, next) {
   });
 });
 
-userRouter.get('/api/users/:user', function(request, response, next) {
+userRouter.get('/api/users/:user', function(request, response) {
   debug('GET: /api/users/:user');
 
   response.json(request.user);

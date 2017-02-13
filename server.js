@@ -7,7 +7,6 @@ const mongoose = require('mongoose');
 const express = require('express');
 const debug = require('debug')('alexa-skillz:server');
 var path = require('path');
-var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 

@@ -3,14 +3,12 @@
 const jsonParser = require('body-parser').json();
 const Router = require('express').Router;
 const debug = require('debug')('alexa-skillz:question-router');
-const User = require('../model/user.js');
 const Question = require('../model/question.js');
 const Answer = require('../model/answer.js');
 const questionRouter = module.exports = Router();
+const createError = require('http-errors');
 const jwt = require('express-jwt');
 const auth = jwt({secret: 'secret', userProperty: 'payload'});
-const mongoose = require('mongoose');
-const passport = require('passport');
 
 questionRouter.get('/api/questions', function(req, res, next){
   debug('GET: /api/questions');
@@ -50,7 +48,7 @@ questionRouter.post('/api/questions', auth, jsonParser, function(req, res, next)
   });
 });
 
-questionRouter.get('/api/questions/:question', function(req, res, next){
+questionRouter.get('/api/questions/:question', function(req, res){
   debug('GET: /api/questions/:question');
 
   Question.populate(req.question, {
@@ -59,7 +57,7 @@ questionRouter.get('/api/questions/:question', function(req, res, next){
     Answer.populate(req.question.answers, {
       path: 'author',
       select: 'username'
-    }).then(function(answers) {
+    }).then(function() {
       res.json(question);
     });
   });
@@ -147,7 +145,7 @@ questionRouter.delete('/api/questions/:question', auth, jsonParser, function(req
   if (req.question.answers.length !== 0) {
     throw new Error();
   }
-  
+
   Answer.remove({ question: req.question }, function(err) {
     if (err) {
       return next(err);
@@ -156,6 +154,7 @@ questionRouter.delete('/api/questions/:question', auth, jsonParser, function(req
       if (err) {
         return next(err);
       }
+      res.statusCode = 204;
       res.send('success');
     });
   });

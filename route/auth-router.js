@@ -5,9 +5,6 @@ const Router = require('express').Router;
 const debug = require('debug')('alexa-skillz:auth-router');
 const User = require('../model/user.js');
 const authRouter = module.exports = Router();
-const jwt = require('express-jwt');
-const auth = jwt({secret: 'secret', userProperty: 'payload'});
-const mongoose = require('mongoose');
 const passport = require('passport');
 
 authRouter.post('/register', jsonParser, function(req, res, next){

@@ -1,7 +1,7 @@
-var passport = require("passport");
-var LocalStrategy = require("passport-local").Strategy;
-var mongoose = require("mongoose");
-var User = mongoose.model("user");
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var mongoose = require('mongoose');
+var User = mongoose.model('user');
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
@@ -14,12 +14,12 @@ passport.use(new LocalStrategy(
 
       if (!user) {
         return done(null, false, {
-          message: "Incorrect username."
+          message: 'Incorrect username.'
         });
       }
       if (!user.validPassword(password)) {
         return done(null, false, {
-          message: "Incorrect password."
+          message: 'Incorrect password.'
         });
       }
       return done(null, user);

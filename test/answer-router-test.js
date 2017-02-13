@@ -23,7 +23,7 @@ describe('Answer Routes', function() {
 
   var testAnswer = '';
 
-  describe.only('POST: /api/questions/:question/answers', () => {
+  describe('POST: /api/questions/:question/answers', () => {
     describe('with a valid body', () => {
       it('should return an answer', done => {
         request.post(`${url}/api/questions/${this.tempQuestion._id}/answers`)
@@ -181,49 +181,49 @@ describe('Answer Routes', function() {
       });
     });
 
-  //   describe('DELETE: /api/questions/:question', () => {
-  //     describe('Question Test', () => {
-  //       it('shoud not delete the question', done => {
-  //         request.delete(`${url}/api/questions/${this.tempQuestion._id}`)
-  //         .set({
-  //           Authorization: `Bearer ${this.tempToken}`
-  //         })
-  //         .end( res => {
-  //           expect(res.status).to.equal(404);
-  //           done();
-  //         });
-  //       });
-  //     });
-  //   });
-  //
-  //   describe('DELETE: /api/questions/:question/answers/:answer', () => {
-  //     describe('with a valid request', () => {
-  //       it('should delete an answer', done => {
-  //         request.delete(`${url}/api/questions/${this.tempQuestion._id}/answers/${testAnswer._id}`)
-  //         .set({
-  //           Authorization: `Bearer ${this.tempToken}`
-  //         })
-  //         .end((err, res) => {
-  //           if(err) return done(err);
-  //           expect(res.status).to.equal(204);
-  //           expect(res.body.content).to.be.empty;
-  //           done();
-  //         });
-  //       });
-  //     });
-  //     describe('with an invalid request', () => {
-  //       it('should return an invalid route', done => {
-  //         request.delete(`${url}/api/questions/${this.tempQuestion._id}/answers/${testAnswer._id}/invalid`)
-  //         .set({
-  //           Authorization: `Bearer ${this.tempToken}`
-  //         })
-  //         .end((err, res) => {
-  //           expect(err).to.be.an('error');
-  //           expect(res.status).to.equal(404);
-  //           done();
-  //         });
-  //       });
-  //     });
-  //   });
+    describe('DELETE: /api/questions/:question', () => {
+      describe('Question Test', () => {
+        it('shoud not delete the question', done => {
+          request.delete(`${url}/api/questions/${this.tempQuestion._id}`)
+          .set({
+            Authorization: `Bearer ${this.tempToken}`
+          })
+          .end( res => {
+            expect(res.status).to.equal(500);
+            done();
+          });
+        });
+      });
+    });
+
+    describe('DELETE: /api/questions/:question/answers/:answer', () => {
+      describe('with a valid request', () => {
+        it('should delete an answer', done => {
+          request.delete(`${url}/api/questions/${this.tempQuestion._id}/answers/${testAnswer._id}`)
+          .set({
+            Authorization: `Bearer ${this.tempToken}`
+          })
+          .end((err, res) => {
+            if(err) return done(err);
+            expect(res.status).to.equal(204);
+            expect(res.body.content).to.be.empty;
+            done();
+          });
+        });
+      });
+      describe('with an invalid request', () => {
+        it('should return an invalid route', done => {
+          request.delete(`${url}/api/questions/${this.tempQuestion._id}/answers/${testAnswer._id}/invalid`)
+          .set({
+            Authorization: `Bearer ${this.tempToken}`
+          })
+          .end((err, res) => {
+            expect(err).to.be.an('error');
+            expect(res.status).to.equal(404);
+            done();
+          });
+        });
+      });
+    });
   });
 });

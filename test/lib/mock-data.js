@@ -21,7 +21,7 @@ exports.updatedQuestion = {
 
 exports.exampleQuestionAnswer = {
   content: 'test question with answer',
-  answersArray: ['12345']
+  answers: ['12345']
 };
 
 exports.updatedVote = {

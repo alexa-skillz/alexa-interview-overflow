@@ -3,14 +3,12 @@
 const jsonParser = require('body-parser').json();
 const Router = require('express').Router;
 const debug = require('debug')('alexa-skillz:answer-router');
-const User = require('../model/user.js');
 const Question = require('../model/question.js');
 const Answer = require('../model/answer.js');
+const createError = require('http-errors');
 const answerRouter = module.exports = Router();
 const jwt = require('express-jwt');
 const auth = jwt({secret: 'secret', userProperty: 'payload'});
-const mongoose = require('mongoose');
-const passport = require('passport');
 
 answerRouter.get('/api/answers/', (request, response, next) => {
   debug('GET: /api/answers/');
@@ -34,7 +32,7 @@ answerRouter.post('/api/questions/:question/answers', auth, jsonParser, function
     }
 
     req.question.answers.push(answer);
-    req.question.save(function(err, question) {
+    req.question.save(function(err) {
       if (err) {
         return next(err);
       }
@@ -45,8 +43,8 @@ answerRouter.post('/api/questions/:question/answers', auth, jsonParser, function
       }).then(function(answer) {
         res.json(answer);
       });
-    })
-  })
+    });
+  });
 });
 
 answerRouter.put('/api/questions/:question/answers/:answer/upvote', auth, jsonParser, function(req, res, next){
@@ -151,7 +149,7 @@ answerRouter.delete('/api/questions/:question/answers/:answer', auth, jsonParser
     }
 
     req.question.answers.splice(req.question.answers.indexOf(req.answer), 1);
-    req.question.save(function(err, question) {
+    req.question.save(function(err) {
       if (err) {
         return next(err);
       }
@@ -159,6 +157,7 @@ answerRouter.delete('/api/questions/:question/answers/:answer', auth, jsonParser
         if (err) {
           return next(err);
         }
+        res.statusCode = 204;
         res.send('success');
       });
     });
