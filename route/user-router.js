@@ -11,6 +11,8 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 
 userRouter.get('/api/users', function(request, response, next) {
+  debug('GET: /api/users');
+
   User.find(function(err, users) {
     if (err) {
       return next(err);
@@ -20,6 +22,8 @@ userRouter.get('/api/users', function(request, response, next) {
 });
 
 userRouter.get('/api/users/:user', function(request, response, next) {
+  debug('GET: /api/users/:user');
+
   response.json(request.user);
 });
 

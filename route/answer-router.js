@@ -12,16 +12,8 @@ const auth = jwt({secret: 'secret', userProperty: 'payload'});
 const mongoose = require('mongoose');
 const passport = require('passport');
 
-answerRouter.get('/api/answer/:id', (request, response, next) => {
-  debug('GET: /api/answer/:id');
-
-  Answer.findById(request.params.id)
-  .then(answer => response.json(answer))
-  .catch(err => next(createError(404, err.message)));
-});
-
-answerRouter.get('/api/answer', (request, response, next) => {
-  debug('GET: /api/answer');
+answerRouter.get('/api/answers/', (request, response, next) => {
+  debug('GET: /api/answers/');
 
   Answer.find()
   .then(arrayOfAnswers => response.json(arrayOfAnswers.map(ele => ele._id)))
@@ -29,6 +21,8 @@ answerRouter.get('/api/answer', (request, response, next) => {
 });
 
 answerRouter.post('/api/questions/:question/answers', auth, jsonParser, function(req, res, next){
+  debug('POST: /api/questions/:question/answers');
+
   let answer = new Answer(req.body);
   answer.question = req.question;
   answer.upvotes = 1;
@@ -56,6 +50,8 @@ answerRouter.post('/api/questions/:question/answers', auth, jsonParser, function
 });
 
 answerRouter.put('/api/questions/:question/answers/:answer/upvote', auth, jsonParser, function(req, res, next){
+  debug('PUT: /api/questions/:question/answers/:answer/upvote');
+
   req.answer.upvote(req.payload, function(err, answer) {
     if (err) {
       return next(err);
@@ -71,6 +67,8 @@ answerRouter.put('/api/questions/:question/answers/:answer/upvote', auth, jsonPa
 });
 
 answerRouter.put('/api/questions/:question/answers/:answer/downvote', auth, jsonParser, function(req, res, next){
+  debug('PUT: /api/questions/:question/answers/:answer/downvote');
+
   req.answer.downvote(req.payload, function(err, answer) {
     if (err) {
       return next(err);
@@ -119,18 +117,50 @@ answerRouter.param('answer', function(req, res, next, id){
   });
 });
 
-answerRouter.put('/api/answer/:id', auth, jsonParser, (request, response, next) => {
-  debug('PUT: /api/answer/:id');
+answerRouter.put('/api/questions/:question/answers/:answer', auth, jsonParser, (request, response, next) => {
+  debug('PUT: /api/questions/:question');
 
-  Answer.findByIdAndUpdate(request.params.id, request.body, {new: true})
-  .then(answer => response.json(answer))
-  .catch(err => next(createError(404, err.message)));
+  // if (request.question.author != request.payload._id) TODO: make this conditional work.
+  if (request.payload._id != request.payload._id) {
+    response.statusCode = 401;
+    return response.end('Invalid Authorization');
+  }
+
+  Answer.findByIdAndUpdate(request.answer, request.body, {new: true})
+  .then( answer => {
+    if(request.body.content === undefined) {
+      return next(createError(400, 'invalid body'));
+    }
+    response.json(answer);
+  })
+  .catch(err => next(createError(500, err.message)));
 });
 
-answerRouter.delete('/api/answer/:id', auth, (request, response, next) => {
-  debug('DELETE: /api/answer/:id');
+answerRouter.delete('/api/questions/:question/answers/:answer', auth, jsonParser, function(req, res, next){
+  debug('DELETE: /api/questions/:question/answers/:answer');
 
-  Question.findByIdAndRemoveAnswer(request.params.id)
-  .then(() => response.status(204).send())
-  .catch(err => next(createError(404, err.message)));
+  // if (req.question.author != req.payload._id) TODO: Make this conditional work.
+  if (req.payload._id != req.payload._id) {
+    res.statusCode = 401;
+    return res.end('invalid authorization');
+  }
+
+  Question.remove({ answer: req.answer }, function(err) {
+    if (err) {
+      return next(err);
+    }
+
+    req.question.answers.splice(req.question.answers.indexOf(req.answer), 1);
+    req.question.save(function(err, question) {
+      if (err) {
+        return next(err);
+      }
+      req.answer.remove(function(err) {
+        if (err) {
+          return next(err);
+        }
+        res.send('success');
+      });
+    });
+  });
 });

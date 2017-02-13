@@ -19,7 +19,7 @@ const userSchema = Schema({
   upvotedQuestions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'question' }],
   downvotedQuestions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'question' }],
   upvotedAnswers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'answer' }],
-  downvotedAnswers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'answer' }]
+  downvotedAnswers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'answer' }],
 });
 
 userSchema.methods.setPassword = function(password){

@@ -119,7 +119,13 @@ questionRouter.put('/api/questions/:question/downvote', auth, jsonParser, functi
 questionRouter.put('/api/questions/:question', auth, jsonParser, (request, response, next) => {
   debug('PUT: /api/questions/:question');
 
-  Question.findByIdAndUpdate(request.params.id, request.body, {new: true})
+  // if (request.question.author != request.payload._id) TODO: make this conditional work.
+  if (request.payload._id != request.payload._id) {
+    response.statusCode = 401;
+    return response.end('Invalid Authorization');
+  }
+
+  Question.findByIdAndUpdate(request.question, request.body, {new: true})
   .then( question => {
     if(request.body.content === undefined) {
       return next(createError(400, 'invalid body'));
@@ -129,18 +135,28 @@ questionRouter.put('/api/questions/:question', auth, jsonParser, (request, respo
   .catch(err => next(createError(500, err.message)));
 });
 
-questionRouter.delete('/api/question/:question', auth, (request, response, next) => {
-  debug('DELETE: /api/question/:question');
+questionRouter.delete('/api/questions/:question', auth, jsonParser, function(req, res, next){
+  debug('DELETE: /api/questions/:question');
 
-  Question.findById(request.params.id)
-  .then(question => {
-    if(question.answers.length === 0) {
-      return Question.findByIdAndRemove(question._id);
+  // if (req.question.author != req.payload._id) TODO: Make this conditional work.
+  if (req.payload._id != req.payload._id) {
+    res.statusCode = 401;
+    return res.end('invalid authorization');
+  }
+
+  if (req.question.answers.length !== 0) {
+    throw new Error();
+  }
+  
+  Answer.remove({ question: req.question }, function(err) {
+    if (err) {
+      return next(err);
     }
-    if(question.answers.length !== 0) {
-      throw new Error();
-    }
-  })
-  .then(() => response.status(204).send())
-  .catch(err => next(createError(404, err.message)));
+    req.question.remove(function(err) {
+      if (err) {
+        return next(err);
+      }
+      res.send('success');
+    });
+  });
 });
