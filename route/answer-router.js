@@ -118,7 +118,7 @@ answerRouter.param('answer', function(req, res, next, id){
 });
 
 answerRouter.put('/api/questions/:question/answers/:answer', auth, jsonParser, (request, response, next) => {
-  debug('PUT: /api/questions/:question');
+  debug('PUT: /api/questions/:question/answers/:answer');
 
   // if (request.question.author != request.payload._id) TODO: make this conditional work.
   if (request.payload._id != request.payload._id) {

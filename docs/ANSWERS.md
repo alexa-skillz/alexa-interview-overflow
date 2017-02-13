@@ -49,7 +49,7 @@ X-Powered-By: Express
 
 After making a POST, you can make a PUT request by grabbing the `_id` from the POST or GET request and adding it as a param to the url. Don't forget to grab your token too.
 
-1. Make a PUT request, like this example: `http PUT :3000/api/answer/5877f8e3f33b6d17a2ecd131 content="Updated an answer." Authentication:"Bearer <long-token-string>"`.
+1. Make a PUT request, like this example: `http PUT :3000/api/questions/58a1f6c4c930303f08d2c6ce/answers/58a1f6c4c930303f08d2c6ce content="test answer" Authentication:"Bearer <long-token-string>"`.
 
 2. You should get a JSON response with a `200` status code, like this example:
 
@@ -57,20 +57,38 @@ After making a POST, you can make a PUT request by grabbing the `_id` from the P
 HTTP/1.1 200 OK
 Access-Control-Allow-Origin: *
 Connection: keep-alive
-Content-Length: 197
+Content-Length: 485
 Content-Type: application/json; charset=utf-8
-Date: Thu, 12 Jan 2017 22:02:09 GMT
-ETag: W/"c5-WOTt43ZNUQk1IHelajezFg"
+Date: Mon, 13 Feb 2017 18:11:16 GMT
+ETag: W/"1e5-U1SuZ5drQujxr4LGoMqdaA"
 X-Powered-By: Express
 
 {
     "__v": 0,
-    "_id": "5877f8e3f33b6d17a2ecd131",
-    "content": "Updated an answer.",
-    "created": "2017-01-12T21:45:07.218Z",
-    "questionID": "5877f880f33b6d17a2ecd130",
-    "updated": "2017-01-12T21:45:07.218Z",
-    "votes": 0
+    "_id": "58a1f6c4c930303f08d2c6ce",
+    "content": "who?",
+    "created": "2017-02-13T18:11:16.009Z",
+    "downvotes": 0,
+    "question": {
+        "__v": 5,
+        "_id": "58a1f5bac930303f08d2c6cd",
+        "answers": [
+            "58a1f6c4c930303f08d2c6ce"
+        ],
+        "content": "test answer",
+        "created": "2017-02-13T18:06:50.612Z",
+        "downvotes": 0,
+        "updated": "2017-02-13T18:06:50.612Z",
+        "upvotes": 0,
+        "usersWhoDownvoted": [],
+        "usersWhoUpvoted": []
+    },
+    "updated": "2017-02-13T18:11:16.009Z",
+    "upvotes": 1,
+    "usersWhoDownvoted": [],
+    "usersWhoUpvoted": [
+        "58a1f539c930303f08d2c6cb"
+    ]
 }
 ```
 
@@ -95,7 +113,7 @@ X-Powered-By: Express
 {
     "__v": 2,
     "_id": "589f9b66dca5d155d14ecc98",
-    "content": "goat",
+    "content": "answer",
     "created": "2017-02-11T23:16:54.690Z",
     "downvotes": 0,
     "question": "589f936c8076134eea917d10",
@@ -121,7 +139,7 @@ X-Powered-By: Express
 {
     "__v": 3,
     "_id": "589f9b66dca5d155d14ecc98",
-    "content": "goat",
+    "content": "answer",
     "created": "2017-02-11T23:16:54.690Z",
     "downvotes": 1,
     "question": "589f936c8076134eea917d10",
@@ -140,7 +158,7 @@ The upvotes and downvotes will increment or decrement the number of votes associ
 
 After making a POST, you can make a DELETE request by grabbing the `_id` from the POST or GET request and adding it as a param to the url. Be sure to have your token.
 
-1. Make a DELETE request, like this example: `http DELETE :3000/api/answer/5877f8e3f33b6d17a2ecd131 Authentication:"Bearer <long-token-string>"`.
+1. Make a DELETE request, like this example: `http DELETE :3000/api/questions/58a1f6c4c930303f08d2c6ce/answer/5877f8e3f33b6d17a2ecd131 Authentication:"Bearer <long-token-string>"`.
 
 2. You should get a JSON response with a `204` status code, like this example:
 

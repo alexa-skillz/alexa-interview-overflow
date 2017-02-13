@@ -118,7 +118,7 @@ X-Powered-By: Express
 
 After making a POST, you can make a PUT request by grabbing the `_id` from the POST or GET request and adding it as a param to the url. Don't forget to grab your token too.
 
-1. Make a PUT request, like this example: `http PUT :3000/api/question/5872ab02ee1492148dabdee3 content="updated" Authentication:"Bearer <long-token-string>"`.
+1. Make a PUT request, like this example: `http PUT :3000/api/question/5872ab02ee1492148dabdee3 content="who?" Authentication:"Bearer <long-token-string>"`.
 
 2. You should get a JSON response with a `200` status code, like this example:
 
@@ -126,17 +126,25 @@ After making a POST, you can make a PUT request by grabbing the `_id` from the P
 HTTP/1.1 200 OK
 Access-Control-Allow-Origin: *
 Connection: keep-alive
-Content-Length: 99
+Content-Length: 242
 Content-Type: application/json; charset=utf-8
-Date: Sun, 08 Jan 2017 21:12:15 GMT
-ETag: W/"63-pk1qDVC613Kbd2w0Qyp5Og"
+Date: Mon, 13 Feb 2017 18:09:18 GMT
+ETag: W/"f2-IfrHxGlkq7E/4orshfdj1A"
 X-Powered-By: Express
 
 {
     "__v": 0,
     "_id": "5872ab02ee1492148dabdee3",
-    "content": "updated",
-    "created": "2017-01-08T21:11:30.839Z"
+    "answers": [],
+    "content": "who?",
+    "created": "2017-02-13T18:06:50.612Z",
+    "downvotes": 0,
+    "updated": "2017-02-13T18:06:50.612Z",
+    "upvotes": 1,
+    "usersWhoDownvoted": [],
+    "usersWhoUpvoted": [
+        "58a1f539c930303f08d2c6cb"
+    ]
 }
 ```
 
