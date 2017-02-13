@@ -23,6 +23,7 @@ module.exports = function(done) {
     this.tempQuestion = question;
     mockData.exampleAnswer.userID = this.tempUser._id;
     mockData.exampleAnswer.questionID = this.tempQuestion._id;
+    console.log('this.tempQuestion', this.tempQuestion);
     done();
   })
   .catch(done);

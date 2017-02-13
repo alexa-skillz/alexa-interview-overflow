@@ -23,11 +23,10 @@ describe('Answer Routes', function() {
 
   var testAnswer = '';
 
-  describe('POST: /api/question/:questionID/answer', () => {
+  describe.only('POST: /api/questions/:question/answers', () => {
     describe('with a valid body', () => {
       it('should return an answer', done => {
-        console.log('this.tempQuestion._id', this.tempToken);
-        request.post(`${url}/api/question/${this.tempQuestion._id}/answer`)
+        request.post(`${url}/api/questions/${this.tempQuestion._id}/answers`)
         .send(mockData.exampleAnswer)
         .set({
           Authorization: `Bearer ${this.tempToken}`
@@ -38,14 +37,13 @@ describe('Answer Routes', function() {
           expect(res.status).to.equal(200);
           expect(res.body.content).to.equal(mockData.exampleAnswer.content);
           expect(res.body.content).to.be.a('string');
-          expect(res.body.votes).to.equal(0);
           done();
         });
       });
     });
     describe('with an invalid body', () => {
       it('should return an bad request', done => {
-        request.post(`${url}/api/question/${this.tempQuestion._id}/answer`)
+        request.post(`${url}/api/questions/${this.tempQuestion._id}/answers`)
         .send('')
         .set({
           Authorization: `Bearer ${this.tempToken}`
@@ -59,7 +57,7 @@ describe('Answer Routes', function() {
     });
     describe('with invalid token', () => {
       it('should return unauthorized', done => {
-        request.post(`${url}/api/question/${this.tempQuestion._id}/answer`)
+        request.post(`${url}/api/questions/${this.tempQuestion._id}/answers`)
         .send(mockData.exampleAnswer)
         .set({
           Authorization: 'Bearer '
