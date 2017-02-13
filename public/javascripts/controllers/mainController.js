@@ -1,6 +1,6 @@
 (function() {
   "use strict";
-  
+
   var app = angular.module("interview-overflow.controllers.main", [
     "ui.router"
   ]);
@@ -18,10 +18,10 @@
           }
         },
         resolve: {
-          getPostsPromise: [
-            "postService",
-            function(postService) {
-              return postService.getAll();
+          getQuestionsPromise: [
+            "questionService",
+            function(questionService) {
+              return questionService.getAll();
             }
           ]
         }
@@ -31,21 +31,21 @@
 
   app.controller("MainController", [
     "$scope",
-    "postService",
+    "questionService",
     "authService",
-    function($scope, postService, authService) {
+    function($scope, questionService, authService) {
       $scope.isLoggedIn = authService.isLoggedIn;
 
-      $scope.posts = postService.posts;
+      $scope.questions = questionService.questions;
 
-      $scope.shouldShowAddNewPostForm = false;
+      $scope.shouldShowAddNewQuestionForm = false;
 
-      function addPost() {
+      function addQuestion() {
         if (!$scope.title || $scope.title === "") {
           return;
         }
 
-        postService.create({
+        questionService.create({
           title: $scope.title,
           link: $scope.link,
           author: authService.currentUserId()
@@ -53,69 +53,69 @@
 
         $scope.title = "";
         $scope.link = "";
-        $scope.shouldShowAddNewPostForm = false;
+        $scope.shouldShowAddNewQuestionForm = false;
       }
 
-      function deletePost(post) {
+      function deleteQuestion(question) {
         // TODO add modal confirmation
-        postService.deletePost(post);
+        questionService.deleteQuestion(question);
       }
 
-      function incrementUpvotes(post) {
-        postService.upvote(post);
+      function incrementUpvotes(question) {
+        questionService.upvote(question);
       }
 
-      function incrementDownvotes(post) {
-        postService.downvote(post);
+      function incrementDownvotes(question) {
+        questionService.downvote(question);
       }
 
-      function getUpvoteColor(post) {
-        if (post.upvoteHover || isUpvotedByCurrentUser(post)) {
+      function getUpvoteColor(question) {
+        if (question.upvoteHover || isUpvotedByCurrentUser(question)) {
           return "text-primary";
         } else {
           return "text-muted";
         }
       }
 
-      function getDownvoteColor(post) {
-        if (post.downvoteHover || isDownvotedByCurrentUser(post)) {
+      function getDownvoteColor(question) {
+        if (question.downvoteHover || isDownvotedByCurrentUser(question)) {
           return "text-danger";
         } else {
           return "text-muted";
         }
       }
 
-      function isUpvotedByCurrentUser(post) {
-        return post.usersWhoUpvoted.indexOf(authService.currentUserId()) != -1;
+      function isUpvotedByCurrentUser(question) {
+        return question.usersWhoUpvoted.indexOf(authService.currentUserId()) != -1;
       }
 
-      function isDownvotedByCurrentUser(post) {
-        return post.usersWhoDownvoted.indexOf(authService.currentUserId()) != -1;
+      function isDownvotedByCurrentUser(question) {
+        return question.usersWhoDownvoted.indexOf(authService.currentUserId()) != -1;
       }
 
-      function showAddNewPostForm() {
-        $scope.shouldShowAddNewPostForm = true;
+      function showAddNewQuestionForm() {
+        $scope.shouldShowAddNewQuestionForm = true;
       }
 
-      function hideAddNewPostForm() {
-        $scope.shouldShowAddNewPostForm = false;
+      function hideAddNewQuestionForm() {
+        $scope.shouldShowAddNewQuestionForm = false;
         $scope.title = "";
         $scope.link = "";
       }
 
-      function showDeletePost(post) {
-        return post.author._id == authService.currentUserId();
+      function showDeleteQuestion(question) {
+        return question.author._id == authService.currentUserId();
       }
 
-      $scope.addPost = addPost;
-      $scope.deletePost = deletePost;
+      $scope.addQuestion = addQuestion;
+      $scope.deleteQuestion = deleteQuestion;
       $scope.incrementUpvotes = incrementUpvotes;
       $scope.incrementDownvotes = incrementDownvotes;
       $scope.getUpvoteColor = getUpvoteColor;
       $scope.getDownvoteColor = getDownvoteColor;
-      $scope.showAddNewPostForm = showAddNewPostForm;
-      $scope.hideAddNewPostForm = hideAddNewPostForm;
-      $scope.showDeletePost = showDeletePost
+      $scope.showAddNewQuestionForm = showAddNewQuestionForm;
+      $scope.hideAddNewQuestionForm = hideAddNewQuestionForm;
+      $scope.showDeleteQuestion = showDeleteQuestion
     }
   ]);
 })();

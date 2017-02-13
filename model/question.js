@@ -10,7 +10,6 @@ const questionSchema = Schema({
   content: { type: String, required: true },
   created: { type: Date, required: true, default: Date.now },
   userID: { type: mongoose.Schema.Types.ObjectId, required: true },
-  // author: { type: String },
   answersArray: [{ type: mongoose.Schema.Types.ObjectId, ref: 'answer' }],
   votes: { type: Number, default: 0 },
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },

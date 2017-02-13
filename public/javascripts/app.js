@@ -1,12 +1,12 @@
 (function() {
   "use strict";
-  
+
   var app = angular.module("interview-overflow", [
     "interview-overflow.controllers.main",
-    "interview-overflow.controllers.post",
+    "interview-overflow.controllers.question",
     "interview-overflow.controllers.auth",
     "interview-overflow.controllers.nav",
-    "interview-overflow.services.post",
+    "interview-overflow.services.question",
     "interview-overflow.services.auth",
     "ui.router"
   ]);
