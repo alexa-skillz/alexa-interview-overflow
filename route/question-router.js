@@ -31,8 +31,9 @@ questionRouter.post('/api/questions', auth, jsonParser, function(req, res, next)
   debug('GET: /api/questions');
 
   let question = new Question(req.body);
-  // question.usersWhoUpvoted.push(req.payload._id);
+  question.usersWhoUpvoted.push(req.payload._id);
   question.upvotes = 1;
+  question.author = req.payload._id;
 
   question.save(function(err, question) {
     if (err) {
@@ -117,12 +118,10 @@ questionRouter.put('/api/questions/:question/downvote', auth, jsonParser, functi
 questionRouter.put('/api/questions/:question', auth, jsonParser, (request, response, next) => {
   debug('PUT: /api/questions/:question');
 
-  // if (request.question.author != request.payload._id) TODO: make this conditional work.
-  // console.log(request.payload._id);
-  // if (request.question.author != request.payload._id) {
-  //   response.statusCode = 401;
-  //   return response.end('Invalid Authorization');
-  // }
+  if (request.question.author != request.payload._id) {
+    response.statusCode = 401;
+    return response.end('Invalid Authorization');
+  }
 
   Question.findByIdAndUpdate(request.question, request.body, {new: true})
   .then( question => {
@@ -137,11 +136,10 @@ questionRouter.put('/api/questions/:question', auth, jsonParser, (request, respo
 questionRouter.delete('/api/questions/:question', auth, jsonParser, function(req, res, next){
   debug('DELETE: /api/questions/:question');
 
-  // if (req.question.author != req.payload._id) TODO: Make this conditional work.
-  // if (req.payload._id != req.payload._id) {
-  //   res.statusCode = 401;
-  //   return res.end('invalid authorization');
-  // }
+  if (req.payload.author != req.payload._id) {
+    res.statusCode = 401;
+    return res.end('invalid authorization');
+  }
 
   if (req.question.answers.length !== 0) {
     throw new Error();
