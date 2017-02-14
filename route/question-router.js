@@ -27,11 +27,11 @@ questionRouter.get('/api/questions', function(req, res, next){
   });
 });
 
-questionRouter.post('/api/questions', auth, jsonParser, function(req, res, next){
+questionRouter.post('/api/questions', jsonParser, function(req, res, next){
   debug('GET: /api/questions');
 
   let question = new Question(req.body);
-  question.usersWhoUpvoted.push(req.payload._id);
+  // question.usersWhoUpvoted.push(req.payload._id);
   question.upvotes = 1;
 
   question.save(function(err, question) {
@@ -118,7 +118,7 @@ questionRouter.put('/api/questions/:question', auth, jsonParser, (request, respo
   debug('PUT: /api/questions/:question');
 
   // if (request.question.author != request.payload._id) TODO: make this conditional work.
-  if (request.payload._id != request.payload._id) {
+  if (request.question.author != request.payload._id) {
     response.statusCode = 401;
     return response.end('Invalid Authorization');
   }
@@ -133,14 +133,14 @@ questionRouter.put('/api/questions/:question', auth, jsonParser, (request, respo
   .catch(err => next(createError(500, err.message)));
 });
 
-questionRouter.delete('/api/questions/:question', auth, jsonParser, function(req, res, next){
+questionRouter.delete('/api/questions/:question', jsonParser, function(req, res, next){
   debug('DELETE: /api/questions/:question');
 
   // if (req.question.author != req.payload._id) TODO: Make this conditional work.
-  if (req.payload._id != req.payload._id) {
-    res.statusCode = 401;
-    return res.end('invalid authorization');
-  }
+  // if (req.payload._id != req.payload._id) {
+  //   res.statusCode = 401;
+  //   return res.end('invalid authorization');
+  // }
 
   if (req.question.answers.length !== 0) {
     throw new Error();
