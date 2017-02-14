@@ -25,6 +25,7 @@ answerRouter.post('/api/questions/:question/answers', auth, jsonParser, function
   answer.question = req.question;
   answer.upvotes = 1;
   answer.usersWhoUpvoted.push(req.payload._id);
+  answer.author = req.payload._id;
 
   answer.save(function(err, answer) {
     if (err) {

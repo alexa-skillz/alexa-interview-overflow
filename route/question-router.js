@@ -53,6 +53,11 @@ questionRouter.get('/api/questions/:question', function(req, res){
   debug('GET: /api/questions/:question');
 
   Question.populate(req.question, {
+    path: 'author',
+    select: 'username'
+  });
+
+  Question.populate(req.question, {
     path: 'answers',
   }).then(function(question) {
     Answer.populate(req.question.answers, {
