@@ -128,15 +128,22 @@ questionRouter.put('/api/questions/:question', auth, jsonParser, (request, respo
     if(request.body.content === undefined) {
       return next(createError(400, 'invalid body'));
     }
-    response.json(question);
+    Question.populate(question, {
+      path: 'author',
+      select: 'username'
+    }).then(function(question) {
+      response.json(question);
+    });
   })
   .catch(err => next(createError(500, err.message)));
+
 });
+
 
 questionRouter.delete('/api/questions/:question', auth, jsonParser, function(req, res, next){
   debug('DELETE: /api/questions/:question');
 
-  if (req.payload.author != req.payload._id) {
+  if (req.question.author != req.payload._id) {
     res.statusCode = 401;
     return res.end('invalid authorization');
   }
