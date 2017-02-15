@@ -118,9 +118,8 @@ answerRouter.param('answer', function(req, res, next, id){
 
 answerRouter.put('/api/questions/:question/answers/:answer', auth, jsonParser, (request, response, next) => {
   debug('PUT: /api/questions/:question/answers/:answer');
-
-  // if (request.question.author != request.payload._id) TODO: make this conditional work.
-  if (request.payload._id != request.payload._id) {
+  console.log('PUT', request.answer.author);
+  if (request.answer.author != request.payload._id) {
     response.statusCode = 401;
     return response.end('Invalid Authorization');
   }
@@ -135,15 +134,9 @@ answerRouter.put('/api/questions/:question/answers/:answer', auth, jsonParser, (
   .catch(err => next(createError(500, err.message)));
 });
 
-answerRouter.delete('/api/questions/:question/answers/:answer', auth, jsonParser, function(req, res, next){
+answerRouter.delete('/api/questions/:question/answers/:answer', jsonParser, (req, res, next) => {
   debug('DELETE: /api/questions/:question/answers/:answer');
-
-  // if (req.question.author != req.payload._id) TODO: Make this conditional work.
-  if (req.payload._id != req.payload._id) {
-    res.statusCode = 401;
-    return res.end('invalid authorization');
-  }
-
+  
   Question.remove({ answer: req.answer }, function(err) {
     if (err) {
       return next(err);

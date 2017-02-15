@@ -189,7 +189,7 @@ describe('Answer Routes', function() {
             Authorization: `Bearer ${this.tempToken}`
           })
           .end( res => {
-            expect(res.status).to.equal(500);
+            expect(res.status).to.equal(401);
             done();
           });
         });

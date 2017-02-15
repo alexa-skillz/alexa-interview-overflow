@@ -12,7 +12,6 @@ var bodyParser = require('body-parser');
 
 const authRouter = require('./route/auth-router.js');
 const answerRouter = require('./route/answer-router.js');
-const profileRouter = require('./route/profile-router.js');
 const userRouter = require('./route/user-router.js');
 const questionRouter = require('./route/question-router.js');
 const errors = require('./lib/error-middleware.js');
@@ -46,7 +45,6 @@ app.use(morgan('dev'));
 
 app.use(authRouter);
 app.use(answerRouter);
-app.use(profileRouter);
 app.use(userRouter);
 app.use(questionRouter);
 app.use(express.static('public'));
