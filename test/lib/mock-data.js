@@ -4,8 +4,7 @@ module.exports = exports = {};
 
 exports.exampleUser = {
   username: 'examplename',
-  password: '1234',
-  email: 'test@test.com'
+  password: '1234'
 };
 
 exports.exampleQuestion = {
@@ -22,9 +21,10 @@ exports.updatedQuestion = {
 
 exports.exampleQuestionAnswer = {
   content: 'test question with answer',
-  answersArray: ['12345']
+  answers: ['12345']
 };
 
 exports.updatedVote = {
-  votes: 1
+  upvotes: 1,
+  downvotes: -1
 };
