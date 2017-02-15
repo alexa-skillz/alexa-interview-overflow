@@ -172,3 +172,32 @@ describe('Auth Routes', function() {
     });
   });
 });
+
+describe('User Routes', function() {
+  before( done => serverToggle.serverOn(server, done));
+  after( done => serverToggle.serverOff(server, done));
+  before( done => beforeController.call(this, done));
+  after( done => afterController.killAllDataBase(done));
+
+  describe('GET: /api/users', function() {
+    it('should return a collection of users with a 200 status', done => {
+      request.get(`${url}/api/users`)
+      .end((err,res) => {
+        if (err) return done(err);
+        expect(res.status).to.equal(200);
+        done();
+      });
+    });
+  });
+
+  describe('GET: /api/users/:userID', function() {
+    it('should return a collection of users with a 200 status', done => {
+      request.get(`${url}/api/users/${mockData.exampleAnswer.userID}`)
+      .end((err,res) => {
+        if (err) return done(err);
+        expect(res.status).to.equal(200);
+        done();
+      });
+    });
+  });
+});
