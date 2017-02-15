@@ -144,7 +144,7 @@ questionRouter.delete('/api/questions/:question', auth, jsonParser, function(req
   // }
 
   if (req.question.answers.length !== 0) {
-    throw new Error();
+    throw new Error('forbidden');
   }
 
   Answer.remove({ question: req.question }, function(err) {
