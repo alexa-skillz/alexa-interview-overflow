@@ -18,11 +18,11 @@ mongoose.Promise = Promise;
 describe('Auth Routes', function() {
   before( done => serverToggle.serverOn(server, done));
   after( done => serverToggle.serverOff(server, done));
-  describe('POST: /api/signup', function() {
+  describe('POST: /register', function() {
     describe('POST with a valid body', function() {
       afterEach( done => afterController.killAllDataBase(done));
       it('should create a new user', done => {
-        request.post(`${url}/api/signup`)
+        request.post(`${url}/register`)
         .send(mockData.exampleUser)
         .end((err, res) => {
           if(err) return done(err);
@@ -35,66 +35,38 @@ describe('Auth Routes', function() {
         });
       });
       it('should return a token that is 205 characters long', done => {
-        request.post(`${url}/api/signup`)
+        request.post(`${url}/register`)
         .send(mockData.exampleUser)
         .end((err, res) => {
           if(err) return done(err);
-          expect(res.text.length).to.equal(205);
+          expect(res.body.token.length).to.equal(205);
           expect(res.status).to.equal(200);
           done();
         });
       });
     });
-    describe('with an invalid request - missing email', function() {
-      it('should return a 400 BadRequestError', done => {
-        request.post(`${url}/api/signup`)
-        .send({username: mockData.exampleUser.username, password: mockData.exampleUser.password})
-        .end((err, res) => {
-          expect(err).to.be.an('error');
-          expect(res.status).to.equal(400);
-          expect(res.text).to.equal('BadRequestError');
-          done();
-        });
-      });
-    });
     describe('with an invalid request - missing password', function() {
-      it('should return a 401 BadRequestError', done => {
-        request.post(`${url}/api/signup`)
-        .send({username: mockData.exampleUser.username, email: mockData.exampleUser.email})
-        .end((err, res) => {
-          expect(err).to.be.an('error');
-          expect(res.status).to.equal(401);
-          expect(res.text).to.equal('BadRequestError');
+      it('should return a 400 BadRequestError - missing password', done => {
+        request.post(`${url}/register`)
+        .send({username: mockData.exampleUser.username})
+        .end( res => {
+          expect(res.status).to.equal(400);
           done();
         });
       });
     });
     describe('with an invalid request - missing username', function() {
-      it('should return a 400 BadRequestError', done => {
-        request.post(`${url}/api/signup`)
-        .send({password: mockData.exampleUser.password, email: mockData.exampleUser.email})
-        .end((err, res) => {
-          expect(err).to.be.an('error');
+      it('should return a 400 BadRequestError - missing username', done => {
+        request.post(`${url}/register`)
+        .send({password: mockData.exampleUser.password})
+        .end( res => {
           expect(res.status).to.equal(400);
-          expect(res.text).to.equal('BadRequestError');
-          done();
-        });
-      });
-    });
-    describe('with an invalid request of number instead of string', function() {
-      it('should return a bad request', done => {
-        request.post(`${url}/api/signup`)
-        .send({username: 5, password: mockData.exampleUser.password})
-        .end((err, res) => {
-          expect(err).to.be.an('error');
-          expect(res.status).to.equal(400);
-          expect(res.text).to.equal('BadRequestError');
           done();
         });
       });
     });
     describe('with an invalid route', function() {
-      it('should return a not found', done => {
+      it('should return a 404 - /api/invalid is not a route', done => {
         request.post(`${url}/api/invalid`)
         .send(mockData.exampleUser)
         .end((err, res) => {
@@ -106,13 +78,13 @@ describe('Auth Routes', function() {
     });
   });
 
-  describe('GET /api/signin', function() {
+  describe('GET /login', function() {
     beforeEach( done => beforeController.call(this,done));
     afterEach( done => afterController.killAllDataBase(done));
     describe('with a valid body', function() {
-      it('should return a user', done => {
-        request.get(`${url}/api/signin`)
-        .auth(mockData.exampleUser.username, mockData.exampleUser.password)
+      it('should login and return a user', done => {
+        request.post(`${url}/login`)
+        .send(mockData.exampleUser)
         .end((err, res) => {
           if(err) return done(err);
           expect(res.status).to.equal(200);
@@ -122,9 +94,9 @@ describe('Auth Routes', function() {
       });
     });
     describe('with a valid username and invalid password', function() {
-      it('should return a bad request', done => {
-        request.get(`${url}/api/signin`)
-        .auth(mockData.exampleUser.username, 'invalidPassword')
+      it('should return a bad request - wrong password', done => {
+        request.post(`${url}/login`)
+        .send({username: mockData.exampleUser.username, password: 'wrongPassword'})
         .end((err, res) => {
           expect(err).to.be.an('error');
           expect(res.status).to.equal(401);
@@ -134,67 +106,97 @@ describe('Auth Routes', function() {
     });
     describe('with a valid password and invalid username', function() {
       it('should return a bad request - incorrect username', done => {
-        request.get(`${url}/api/signin`)
-        .auth('invalidUsername', mockData.exampleUser.password)
+        request.post(`${url}/login`)
+        .send({username: 'wrongUsername', password: mockData.exampleUser.password})
         .end((err, res) => {
           expect(err).to.be.an('error');
-          expect(res.status).to.equal(500);
+          expect(res.status).to.equal(401);
           done();
         });
       });
     });
     describe('with a valid username and missing password', function() {
       it('should return a bad request - missing password', done => {
-        request.get(`${url}/api/signin`)
-        .auth(mockData.exampleUser.username)
+        request.post(`${url}/login`)
+        .send({username: mockData.exampleUser.username})
         .end((err, res) => {
           expect(err).to.be.an('error');
-          expect(res.status).to.equal(401);
+          expect(res.status).to.equal(400);
           done();
         });
       });
     });
     describe('with a valid password and missing username', function() {
       it('should return a bad request - missing username', done => {
-        request.get(`${url}/api/signin`)
-        .auth('', mockData.exampleUser.password)
+        request.post(`${url}/login`)
+        .send({password: mockData.exampleUser.password})
         .end((err, res) => {
           expect(err).to.be.an('error');
-          expect(res.status).to.equal(401);
+          expect(res.status).to.equal(400);
           done();
         });
       });
     });
     describe('with a missing username and password', function() {
       it('should return a bad request - missing username and password', done => {
-        request.get(`${url}/api/signin`)
-        .auth('', '')
+        request.post(`${url}/login`)
+        .send({username: '', password: ''})
         .end((err, res) => {
           expect(err).to.be.an('error');
-          expect(res.status).to.equal(401);
+          expect(res.status).to.equal(400);
           done();
         });
       });
     });
     describe('with a missing username and password', function() {
       it('should return a bad request',done => {
-        request.get(`${url}/api/signin`)
+        request.post(`${url}/login`)
+        .send()
         .end((err, res) => {
           expect(err).to.be.an('error');
-          expect(res.status).to.equal(401);
+          expect(res.status).to.equal(400);
           done();
         });
       });
     });
     describe('with and invalid route', function() {
       it('should return a not found', done => {
-        request.get(`${url}/api/invalid`)
-        .auth(mockData.exampleUser.username, mockData.exampleUser.password)
+        request.post(`${url}/api/invalid`)
+        .send(mockData.exampleUser.username, mockData.exampleUser.password)
         .end((err, res) => {
           expect(err).to.be.an('error');
           expect(res.status).to.equal(404);
           done();
         });
+      });
+    });
+  });
+});
+
+describe('User Routes', function() {
+  before( done => serverToggle.serverOn(server, done));
+  after( done => serverToggle.serverOff(server, done));
+  before( done => beforeController.call(this, done));
+  after( done => afterController.killAllDataBase(done));
+
+  describe('GET: /api/users', function() {
+    it('should return a collection of users with a 200 status', done => {
+      request.get(`${url}/api/users`)
+      .end((err,res) => {
+        if (err) return done(err);
+        expect(res.status).to.equal(200);
+        done();
+      });
+    });
+  });
+
+  describe('GET: /api/users/:userID', function() {
+    it('should return a collection of users with a 200 status', done => {
+      request.get(`${url}/api/users/${mockData.exampleAnswer.userID}`)
+      .end((err,res) => {
+        if (err) return done(err);
+        expect(res.status).to.equal(200);
+        done();
       });
     });
   });

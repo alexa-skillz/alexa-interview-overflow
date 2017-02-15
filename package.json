@@ -9,7 +9,9 @@
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "gulp": "gulp",
     "lint": "gulp lint",
-    "debug": "DEBUG='alexa-skillz*' mocha"
+    "debug": "DEBUG='alexa-skillz*' mocha",
+    "docs:prepare": "gitbook install",
+    "docs:start": "npm run docs:prepare && gitbook serve"
   },
   "repository": {
     "type": "git",
@@ -35,12 +37,17 @@
     "http-errors": "^1.5.1",
     "jsonwebtoken": "^7.2.1",
     "mongoose": "^4.7.6",
+    "express-jwt": "^5.1.0",
     "morgan": "^1.7.0",
-    "multer": "^1.2.1"
+    "multer": "^1.2.1",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "serve-favicon": "^2.3.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "coveralls": "^2.11.15",
+    "gitbook-cli": "^2.3.0",
     "gulp": "^3.9.1",
     "gulp-cache": "^0.4.5",
     "gulp-eslint": "^3.0.1",
