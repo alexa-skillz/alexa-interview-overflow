@@ -44,14 +44,27 @@ authRouter.post('/login', jsonParser, function(req, res, next){
 
 authRouter.get('/auth/twitter', passport.authenticate('twitter'));
 
-authRouter.get('/auth/twitter/callback', passport.authenticate('twitter', {  
-  successRedirect: '/profile',
-  failureRedirect: '/',
-}));
+authRouter.get('/auth/twitter/callback', passport.authenticate('twitter', {
+  successRedirect: 'http://127.0.0.1:8080/#!/',
+  failureRedirect: '/login'}),
+  function( req, res ) {
+    res.json(req.user);
+    return res.redirect('http://127.0.0.1:8080/#!/');
+  });
 
 authRouter.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 authRouter.get('/auth/google/callback', passport.authenticate('google', {
-  successRedirect: '/profile',
+  successRedirect: 'http://127.0.0.1:8080/#!/',
   failureRedirect: '/',
 }));
+
+authRouter.get('/auth/amazon', passport.authenticate('amazon', { scope: ['profile', 'postal_code'] })),
+function(req, res) {
+};
+
+authRouter.get('/auth/amazon/callback', passport.authenticate('amazon', { failureRedirect: '/login' }),
+  function(req, res) {
+    // console.log('CALLBACK RESPONSE;', res);
+    res.redirect('http://127.0.0.1:8080/#!/');
+  });

@@ -2,6 +2,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var TwitterStrategy = require('passport-twitter').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var AmazonStrategy = require('passport-amazon').Strategy;
 var mongoose = require('mongoose');
 var User = mongoose.model('user');
 var configAuth = require('./auth.js');
@@ -85,3 +86,31 @@ passport.use(new GoogleStrategy({
       });
     });
   }));
+
+passport.use(new AmazonStrategy({
+  clientID: configAuth.amazonAuth.clientID,
+  clientSecret: configAuth.amazonAuth.clientSecret,
+  callbackURL: configAuth.amazonAuth.callbackURL
+},
+function(token, refreshToken, profile, done) {
+  process.nextTick(function() {
+    User.findOne({ amazonId: profile.id }, function (err, user) {
+      if (err)
+        return done(err);
+      if (user) {
+        return done(null, user);
+      } else {
+        var newUser = new User();
+        newUser.amazon.id = profile.id;
+        newUser.amazon.token = token;
+        newUser.amazon.name = profile.displayName;
+        newUser.amazon.email = profile.emails[0].value;
+        newUser.save(function(err) {
+          if (err)
+            throw err;
+          return done(null, newUser);
+        });
+      }
+    });
+  });
+}));
