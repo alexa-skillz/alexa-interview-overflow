@@ -41,3 +41,17 @@ authRouter.post('/login', jsonParser, function(req, res, next){
     }
   })(req, res, next);
 });
+
+authRouter.get('/auth/twitter', passport.authenticate('twitter'));
+
+authRouter.get('/auth/twitter/callback', passport.authenticate('twitter', {  
+  successRedirect: '/profile',
+  failureRedirect: '/',
+}));
+
+authRouter.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+authRouter.get('/auth/google/callback', passport.authenticate('google', {
+  successRedirect: '/profile',
+  failureRedirect: '/',
+}));

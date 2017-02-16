@@ -18,6 +18,7 @@ const errors = require('./lib/error-middleware.js');
 
 const passport = require('passport');
 require('./config/passport');
+require('./config/auth.js');
 
 require('./model/answer');
 require('./model/question');
