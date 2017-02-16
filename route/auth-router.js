@@ -59,9 +59,7 @@ authRouter.get('/auth/google/callback', passport.authenticate('google', {
   failureRedirect: '/',
 }));
 
-authRouter.get('/auth/amazon', passport.authenticate('amazon', { scope: ['profile', 'postal_code'] })),
-function(req, res) {
-};
+authRouter.get('/auth/amazon', passport.authenticate('amazon', { scope: ['profile', 'postal_code'] }));
 
 authRouter.get('/auth/amazon/callback', passport.authenticate('amazon', { failureRedirect: '/login' }),
   function(req, res) {
