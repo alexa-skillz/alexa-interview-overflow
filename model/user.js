@@ -17,6 +17,24 @@ const userSchema = Schema({
   downvotedQuestions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'question' }],
   upvotedAnswers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'answer' }],
   downvotedAnswers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'answer' }],
+  twitter: {
+    id: String,
+    token: String,
+    displayName: String,
+    username: String,
+  },
+  google: {
+    id: String,
+    token: String,
+    email: String,
+    name: String,
+  },
+  amazon: {
+    id: String,
+    token: String,
+    email: String,
+    username: String
+  }
 });
 
 userSchema.methods.setPassword = function(password){
