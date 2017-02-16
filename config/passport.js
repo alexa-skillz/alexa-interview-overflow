@@ -5,7 +5,9 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var AmazonStrategy = require('passport-amazon').Strategy;
 var mongoose = require('mongoose');
 var User = mongoose.model('user');
-var configAuth = require('./auth.js');
+const dotenv = require('dotenv');
+
+dotenv.load();
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
@@ -32,9 +34,9 @@ passport.use(new LocalStrategy(
 ));
 
 passport.use(new TwitterStrategy({
-  consumerKey: configAuth.twitterAuth.consumerKey,
-  consumerSecret: configAuth.twitterAuth.consumerSecret,
-  callbackURL: configAuth.twitterAuth.callbackURL,
+  consumerKey: process.env.TWITTER_CONSUMER_KEY,
+  consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+  callbackURL: process.env.TWITTER_CALLBACK_URL,
 },
 function(token, tokenSecret, profile, done) {
   process.nextTick(function() {
@@ -60,9 +62,9 @@ function(token, tokenSecret, profile, done) {
 }));
 
 passport.use(new GoogleStrategy({
-  clientID: configAuth.googleAuth.clientID,
-  clientSecret: configAuth.googleAuth.clientSecret,
-  callbackURL: configAuth.googleAuth.callbackURL,
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: process.env.GOOGLE_CALLBACK_URL,
 },
   function(token, refreshToken, profile, done) {
     process.nextTick(function() {
@@ -88,9 +90,9 @@ passport.use(new GoogleStrategy({
   }));
 
 passport.use(new AmazonStrategy({
-  clientID: configAuth.amazonAuth.clientID,
-  clientSecret: configAuth.amazonAuth.clientSecret,
-  callbackURL: configAuth.amazonAuth.callbackURL
+  clientID: process.env.AMAZON_CLIENT_ID,
+  clientSecret: process.env.AMAZON_CLIENT_SECRET,
+  callbackURL: process.env.AMAZON_CALLBACK_URL,
 },
 function(token, refreshToken, profile, done) {
   process.nextTick(function() {
